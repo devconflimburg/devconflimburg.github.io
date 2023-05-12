@@ -20,21 +20,17 @@
   <script src="/js/amazon-cognito-identity.min.js"></script>
   <script src="/js/authentication.js"></script>
   <script>
-  //sessionStorage["prevLoc"] = location;
-  function finalize_change(err,data){
+  function finalize_signin(err,data){
     if (err){
       console.log(err);
       alert(err["message"]);
     }
     localStorage["token"] = data["idToken"]["jwtToken"];
+    cacheJS.set("token",localStorage["token"], 60);
     navigate_to_referer();
   }
-  function executeChange(username,oldPassword,newPassword){
-    signInUser(username, oldPassword, function(err,data){
-        console.log(err);
-        console.log(data);
-        getUser(username).changePassword(oldPassword, newPassword, finalize_change);
-    });
+  function executeSignIn(username,password){
+    signInUser(username,password,finalize_signin)
   }
   </script>
   <style>
@@ -81,25 +77,21 @@
 </head>
 <body class="d-flex flex-column h-100" x-cloak x-data="{}">
 <main class="form-signin">
-    <form x-data="{username:'',oldPassword:'',newPassword: '', enabled: true}">
+    <form x-data="{username:'',password:'', enabled: true}">
         <img class="mb-4" src="/assets/email-header.png" alt=""  height="57">
-        <h1 class="h3 mb-3 fw-normal">Please update password</h1>
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
         <div class="form-floating">
             <input x-model="username" type="text" class="form-control" id="floatingInput" placeholder="username">
             <label for="floatingInput">Username</label>
         </div>
         <div class="form-floating">
-            <input x-model="oldPassword" type="password" class="form-control" id="floatingPassword" placeholder="Password"
-            <label for="floatingPassword">Old Password</label>
-        </div>
-        <div class="form-floating">
-            <input x-model="newPassword" type="password" class="form-control" id="floatingPassword2" placeholder="Password"
-            <label for="floatingPassword2">New Password</label>
+            <input x-model="password" type="password" class="form-control" id="floatingPassword" placeholder="Password"
+                   @keyup.enter="enabled = false;username = username.toLowerCase();executeSignIn(username,password);setTimeout(function(){enabled = true;password=''},3000)">
+            <label for="floatingPassword">Password</label>
         </div>
 
-        <button class="w-100 btn btn-lg btn-primary" type="button" @click="enabled = false;username = username.toLowerCase();executeChange(username,oldPassword,newPassword);setTimeout(function(){enabled = true;password=''},3000)" x-cloak x-transition x-bind:disabled="!enabled">Update</button>
-        <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+        <button class="w-100 btn btn-lg btn-primary" type="button" @click="enabled = false;username = username.toLowerCase();executeSignIn(username,password);setTimeout(function(){enabled = true;password=''},3000)" x-cloak x-transition x-bind:disabled="!enabled">Sign in</button>
     </form>
 </main>
 

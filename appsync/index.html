@@ -3,9 +3,11 @@
     <link rel="icon" type="image/png" href="./favicon.png" />
     <title>devConf API explorer</title>
     <meta name="title" content="devConf API explorer" />
+    <script src="/js/cache.js"></script>
     <script src="/js/configuration.js"></script>
     <script src="/appsync/configuration.js"></script>
     <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/8.0.20/jsrsasign-all-min.js"></script>
   </head>
   <body>
 
@@ -48,12 +50,12 @@
   </div>
   <div class="custom-button" x-data="{}">
     <button
-            @click="sessionStorage['prevLoc'] = location;location = '/login'">
-      <span x-text="localStorage.token ? 'Refresh' : 'Fetch'"></span> User token
+            @click="sessionStorage['prevLoc'] = location;location = '/auth/signin'">
+      <span x-text="TOKEN ? 'Refresh' : 'Fetch'"></span> User token
     </button>
     <button
-            x-show="localStorage.token"
-            @click="localStorage.removeItem('token');location.reload();">
+            x-show="TOKEN"
+            @click="cacheJS.removeByKey('token');location.reload();">
       Switch to anonymous mode
     </button>
   </div>

@@ -4,6 +4,13 @@ window.__env = {
 
 localStorage["ApiExplorer:HeadersSectionIsOpen"] = false;
 localStorage["ApiExplorer:EndpointSectionIsOpen"] = false;
+var TOKEN = null;
+try{
+    TOKEN = cacheJS.get("token");
+    console.log(TOKEN);
+} catch(e) {
+    console.log(e);
+}
 
 function refresh_headers(){
     var headers = [
@@ -15,10 +22,10 @@ function refresh_headers(){
                         "isDisabled":true
                      }
                   ];
-    if (localStorage.token){
+    if (TOKEN){
         headers.push({
          "key":"Authorization",
-         "value":localStorage.token,
+         "value":TOKEN,
          "isActive":true,
          "isNewHeader":false,
          "isDisabled":false
