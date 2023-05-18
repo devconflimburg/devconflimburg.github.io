@@ -25,13 +25,13 @@ function get_variable(key){
 }
 
 // User pool configuratie
-localStorage["aws-congnito-user-pool-id"] = "eu-north-1_zMQxeO3MU";
-localStorage["aws-congnito-app-id"] = "34fis017c4qn4isutgo05tdngr";
+localStorage["aws-congnito-user-pool-id"] = "eu-north-1_Tnm5HUrCT";
+localStorage["aws-congnito-app-id"] = "47g2qgjonl5vvr2b7mkikgb50j";
 
 // GraphQL API configuratie
-const api_url = "https://npfew72uirgrln2tmhe6uljfeq.appsync-api.eu-north-1.amazonaws.com/graphql";
-const api_ws = "wss://npfew72uirgrln2tmhe6uljfeq.appsync-realtime-api.eu-north-1.amazonaws.com/graphql";
-const api_key = "da2-6muoejg5efaxtdnwg5h5f3x4lu";
+const api_url = "https://6nabadxxkbcbtlvnpbagq4wtua.appsync-api.eu-north-1.amazonaws.com/graphql";
+const api_ws = "wss://6nabadxxkbcbtlvnpbagq4wtua.appsync-realtime-api.eu-north-1.amazonaws.com/graphql";
+const api_key = "da2-6773gczxvzawlj2ejrjdh4qkgu";
 
 // vimesh-ui configuratie
 $vui.config = {
