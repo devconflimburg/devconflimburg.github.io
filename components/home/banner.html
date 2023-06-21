@@ -1,0 +1,26 @@
+<template x-component="banner" x-data="{}">
+  <header class="bg-dark background-image py-5">
+    <div class="container px-5">
+      <div class="row gx-5 align-items-center justify-content-center">
+        <div class="col-lg-8 col-xl-7 col-xxl-6">
+          <div class="my-5 text-center text-xl-start">
+            <img src="/assets/devconf_logo_white_poly.png" width="100%"/>
+            <h4 x-text="get_variable('editie_datum');"
+                class="display-5 fw-bolder text-white mb-2 text-center">
+            </h4>
+            <div class="d-grid gap-2 col-6 mx-auto">
+              <a href="#register" class="btn btn-outline-light" x-show="get_variable('home_inschrijving_open');">Schrijf je nu in!</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
+          <a x-bind:href="get_variable('home_video_youtube_link')" target="_blank">
+            <video x-bind:src="get_variable('home_video');"
+                   muted autoplay loop
+                   class="img-fluid rounded-3 my-5"></video>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+</template>
