@@ -2,7 +2,7 @@ import os, time, glob, shutil, subprocess, traceback
 global server
 server = None
 reload_interval_in_seconds = 3
-
+environment = "staging"
 def start_server():
     global server
     server = subprocess.Popen(["py","-m", "http.server", "8181", "--directory", "./tmp/"])
@@ -38,6 +38,14 @@ def copy_source():
         head, tail = os.path.split(dst)
         os.makedirs(head, exist_ok=True)
         shutil.copyfile(src, dst)
+    if environment == "staging":
+        src = "./js/configuration-staging.js"
+    elif environment == "production":
+        src = "./js/configuration.js"
+    else:
+        raise Exception("Invalid environment, mut be staging or production")
+    dst = "./tmp/js/configuration.js"
+    shutil.copyfile(src, dst)
 
 
 def show_activity_bar(x):

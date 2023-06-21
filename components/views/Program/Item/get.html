@@ -1,0 +1,38 @@
+<!--
+This file is managed by the tracepaper modeler, if you want to customize this view
+please make sure you rename the file.
+-->
+<template x-component="program-item-get">
+    <div>
+        <draftsman-query :alias="$prop('alias')">
+     query GetProgramitem($key: ID = "") {
+       Program {
+         Item {
+           get(key: $key) {
+             key
+             summary
+             year
+             session
+             title
+             room
+             duration
+             breakout
+             speaker
+             startTime
+             id
+             endTime
+           }
+         }
+       }
+     }
+        </draftsman-query>
+        <div x-init="$store.forms[$prop('alias')] = $el.innerHTML" style="display:none;">
+[
+  {
+    "name": "key",
+    "type": "String"
+  }
+]
+        </div>
+    </div>
+</template>
