@@ -1,0 +1,8 @@
+
+.background-image {
+    background-image: url("/assets/achtergrond.png");
+}
+
+[x-cloak] {
+    display: none !important;
+}

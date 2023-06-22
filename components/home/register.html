@@ -1,0 +1,31 @@
+<template x-component="register">
+    <div class="py-5 bg-light" x-show="get_variable('home_inschrijving_open');">
+        <script src="/js/inschrijven.js"></script>
+        <div class="container px-5 my-5">
+            <div class="row gx-5 justify-content-center">
+                <div class="col-lg-10 col-xl-7">
+                    <div class="text-center">
+                        <div class="fs-4 mb-4 fst-italic">
+                            <h2 id="register">Schrijf je in!</h2>
+                            <form x-data="{ form : {}}" @submit.prevent="schrijf_in(form);">
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Email</label>
+                                    <input x-model="form.email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputPassword1" class="form-label">Voornaam</label>
+                                    <input x-model="form.voornaam" type="text" class="form-control" id="exampleInputPassword1">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputPassword2" class="form-label">Achternaam</label>
+                                    <input x-model="form.achternaam" type="text" class="form-control" id="exampleInputPassword2">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Schrijf je in</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
