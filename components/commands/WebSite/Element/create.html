@@ -1,0 +1,39 @@
+<!--
+This file is managed by the tracepaper modeler, if you want to customize this command
+please make sure you rename the file first.
+-->
+<template x-component="create-web-site-element">
+  <div>
+    <draftsman-mutation :command="$prop('command')"  authenticated>
+     mutation Create($name: String = "", $content: String = "") {
+       WebSite{
+         Element{
+           create(input: {name: $name,content: $content}) {
+              correlationId
+           }
+         }
+       }
+     }
+    </draftsman-mutation>
+    <div x-init="$store.forms[$prop('command')] = $el.innerHTML" style="display:none;">
+[
+  {
+    "name": "name",
+    "title": "Name",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "content",
+    "title": "Content",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  }
+]
+    </div>
+  </div>
+</template>

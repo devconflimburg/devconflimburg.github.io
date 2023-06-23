@@ -20,7 +20,7 @@
     </script>
 </head>
 <body class="d-flex flex-column h-100" x-data="{search: $persist('').using(sessionStorage),
-        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Conference/addProgramItem;commands/Conference/initializeEdition;views/Edition/filter;views/Edition/get;views/Program/filter;views/Program/get;views/Program/Item/filter;views/Program/Item/get">
+        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Conference/addProgramItem;commands/Conference/initializeEdition;commands/WebSite/Element/create;views/Edition/filter;views/Edition/get;views/WebSite/Element/filter;views/WebSite/Element/get;views/Program/filter;views/Program/get;views/Program/Item/filter;views/Program/Item/get">
 <main class="flex-shrink-0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" x-transition>
         <div class="container px-5">
@@ -84,6 +84,23 @@
                     </div>
                     <hr>
                 
+                    <h6>WebSite.Element</h6>
+                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                        
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'createwebsiteelement'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_createwebsiteelement">
+                                CreateWebSiteElement
+                            </button>
+                            <ui-create-web-site-element command="createwebsiteelement"></ui-create-web-site-element>
+                            <ui-basic-modal
+                                        title="Command: CreateWebSiteElement"
+                                        alias="createwebsiteelement"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_createwebsiteelement"></ui-trace-table>
+                            <ui-basic-form alias="createwebsiteelement" target="#modal_body_createwebsiteelement"></ui-basic-form>
+                        
+                    </div>
+                    <hr>
+                
                 </center>
             </div>
             <div class="col-7">
@@ -118,6 +135,39 @@
                     <ui-item-table alias="editionget"
                                    path="get"
                                    target="#editionget-container"></ui-item-table>
+                    
+                </div>
+                
+                <div x-show="query == 'Element.filter'" x-cloak>
+                    <center id="websiteelementfilter-header">
+                        <h1>Element.filter</h1>
+                        <ui-view-query-form alias="websiteelementfilter" target="#websiteelementfilter-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-website-element-filter alias="websiteelementfilter"></ui-website-element-filter>
+
+                    <div id="websiteelementfilter-container"></div>
+                    
+                    <ui-raw-data-list
+                            target="#websiteelementfilter-container"
+                            alias="websiteelementfilter"
+                            path="Element.filter.resultset"></ui-raw-data-list>
+                    
+                </div>
+                
+                <div x-show="query == 'Element.get'" x-cloak>
+                    <center id="websiteelementget-header">
+                        <h1>Element.get</h1>
+                        <ui-view-query-form alias="websiteelementget" target="#websiteelementget-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-website-element-get alias="websiteelementget"></ui-website-element-get>
+
+                    <div id="websiteelementget-container"></div>
+                    
+                    <ui-item-table alias="websiteelementget"
+                                   path="Element.get"
+                                   target="#websiteelementget-container"></ui-item-table>
                     
                 </div>
                 
@@ -199,6 +249,14 @@
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'edition.get'.includes(search.toLowerCase())"
                             @click="query = 'Edition.get'">Edition.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'element.filter'.includes(search.toLowerCase())"
+                            @click="query = 'Element.filter'">Element.filter</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'element.get'.includes(search.toLowerCase())"
+                            @click="query = 'Element.get'">Element.get</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'program.filter'.includes(search.toLowerCase())"
