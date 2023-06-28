@@ -20,7 +20,7 @@
     </script>
 </head>
 <body class="d-flex flex-column h-100" x-data="{search: $persist('').using(sessionStorage),
-        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Conference/addProgramItem;commands/Conference/initializeEdition;commands/WebSite/Element/create;views/Edition/filter;views/Edition/get;views/WebSite/Element/filter;views/WebSite/Element/get;views/Program/filter;views/Program/get;views/Program/Item/filter;views/Program/Item/get">
+        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Conference/addProgramItem;commands/Conference/initializeEdition;commands/WebSite/Element/create;views/Edition/filter;views/Edition/get;views/Program/filter;views/Program/get;views/Program/Item/filter;views/Program/Item/get;views/WebSite/Element/filter;views/WebSite/Element/get">
 <main class="flex-shrink-0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" x-transition>
         <div class="container px-5">
@@ -138,39 +138,6 @@
                     
                 </div>
                 
-                <div x-show="query == 'Element.filter'" x-cloak>
-                    <center id="websiteelementfilter-header">
-                        <h1>Element.filter</h1>
-                        <ui-view-query-form alias="websiteelementfilter" target="#websiteelementfilter-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-website-element-filter alias="websiteelementfilter"></ui-website-element-filter>
-
-                    <div id="websiteelementfilter-container"></div>
-                    
-                    <ui-raw-data-list
-                            target="#websiteelementfilter-container"
-                            alias="websiteelementfilter"
-                            path="Element.filter.resultset"></ui-raw-data-list>
-                    
-                </div>
-                
-                <div x-show="query == 'Element.get'" x-cloak>
-                    <center id="websiteelementget-header">
-                        <h1>Element.get</h1>
-                        <ui-view-query-form alias="websiteelementget" target="#websiteelementget-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-website-element-get alias="websiteelementget"></ui-website-element-get>
-
-                    <div id="websiteelementget-container"></div>
-                    
-                    <ui-item-table alias="websiteelementget"
-                                   path="Element.get"
-                                   target="#websiteelementget-container"></ui-item-table>
-                    
-                </div>
-                
                 <div x-show="query == 'Program.filter'" x-cloak>
                     <center id="programfilter-header">
                         <h1>Program.filter</h1>
@@ -237,6 +204,39 @@
                     
                 </div>
                 
+                <div x-show="query == 'Webpageelement.filter'" x-cloak>
+                    <center id="websiteelementfilter-header">
+                        <h1>Webpageelement.filter</h1>
+                        <ui-view-query-form alias="websiteelementfilter" target="#websiteelementfilter-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-website-element-filter alias="websiteelementfilter"></ui-website-element-filter>
+
+                    <div id="websiteelementfilter-container"></div>
+                    
+                    <ui-raw-data-list
+                            target="#websiteelementfilter-container"
+                            alias="websiteelementfilter"
+                            path="Element.filter.resultset"></ui-raw-data-list>
+                    
+                </div>
+                
+                <div x-show="query == 'Webpageelement.get'" x-cloak>
+                    <center id="websiteelementget-header">
+                        <h1>Webpageelement.get</h1>
+                        <ui-view-query-form alias="websiteelementget" target="#websiteelementget-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-website-element-get alias="websiteelementget"></ui-website-element-get>
+
+                    <div id="websiteelementget-container"></div>
+                    
+                    <ui-item-table alias="websiteelementget"
+                                   path="Element.get"
+                                   target="#websiteelementget-container"></ui-item-table>
+                    
+                </div>
+                
             </div>
             <div class="col-2">
                 <h1>Queries</h1>
@@ -249,14 +249,6 @@
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'edition.get'.includes(search.toLowerCase())"
                             @click="query = 'Edition.get'">Edition.get</button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'element.filter'.includes(search.toLowerCase())"
-                            @click="query = 'Element.filter'">Element.filter</button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'element.get'.includes(search.toLowerCase())"
-                            @click="query = 'Element.get'">Element.get</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'program.filter'.includes(search.toLowerCase())"
@@ -273,6 +265,14 @@
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'programitem.get'.includes(search.toLowerCase())"
                             @click="query = 'Programitem.get'">Programitem.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'webpageelement.filter'.includes(search.toLowerCase())"
+                            @click="query = 'Webpageelement.filter'">Webpageelement.filter</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'webpageelement.get'.includes(search.toLowerCase())"
+                            @click="query = 'Webpageelement.get'">Webpageelement.get</button>
                     
                 </div>
             </div>

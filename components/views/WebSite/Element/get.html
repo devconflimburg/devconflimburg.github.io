@@ -5,11 +5,12 @@ please make sure you rename the file.
 <template x-component="website-element-get">
     <div>
         <draftsman-query :alias="$prop('alias')">
-     query GetElement($key: ID = "") {
+     query GetWebpageelement($key: ID = "") {
        WebSite {
          Element {
            get(key: $key) {
              key
+             year
              name
              content
            }
