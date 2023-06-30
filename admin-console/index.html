@@ -20,7 +20,7 @@
     </script>
 </head>
 <body class="d-flex flex-column h-100" x-data="{search: $persist('').using(sessionStorage),
-        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Conference/addProgramItem;commands/Conference/initializeEdition;commands/WebSite/Element/create;views/Edition/filter;views/Edition/get;views/Program/filter;views/Program/get;views/Program/Item/filter;views/Program/Item/get;views/WebSite/Element/filter;views/WebSite/Element/get">
+        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Conference/addProgramItem;commands/Conference/initializeEdition;commands/WebSite/Element/create;views/Edition/filter;views/Edition/get;views/Program/filter;views/Program/get;views/Program/Item/filter;views/Program/Item/get;views/Conference/RegistrationManager/get;views/WebSite/Element/filter;views/WebSite/Element/get">
 <main class="flex-shrink-0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" x-transition>
         <div class="container px-5">
@@ -204,6 +204,22 @@
                     
                 </div>
                 
+                <div x-show="query == 'Registrationmanager.get'" x-cloak>
+                    <center id="conferenceregistrationmanagerget-header">
+                        <h1>Registrationmanager.get</h1>
+                        <ui-view-query-form alias="conferenceregistrationmanagerget" target="#conferenceregistrationmanagerget-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-conference-registrationmanager-get alias="conferenceregistrationmanagerget"></ui-conference-registrationmanager-get>
+
+                    <div id="conferenceregistrationmanagerget-container"></div>
+                    
+                    <ui-item-table alias="conferenceregistrationmanagerget"
+                                   path="RegistrationManager.get"
+                                   target="#conferenceregistrationmanagerget-container"></ui-item-table>
+                    
+                </div>
+                
                 <div x-show="query == 'Webpageelement.filter'" x-cloak>
                     <center id="websiteelementfilter-header">
                         <h1>Webpageelement.filter</h1>
@@ -265,6 +281,10 @@
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'programitem.get'.includes(search.toLowerCase())"
                             @click="query = 'Programitem.get'">Programitem.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'registrationmanager.get'.includes(search.toLowerCase())"
+                            @click="query = 'Registrationmanager.get'">Registrationmanager.get</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'webpageelement.filter'.includes(search.toLowerCase())"
