@@ -5,7 +5,7 @@ please make sure you rename the file.
 <template x-component="program-item-get">
     <div>
         <draftsman-query :alias="$prop('alias')">
-     query GetProgramitem($key: ID = "") {
+     query GetProgramItem($key: ID = "") {
        Program {
          Item {
            get(key: $key) {

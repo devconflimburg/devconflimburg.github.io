@@ -5,7 +5,7 @@ please make sure you rename the file.
 <template x-component="conference-registrationmanager-get">
     <div>
         <draftsman-query :alias="$prop('alias')">
-     query GetRegistrationmanager($key: ID = "") {
+     query GetRegistrationManager($key: ID = "") {
        Conference {
          RegistrationManager {
            get(key: $key) {

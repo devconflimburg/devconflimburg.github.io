@@ -188,9 +188,9 @@
                     
                 </div>
                 
-                <div x-show="query == 'Programitem.filter'" x-cloak>
+                <div x-show="query == 'ProgramItem.filter'" x-cloak>
                     <center id="programitemfilter-header">
-                        <h1>Programitem.filter</h1>
+                        <h1>ProgramItem.filter</h1>
                         <ui-view-query-form alias="programitemfilter" target="#programitemfilter-header"></ui-view-query-form>
                     </center>
                     <hr>
@@ -205,9 +205,9 @@
                     
                 </div>
                 
-                <div x-show="query == 'Programitem.get'" x-cloak>
+                <div x-show="query == 'ProgramItem.get'" x-cloak>
                     <center id="programitemget-header">
-                        <h1>Programitem.get</h1>
+                        <h1>ProgramItem.get</h1>
                         <ui-view-query-form alias="programitemget" target="#programitemget-header"></ui-view-query-form>
                     </center>
                     <hr>
@@ -221,9 +221,9 @@
                     
                 </div>
                 
-                <div x-show="query == 'Registrationmanager.get'" x-cloak>
+                <div x-show="query == 'RegistrationManager.get'" x-cloak>
                     <center id="conferenceregistrationmanagerget-header">
-                        <h1>Registrationmanager.get</h1>
+                        <h1>RegistrationManager.get</h1>
                         <ui-view-query-form alias="conferenceregistrationmanagerget" target="#conferenceregistrationmanagerget-header"></ui-view-query-form>
                     </center>
                     <hr>
@@ -237,9 +237,9 @@
                     
                 </div>
                 
-                <div x-show="query == 'Webpageelement.filter'" x-cloak>
+                <div x-show="query == 'WebPageElement.filter'" x-cloak>
                     <center id="websiteelementfilter-header">
-                        <h1>Webpageelement.filter</h1>
+                        <h1>WebPageElement.filter</h1>
                         <ui-view-query-form alias="websiteelementfilter" target="#websiteelementfilter-header"></ui-view-query-form>
                     </center>
                     <hr>
@@ -254,9 +254,9 @@
                     
                 </div>
                 
-                <div x-show="query == 'Webpageelement.get'" x-cloak>
+                <div x-show="query == 'WebPageElement.get'" x-cloak>
                     <center id="websiteelementget-header">
-                        <h1>Webpageelement.get</h1>
+                        <h1>WebPageElement.get</h1>
                         <ui-view-query-form alias="websiteelementget" target="#websiteelementget-header"></ui-view-query-form>
                     </center>
                     <hr>
@@ -293,23 +293,23 @@
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'programitem.filter'.includes(search.toLowerCase())"
-                            @click="query = 'Programitem.filter'">Programitem.filter</button>
+                            @click="query = 'ProgramItem.filter'">ProgramItem.filter</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'programitem.get'.includes(search.toLowerCase())"
-                            @click="query = 'Programitem.get'">Programitem.get</button>
+                            @click="query = 'ProgramItem.get'">ProgramItem.get</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'registrationmanager.get'.includes(search.toLowerCase())"
-                            @click="query = 'Registrationmanager.get'">Registrationmanager.get</button>
+                            @click="query = 'RegistrationManager.get'">RegistrationManager.get</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'webpageelement.filter'.includes(search.toLowerCase())"
-                            @click="query = 'Webpageelement.filter'">Webpageelement.filter</button>
+                            @click="query = 'WebPageElement.filter'">WebPageElement.filter</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'webpageelement.get'.includes(search.toLowerCase())"
-                            @click="query = 'Webpageelement.get'">Webpageelement.get</button>
+                            @click="query = 'WebPageElement.get'">WebPageElement.get</button>
                     
                 </div>
             </div>
