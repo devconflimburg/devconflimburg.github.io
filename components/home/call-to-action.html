@@ -1,14 +1,21 @@
 <template x-component="call-to-action">
-  <section class="py-5" id="features">
+  <section class="py-5 data-element" id="features"
+           @refresh="title = $store.actionTitle.Element.get.content;text = $store.actionText.Element.get.content;"
+           x-data="{title:'',text:''}">
     <div class="container px-5 my-5">
       <div class="row gx-5">
-        <div class="col-lg-4 mb-5 mb-lg-0"><h2 class="fw-bolder mb-0" x-text="get_variable('home_call_for_action_title');"></h2></div>
+        <div class="col-lg-4 mb-5 mb-lg-0"><h2 class="fw-bolder mb-0" x-text="title"></h2></div>
         <div class="col-lg-8">
           <div class="row gx-5 row-cols-1 row-cols-md-2">
-            <p class="mb-0" x-html="get_variable('home_call_for_action_paragraph');"></p>
+            <p class="mb-0" x-html="text"></p>
           </div>
         </div>
       </div>
     </div>
+
+    <draftsman-query alias="actionTitle" x-include="/prepared-statements/call-to-action-title.txt">
+    </draftsman-query>
+    <draftsman-query alias="actionText" x-include="/prepared-statements/call-to-action-text.txt">
+    </draftsman-query>
   </section>
 </template>

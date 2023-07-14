@@ -1,0 +1,9 @@
+query MyQuery {
+  WebSite {
+    Element {
+      get(key: "call_to_action_title") {
+        content
+      }
+    }
+  }
+}

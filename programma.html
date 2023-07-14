@@ -11,27 +11,90 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
   <link href="/css/styles.css" rel="stylesheet" />
   <link href="/css/devconf.css" rel="stylesheet" />
-  <script src="https://unpkg.com/@vimesh/ui"></script>
-  <script src="https://unpkg.com/alpinejs" defer></script>
+  <link href="/css/programma.css" rel="stylesheet" />
   <script src="/js/configuration.js"></script>
-  <script src="/js/cache.js"></script>
   <script src="/js/draftsman.js"></script>
+  <script src="/js/programma.js"></script>
   <!-- -->
-  <style>
-    .footer-customization {
-      position: absolute;
-      bottom: 0px;
-      width: 100%;
-      left: 0;
-    }
-  </style>
+
 </head>
 <body class="d-flex flex-column h-100" x-cloak x-data="{}" x-import="navbar;footer">
 <main class="flex-shrink-0">
   <ui-navbar></ui-navbar>
-  <p>todo</p>
+
+  <div class="container data-element"
+       x-data="{programma: $store.programma}" @refresh="programma = $store.programma">
+    <div class="row" style="margin-left:40px;">
+      <template x-for="item in get_rooms(programma)">
+        <div class="col">
+          <h6 x-text="item"></h6>
+        </div>
+      </template>
+    </div>
+    <div class="programma-container">
+      <div class="programma-element" style="z-index:-1;">
+        <template x-for="item in get_grid_lines(programma)">
+          <div class="gridline">
+            <span x-text="item"></span>
+          </div>
+        </template>
+      </div>
+      <div class="programma-element">
+        <div class="row" style="margin-left:40px;">
+          <template x-for="set in get_talks(programma)">
+            <div class="col">
+              <template x-for="element in set">
+                <div :class="'room ' + element.class"
+                      @click="$('#' + element.id).modal('show')"
+                     :style="`height: ${100 * element.duration / 15}px;margin-top: ${element.margin}px;`">
+                  <div style="float: left; font-size: 15px;" x-text="element.room"></div>
+                  <div class="pull-right" style="float: right;"><span style="font-size: 10px;"><span x-text="element.startTime"></span> - <span x-text="element.endTime"></span></span></div>
+                  <div class="title" style="font-size: 16px; padding-top: 20px;"><b x-text="element.title"></b></div>
+                  <div class="speaker" x-text="element.speaker"></div>
+                </div>
+              </template>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <template x-for="talk in programma.get.programItem">
+      <div class="modal fade" :id="talk.id" tabindex="-1" role="dialog"
+           :aria-labelledby="talk.id + 'Label'" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" :id="talk.id + 'Label'">
+                <span x-text="talk.speaker + ': '" x-show="talk.speaker && talk.speaker.trim() != ''"></span>
+                <span x-text="talk.title"></span>
+              </h5>
+            </div>
+            <div class="modal-body">
+              <div style="float: left; font-size: 15px;" x-text="talk.room"></div>
+              <div class="pull-right" style="float: right;">
+                <span style="font-size: 10px;">
+                  <span x-text="talk.startTime"></span> - <span x-text="talk.endTime"></span>
+                </span>
+              </div><br>
+              <div x-html="talk.summary"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <ui-footer></ui-footer>
+
+  <draftsman-query alias="programma" x-include="/prepared-statements/programma.txt">
+  </draftsman-query>
 </main>
-<ui-footer></ui-footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
 </body>
 </html>

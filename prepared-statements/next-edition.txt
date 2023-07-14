@@ -1,0 +1,17 @@
+query MyQuery {
+  WebSite {
+    Element {
+      get(key: "next-edition") {
+        edition {
+          date
+          registrationManager {
+            openDate
+            closeDate
+            maxVisitors
+            registeredVisitors
+          }
+        }
+      }
+    }
+  }
+}
