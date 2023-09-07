@@ -20,7 +20,7 @@
     </script>
 </head>
 <body class="d-flex flex-column h-100" x-data="{search: $persist('').using(sessionStorage),
-        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Conference/addProgramItem;commands/Conference/initializeEdition;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/WebSite/Element/create;views/Edition/filter;views/Edition/get;views/Program/filter;views/Program/get;views/Program/Item/filter;views/Program/Item/get;views/Conference/RegistrationManager/get;views/WebSite/Element/filter;views/WebSite/Element/get">
+        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Conference/addProgramItem;commands/Conference/initializeEdition;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/Conference/TalkProposal/create;commands/WebSite/Element/create;views/Edition/filter;views/Edition/get;views/Program/filter;views/Program/get;views/Program/Item/filter;views/Program/Item/get;views/Conference/RegistrationManager/get;views/TalkProposal/filter;views/WebSite/Element/filter;views/WebSite/Element/get">
 <main class="flex-shrink-0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" x-transition>
         <div class="container px-5">
@@ -108,6 +108,23 @@
                                         alias="registervisitorconferenceregistrationmanager"></ui-basic-modal>
                             <ui-trace-table target="#modal_body_registervisitorconferenceregistrationmanager"></ui-trace-table>
                             <ui-basic-form alias="registervisitorconferenceregistrationmanager" target="#modal_body_registervisitorconferenceregistrationmanager"></ui-basic-form>
+                        
+                    </div>
+                    <hr>
+                
+                    <h6>Conference.TalkProposal</h6>
+                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                        
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'createconferencetalkproposal'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_createconferencetalkproposal">
+                                CreateConferenceTalkProposal
+                            </button>
+                            <ui-create-conference-talk-proposal command="createconferencetalkproposal"></ui-create-conference-talk-proposal>
+                            <ui-basic-modal
+                                        title="Command: CreateConferenceTalkProposal"
+                                        alias="createconferencetalkproposal"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_createconferencetalkproposal"></ui-trace-table>
+                            <ui-basic-form alias="createconferencetalkproposal" target="#modal_body_createconferencetalkproposal"></ui-basic-form>
                         
                     </div>
                     <hr>
@@ -248,6 +265,23 @@
                     
                 </div>
                 
+                <div x-show="query == 'TalkProposal.filter'" x-cloak>
+                    <center id="talkproposalfilter-header">
+                        <h1>TalkProposal.filter</h1>
+                        <ui-view-query-form alias="talkproposalfilter" target="#talkproposalfilter-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-talkproposal-filter alias="talkproposalfilter"></ui-talkproposal-filter>
+
+                    <div id="talkproposalfilter-container"></div>
+                    
+                    <ui-raw-data-list
+                            target="#talkproposalfilter-container"
+                            alias="talkproposalfilter"
+                            path="filter.resultset"></ui-raw-data-list>
+                    
+                </div>
+                
                 <div x-show="query == 'WebPageElement.filter'" x-cloak>
                     <center id="websiteelementfilter-header">
                         <h1>WebPageElement.filter</h1>
@@ -313,6 +347,10 @@
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'registrationmanager.get'.includes(search.toLowerCase())"
                             @click="query = 'RegistrationManager.get'">RegistrationManager.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'talkproposal.filter'.includes(search.toLowerCase())"
+                            @click="query = 'TalkProposal.filter'">TalkProposal.filter</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'webpageelement.filter'.includes(search.toLowerCase())"
