@@ -19,56 +19,56 @@ function send_mutation(command,data){
     request_cache.push(cache_key);
     let query = mutation_queries[command];
     let anonymous = mutation_queries[command+"_anonymous"];
-    appsync_call(query,(data,errors) => {
-        if (errors){
-            add_trace({
-              command: command,
-              status: "failed",
-              message: `API denied the request`,
-              timestamp: new Date().toLocaleString()
-            });
-            errors.forEach(function(item){
-                add_trace({
-                  command: "",
-                  status: "",
-                  message: item["message"],
-                  timestamp: new Date().toLocaleString()
-                });
-            });
-        } else {
-            var cid = null;
-            var tmp = data;
-            while (cid == null){
-                let key = Object.keys(tmp)[0];
-                if (key == "correlationId"){
-                    cid = tmp["correlationId"];
+        appsync_call(query,(data,errors) => {
+                if (errors){
+                    add_trace({
+                      command: command,
+                      status: "failed",
+                      message: `API denied the request`,
+                      timestamp: new Date().toLocaleString()
+                    });
+                    errors.forEach(function(item){
+                        add_trace({
+                          command: "",
+                          status: "",
+                          message: item["message"],
+                          timestamp: new Date().toLocaleString()
+                        });
+                    });
                 } else {
-                    tmp = tmp[key];
+                    var cid = null;
+                    var tmp = data;
+                    while (cid == null){
+                        let key = Object.keys(tmp)[0];
+                        if (key == "correlationId"){
+                            cid = tmp["correlationId"];
+                        } else {
+                            tmp = tmp[key];
+                        }
+                    }
+                    add_trace({
+                      command: command,
+                      status: "pending",
+                      message: `Request accepted, trace id ${cid}`,
+                      timestamp: new Date().toLocaleString()
+                    });
+                    var query_string = `subscription TrackAndTrace($correlationId: String = "") {
+                        onTrace(correlationId: $correlationId) {
+                          command
+                          event
+                          message
+                          status
+                          previous
+                          component
+                          timestamp
+                        }
+                      }`;
+                    trace_socket = Draftsman.subscribe(query_string,(data,errors) => {
+                        add_trace(data["onTrace"]);
+                        evaluate_trace_subscribers(command,data["onTrace"]);
+                    },variables={"correlationId":cid});
                 }
-            }
-            add_trace({
-              command: command,
-              status: "pending",
-              message: `Request accepted, trace id ${cid}`,
-              timestamp: new Date().toLocaleString()
-            });
-            var query_string = `subscription TrackAndTrace($correlationId: String = "") {
-                onTrace(correlationId: $correlationId) {
-                  command
-                  event
-                  message
-                  status
-                  previous
-                  component
-                  timestamp
-                }
-              }`;
-            trace_socket = Draftsman.subscribe(query_string,(data,errors) => {
-                add_trace(data["onTrace"]);
-                evaluate_trace_subscribers(command,data["onTrace"]);
-            },variables={"correlationId":cid});
-        }
-    },data,anonymous);
+            },data,anonymous);
 }
 
 function list_mutations(){
@@ -360,10 +360,19 @@ function appsync_call(query,callback,variables={},anonymous=false){
     } else {
         xhr.setRequestHeader('Authorization', localStorage["token"]);
     }
+    xhr.setRequestHeader("correlation-id","my-manual-test")
     xhr.onreadystatechange = function () {
+        console.log(xhr.readyState == 4, xhr.status > 399);
         if(xhr.readyState == 4 && xhr.status == 401){
             sessionStorage["prevLoc"] = location;
             location = "/auth/signin";
+        } else if(xhr.readyState == 4 && xhr.status > 399){
+            console.log(xhr);
+            add_trace({
+              status: "failed",
+              message: `Could not send request ${xhr.statusText}`,
+              timestamp: new Date().toLocaleString()
+            });
         }
     }
     xhr.onload = function () {
