@@ -20,7 +20,7 @@
     </script>
 </head>
 <body class="d-flex flex-column h-100" x-data="{search: $persist('').using(sessionStorage),
-        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Conference/addProgramItem;commands/Conference/initializeEdition;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/Conference/TalkProposal/create;commands/WebSite/Element/create;views/Edition/filter;views/Edition/get;views/Program/filter;views/Program/get;views/Program/Item/filter;views/Program/Item/get;views/Conference/RegistrationManager/get;views/TalkProposal/filter;views/WebSite/Element/filter;views/WebSite/Element/get">
+        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Conference/addProgramItem;commands/Conference/initializeEdition;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/Conference/TalkProposal/create;commands/WebSite/Element/create;commands/WebSite/Element/update;views/Edition/filter;views/Edition/get;views/Program/filter;views/Program/get;views/Program/Item/filter;views/Program/Item/get;views/Conference/RegistrationManager/get;views/TalkProposal/filter;views/WebSite/Element/filter;views/WebSite/Element/get">
 <main class="flex-shrink-0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" x-transition>
         <div class="container px-5">
@@ -142,6 +142,17 @@
                                         alias="createwebsiteelement"></ui-basic-modal>
                             <ui-trace-table target="#modal_body_createwebsiteelement"></ui-trace-table>
                             <ui-basic-form alias="createwebsiteelement" target="#modal_body_createwebsiteelement"></ui-basic-form>
+                        
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'updatewebsiteelement'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_updatewebsiteelement">
+                                UpdateWebSiteElement
+                            </button>
+                            <ui-update-web-site-element command="updatewebsiteelement"></ui-update-web-site-element>
+                            <ui-basic-modal
+                                        title="Command: UpdateWebSiteElement"
+                                        alias="updatewebsiteelement"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_updatewebsiteelement"></ui-trace-table>
+                            <ui-basic-form alias="updatewebsiteelement" target="#modal_body_updatewebsiteelement"></ui-basic-form>
                         
                     </div>
                     <hr>
