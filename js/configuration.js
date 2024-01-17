@@ -1,5 +1,5 @@
-localStorage["aws-congnito-user-pool-id"] = "eu-north-1_qcaaMq9yf";
-localStorage["aws-congnito-app-id"] = "6451hm52o4h5tguvjucm7qccr9";
-const api_url = "https://4s743zy6qzhy3lnoawcck34e7a.appsync-api.eu-north-1.amazonaws.com/graphql";
-const api_ws = "wss://4s743zy6qzhy3lnoawcck34e7a.appsync-realtime-api.eu-north-1.amazonaws.com/graphql";
-const api_key = "da2-qdiap32b5bdzxecsjwxa7x2lzi";
+localStorage["aws-congnito-user-pool-id"] = "eu-central-1_HNt1QehSI";
+localStorage["aws-congnito-app-id"] = "464mjnisild08l6cvvga00cho8";
+const api_url = "https://xvy5vktksjd37mgdfaoyo7nlaq.appsync-api.eu-central-1.amazonaws.com/graphql";
+const api_ws = "wss://xvy5vktksjd37mgdfaoyo7nlaq.appsync-realtime-api.eu-central-1.amazonaws.com/graphql";
+const api_key = "da2-j3s3mfbp3ba47mo5ov6hcmvyuq";
