@@ -5,9 +5,9 @@ please make sure you rename the file first.
 <template x-component="add-program-item-conference">
   <div>
     <draftsman-mutation :command="$prop('command')"  authenticated>
-     mutation AddProgramItem($summary: String = "", $duration: Int = 0, $year: String = "", $speaker: String = "", $startTime: String = "", $title: String = "", $room: String = "") {
+     mutation AddProgramItem($summary: String = "", $duration: Int = 0, $year: String = "", $speaker: String = "", $startTime: String = "", $title: String = "", $room: String = "", $id: String = "") {
        Conference{
-         addProgramItem(input: {summary: $summary,duration: $duration,year: $year,speaker: $speaker,startTime: $startTime,title: $title,room: $room}) {
+         addProgramItem(input: {summary: $summary,duration: $duration,year: $year,speaker: $speaker,startTime: $startTime,title: $title,room: $room,id: $id}) {
             correlationId
          }
        }
@@ -66,6 +66,14 @@ please make sure you rename the file first.
   {
     "name": "room",
     "title": "Room",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "id",
+    "title": "Id",
     "type": "String",
     "pattern": "",
     "placeholder": "",

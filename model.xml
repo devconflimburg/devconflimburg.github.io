@@ -35,6 +35,7 @@
 			<field name="startTime" type="String" pattern="{{TimeNotation}}"></field>
 			<field name="title" type="String"></field>
 			<field name="room" type="String"></field>
+			<field name="id" type="String"></field>
 		</event>
 		<event name="RegisterVisitorConferenceRegistrationManagerRequested" authorization="anonymous" type="ActorEvent" graphql-name="registerVisitor" graphql-namespace="Conference.RegistrationManager">
 			<field name="firstName" type="String"></field>
@@ -153,7 +154,7 @@
 				<field name="endTime" type="String"></field>
 				<field name="title" type="String"></field>
 				<field name="room" type="String"></field>
-				<command name="Create" create-command="true">
+				<command name="Create" create-command="false">
 					<trigger key-field="id" source="ConferenceEditionProgramItemAdded">
 						<mapping value="id" target="id"></mapping>
 						<mapping value="title" target="title"></mapping>
@@ -365,6 +366,7 @@
 						<mapping value="startTime" target="startTime"></mapping>
 						<mapping value="title" target="title"></mapping>
 						<mapping value="room" target="room"></mapping>
+						<mapping target="id" value="id"></mapping>
 					</trigger>
 					<processor type="code" handler="determine_id_and_breakouts" file="lib/ProgrammaManagement.py" id="UEQl9"></processor>
 					<processor type="emit-event" ref="ConferenceEditionProgramItemAdded" id="YIos2">
@@ -387,6 +389,7 @@
 						<input name="startTime" type="String" value="09:00"></input>
 						<input name="title" type="String" value="Dummy"></input>
 						<input name="room" type="String" value="Forum"></input>
+						<input name="id" type="String" value="2024-1"></input>
 						<expected domain-event="ConferenceEditionProgramItemAdded">
 							<field name="id" type="String" value="2024-1"></field>
 							<field name="breakout" type="Boolean" value="False"></field>
@@ -900,6 +903,7 @@ if snapshot.isDeleted != '':
 				<input name="startTime" type="String" value="09:00"></input>
 				<input name="title" type="String" value="Talk 1"></input>
 				<input name="room" type="String" value="Forum"></input>
+				<input name="id" type="String" value="2024-1"></input>
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
@@ -932,6 +936,7 @@ if snapshot.isDeleted != '':
 				<input name="startTime" type="String" value="09:50"></input>
 				<input name="title" type="String" value="Talk 2"></input>
 				<input name="room" type="String" value="Forum"></input>
+				<input name="id" type="String" value="2024-2"></input>
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
@@ -957,6 +962,7 @@ if snapshot.isDeleted != '':
 				<input name="startTime" type="String" value="09:50"></input>
 				<input name="title" type="String" value="Talk 3"></input>
 				<input name="room" type="String" value="No-code-zone"></input>
+				<input name="id" type="String" value="2024-3"></input>
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
@@ -989,6 +995,7 @@ if snapshot.isDeleted != '':
 				<input name="startTime" type="String" value="10:45"></input>
 				<input name="title" type="String" value="Talk 4"></input>
 				<input name="room" type="String" value="Forum"></input>
+				<input name="id" type="String" value="2024-4"></input>
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
@@ -1020,6 +1027,7 @@ if snapshot.isDeleted != '':
 				<input name="startTime" type="String" value="08:30"></input>
 				<input name="title" type="String" value="Registratie en koffie"></input>
 				<input name="room" type="String" value="Social zone"></input>
+				<input name="id" type="String" value="2024-5"></input>
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
