@@ -191,34 +191,30 @@ document.addEventListener('alpine:init', () => {
         register_mutations();
         console.log("Mutations registered");
         console.log("Basic initialization ready!");
-        setTimeout(function(){
-            console.log("Fetch teleports...");
-            var teleports = document.querySelectorAll('[x-target]');
-            if(document.querySelectorAll('[x-target]').length != 0){
-                console.log("Teleports fetched");
-                teleports = Array.prototype.slice.call(teleports);
-                process_teleports(teleports);
-            } else {
-                console.log("No teleports found, initialization ready.");
-                if (Draftsman.contains_teleports){
-                    location.reload();
-                }
-            }
-        },1000);
+        document.dispatchEvent(new CustomEvent('draftsman:initialized'));
+        reprocess_teleports();
     },500);
 });
 
-async function process_teleports(nodes){
+function reprocess_teleports(){
+    var teleports = document.querySelectorAll('[x-target]');
+    teleports = Array.prototype.slice.call(teleports);
+    process_teleports(teleports);
+}
+
+function process_teleports(nodes){
     if (nodes.length != 0 ){
-        setTimeout(function(){
-            var node = nodes.shift();
-            node.setAttribute("x-teleport",node.getAttribute("x-target"))
-            console.log(`Teleported ${node.getAttribute("x-teleport")}, ${nodes.length} to go`);
-            process_teleports(nodes);
-        },1);
-    } else {
-        console.log("Complete initialization ready!");
+        nodes.forEach(process_teleport);
         trigger_refresh_form_on_components();
+    }
+    setTimeout(reprocess_teleports,1000);
+}
+
+async function process_teleport(node){
+    var teleport = node.getAttribute("x-teleport");
+    if (teleport == null){
+        var target = node.getAttribute("x-target");
+        node.setAttribute("x-teleport",target);
     }
 }
 
@@ -450,19 +446,33 @@ async function load_data_after_page_init(alias,filter){
     var ready_to_aggregate_query = true;
     var tags = document.getElementsByTagName("draftsman-query");
     tags = Array.prototype.slice.call(tags);
-    tags.forEach(q => {
-        let nested_query = q.innerHTML.trim();
-        ready_to_aggregate_query = ready_to_aggregate_query && nested_query !== "";
-    });
+    for (var q of tags){
+        if (q.innerHTML.trim() === "" && q.getAttribute("x-include")){
+            var statement = q.getAttribute("x-include");
+            statement = await fetch(statement);
+            statement = await statement.text();
+            q.innerHTML = statement.trim();
+        }
+        ready_to_aggregate_query = ready_to_aggregate_query && q.innerHTML.trim() !== "";
+    }
+    if (!('reload' in sessionStorage)){
+        sessionStorage.reload = 0;
+    }
+    console.log(ready_to_aggregate_query);
     if (ready_to_aggregate_query){
         await execute_load_data(alias,filter);
-    } else if (load_retry_count < 10){
+        sessionStorage.reload = 0;
+    } else if (load_retry_count < 25){
         load_retry_count++;
         setTimeout(function(){
             load_data_after_page_init(alias,filter);
         },100);
-    } else {
+    } else if (parseInt(sessionStorage.reload) < 10){
+        sessionStorage.reload = parseInt(sessionStorage.reload) + 1;
         location.reload();
+    } else {
+        console.log("Unexpected error!");
+        sessionStorage.reload = 0
     }
 }
 

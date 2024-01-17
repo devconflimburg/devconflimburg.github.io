@@ -5,10 +5,10 @@ please make sure you rename the file first.
 <template x-component="register-visitor-conference-registration-manager">
   <div>
     <draftsman-mutation :command="$prop('command')" >
-     mutation RegisterVisitor($firstName: String = "", $lastName: String = "", $year: String = "", $email: String = "", $breakouts: [RegisterVisitorConferenceRegistrationManager_Breakout!] = []) {
+     mutation RegisterVisitor($firstName: String = "", $lastName: String = "", $year: String = "", $email: String = "", $breakoutss: [RegisterVisitorConferenceRegistrationManager_Breakouts!] = []) {
        Conference{
          RegistrationManager{
-           registerVisitor(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,breakouts: $breakouts}) {
+           registerVisitor(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,breakoutss: $breakoutss}) {
               correlationId
            }
          }

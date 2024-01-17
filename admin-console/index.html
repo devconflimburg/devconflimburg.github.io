@@ -20,7 +20,7 @@
     </script>
 </head>
 <body class="d-flex flex-column h-100" x-data="{search: $persist('').using(sessionStorage),
-        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Conference/addProgramItem;commands/Conference/initializeEdition;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/Conference/TalkProposal/create;commands/WebSite/Element/create;commands/WebSite/Element/update;views/Edition/filter;views/Edition/get;views/Program/filter;views/Program/get;views/Program/Item/filter;views/Program/Item/get;views/Conference/RegistrationManager/get;views/TalkProposal/filter;views/WebSite/Element/filter;views/WebSite/Element/get">
+        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/WebSite/Element/update;commands/WebSite/Element/create;commands/Conference/TalkProposal/create;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/Conference/addProgramItem;commands/Conference/initializeEdition;views/TalkProposal/filter;views/Program/Item/filter;views/Program/Item/get;views/Program/filter;views/Program/get;views/Conference/RegistrationManager/get;views/WebSite/Element/filter;views/WebSite/Element/get;views/Edition/filter;views/Edition/get">
 <main class="flex-shrink-0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" x-transition>
         <div class="container px-5">
@@ -56,30 +56,47 @@
                 <h1>Commands</h1>
                 <center>
                 
-                    <h6>Conference</h6>
+                    <h6>WebSite.Element</h6>
                     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                         
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'addprogramitemconference'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_addprogramitemconference">
-                                AddProgramItemConference
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'updatewebsiteelement'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_updatewebsiteelement">
+                                UpdateWebSiteElement
                             </button>
-                            <ui-add-program-item-conference command="addprogramitemconference"></ui-add-program-item-conference>
+                            <ui-update-web-site-element command="updatewebsiteelement"></ui-update-web-site-element>
                             <ui-basic-modal
-                                        title="Command: AddProgramItemConference"
-                                        alias="addprogramitemconference"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_addprogramitemconference"></ui-trace-table>
-                            <ui-basic-form alias="addprogramitemconference" target="#modal_body_addprogramitemconference"></ui-basic-form>
+                                        title="Command: UpdateWebSiteElement"
+                                        alias="updatewebsiteelement"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_updatewebsiteelement"></ui-trace-table>
+                            <ui-basic-form alias="updatewebsiteelement" target="#modal_body_updatewebsiteelement"></ui-basic-form>
                         
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'initializeeditionconference'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_initializeeditionconference">
-                                InitializeEditionConference
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'createwebsiteelement'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_createwebsiteelement">
+                                CreateWebSiteElement
                             </button>
-                            <ui-initialize-edition-conference command="initializeeditionconference"></ui-initialize-edition-conference>
+                            <ui-create-web-site-element command="createwebsiteelement"></ui-create-web-site-element>
                             <ui-basic-modal
-                                        title="Command: InitializeEditionConference"
-                                        alias="initializeeditionconference"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_initializeeditionconference"></ui-trace-table>
-                            <ui-basic-form alias="initializeeditionconference" target="#modal_body_initializeeditionconference"></ui-basic-form>
+                                        title="Command: CreateWebSiteElement"
+                                        alias="createwebsiteelement"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_createwebsiteelement"></ui-trace-table>
+                            <ui-basic-form alias="createwebsiteelement" target="#modal_body_createwebsiteelement"></ui-basic-form>
+                        
+                    </div>
+                    <hr>
+                
+                    <h6>Conference.TalkProposal</h6>
+                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                        
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'createconferencetalkproposal'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_createconferencetalkproposal">
+                                CreateConferenceTalkProposal
+                            </button>
+                            <ui-create-conference-talk-proposal command="createconferencetalkproposal"></ui-create-conference-talk-proposal>
+                            <ui-basic-modal
+                                        title="Command: CreateConferenceTalkProposal"
+                                        alias="createconferencetalkproposal"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_createconferencetalkproposal"></ui-trace-table>
+                            <ui-basic-form alias="createconferencetalkproposal" target="#modal_body_createconferencetalkproposal"></ui-basic-form>
                         
                     </div>
                     <hr>
@@ -112,47 +129,30 @@
                     </div>
                     <hr>
                 
-                    <h6>Conference.TalkProposal</h6>
+                    <h6>Conference</h6>
                     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                         
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'createconferencetalkproposal'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_createconferencetalkproposal">
-                                CreateConferenceTalkProposal
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'addprogramitemconference'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_addprogramitemconference">
+                                AddProgramItemConference
                             </button>
-                            <ui-create-conference-talk-proposal command="createconferencetalkproposal"></ui-create-conference-talk-proposal>
+                            <ui-add-program-item-conference command="addprogramitemconference"></ui-add-program-item-conference>
                             <ui-basic-modal
-                                        title="Command: CreateConferenceTalkProposal"
-                                        alias="createconferencetalkproposal"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_createconferencetalkproposal"></ui-trace-table>
-                            <ui-basic-form alias="createconferencetalkproposal" target="#modal_body_createconferencetalkproposal"></ui-basic-form>
+                                        title="Command: AddProgramItemConference"
+                                        alias="addprogramitemconference"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_addprogramitemconference"></ui-trace-table>
+                            <ui-basic-form alias="addprogramitemconference" target="#modal_body_addprogramitemconference"></ui-basic-form>
                         
-                    </div>
-                    <hr>
-                
-                    <h6>WebSite.Element</h6>
-                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                        
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'createwebsiteelement'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_createwebsiteelement">
-                                CreateWebSiteElement
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'initializeeditionconference'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_initializeeditionconference">
+                                InitializeEditionConference
                             </button>
-                            <ui-create-web-site-element command="createwebsiteelement"></ui-create-web-site-element>
+                            <ui-initialize-edition-conference command="initializeeditionconference"></ui-initialize-edition-conference>
                             <ui-basic-modal
-                                        title="Command: CreateWebSiteElement"
-                                        alias="createwebsiteelement"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_createwebsiteelement"></ui-trace-table>
-                            <ui-basic-form alias="createwebsiteelement" target="#modal_body_createwebsiteelement"></ui-basic-form>
-                        
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'updatewebsiteelement'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_updatewebsiteelement">
-                                UpdateWebSiteElement
-                            </button>
-                            <ui-update-web-site-element command="updatewebsiteelement"></ui-update-web-site-element>
-                            <ui-basic-modal
-                                        title="Command: UpdateWebSiteElement"
-                                        alias="updatewebsiteelement"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_updatewebsiteelement"></ui-trace-table>
-                            <ui-basic-form alias="updatewebsiteelement" target="#modal_body_updatewebsiteelement"></ui-basic-form>
+                                        title="Command: InitializeEditionConference"
+                                        alias="initializeeditionconference"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_initializeeditionconference"></ui-trace-table>
+                            <ui-basic-form alias="initializeeditionconference" target="#modal_body_initializeeditionconference"></ui-basic-form>
                         
                     </div>
                     <hr>
@@ -161,69 +161,20 @@
             </div>
             <div class="col-7">
                 
-                <div x-show="query == 'Edition.filter'" x-cloak>
-                    <center id="editionfilter-header">
-                        <h1>Edition.filter</h1>
-                        <ui-view-query-form alias="editionfilter" target="#editionfilter-header"></ui-view-query-form>
+                <div x-show="query == 'TalkProposal.filter'" x-cloak>
+                    <center id="talkproposalfilter-header">
+                        <h1>TalkProposal.filter</h1>
+                        <ui-view-query-form alias="talkproposalfilter" target="#talkproposalfilter-header"></ui-view-query-form>
                     </center>
                     <hr>
-                    <ui-edition-filter alias="editionfilter"></ui-edition-filter>
+                    <ui-talkproposal-filter alias="talkproposalfilter"></ui-talkproposal-filter>
 
-                    <div id="editionfilter-container"></div>
+                    <div id="talkproposalfilter-container"></div>
                     
                     <ui-raw-data-list
-                            target="#editionfilter-container"
-                            alias="editionfilter"
+                            target="#talkproposalfilter-container"
+                            alias="talkproposalfilter"
                             path="filter.resultset"></ui-raw-data-list>
-                    
-                </div>
-                
-                <div x-show="query == 'Edition.get'" x-cloak>
-                    <center id="editionget-header">
-                        <h1>Edition.get</h1>
-                        <ui-view-query-form alias="editionget" target="#editionget-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-edition-get alias="editionget"></ui-edition-get>
-
-                    <div id="editionget-container"></div>
-                    
-                    <ui-item-table alias="editionget"
-                                   path="get"
-                                   target="#editionget-container"></ui-item-table>
-                    
-                </div>
-                
-                <div x-show="query == 'Program.filter'" x-cloak>
-                    <center id="programfilter-header">
-                        <h1>Program.filter</h1>
-                        <ui-view-query-form alias="programfilter" target="#programfilter-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-program-filter alias="programfilter"></ui-program-filter>
-
-                    <div id="programfilter-container"></div>
-                    
-                    <ui-raw-data-list
-                            target="#programfilter-container"
-                            alias="programfilter"
-                            path="filter.resultset"></ui-raw-data-list>
-                    
-                </div>
-                
-                <div x-show="query == 'Program.get'" x-cloak>
-                    <center id="programget-header">
-                        <h1>Program.get</h1>
-                        <ui-view-query-form alias="programget" target="#programget-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-program-get alias="programget"></ui-program-get>
-
-                    <div id="programget-container"></div>
-                    
-                    <ui-item-table alias="programget"
-                                   path="get"
-                                   target="#programget-container"></ui-item-table>
                     
                 </div>
                 
@@ -260,6 +211,39 @@
                     
                 </div>
                 
+                <div x-show="query == 'Program.filter'" x-cloak>
+                    <center id="programfilter-header">
+                        <h1>Program.filter</h1>
+                        <ui-view-query-form alias="programfilter" target="#programfilter-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-program-filter alias="programfilter"></ui-program-filter>
+
+                    <div id="programfilter-container"></div>
+                    
+                    <ui-raw-data-list
+                            target="#programfilter-container"
+                            alias="programfilter"
+                            path="filter.resultset"></ui-raw-data-list>
+                    
+                </div>
+                
+                <div x-show="query == 'Program.get'" x-cloak>
+                    <center id="programget-header">
+                        <h1>Program.get</h1>
+                        <ui-view-query-form alias="programget" target="#programget-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-program-get alias="programget"></ui-program-get>
+
+                    <div id="programget-container"></div>
+                    
+                    <ui-item-table alias="programget"
+                                   path="get"
+                                   target="#programget-container"></ui-item-table>
+                    
+                </div>
+                
                 <div x-show="query == 'RegistrationManager.get'" x-cloak>
                     <center id="conferenceregistrationmanagerget-header">
                         <h1>RegistrationManager.get</h1>
@@ -273,23 +257,6 @@
                     <ui-item-table alias="conferenceregistrationmanagerget"
                                    path="RegistrationManager.get"
                                    target="#conferenceregistrationmanagerget-container"></ui-item-table>
-                    
-                </div>
-                
-                <div x-show="query == 'TalkProposal.filter'" x-cloak>
-                    <center id="talkproposalfilter-header">
-                        <h1>TalkProposal.filter</h1>
-                        <ui-view-query-form alias="talkproposalfilter" target="#talkproposalfilter-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-talkproposal-filter alias="talkproposalfilter"></ui-talkproposal-filter>
-
-                    <div id="talkproposalfilter-container"></div>
-                    
-                    <ui-raw-data-list
-                            target="#talkproposalfilter-container"
-                            alias="talkproposalfilter"
-                            path="filter.resultset"></ui-raw-data-list>
                     
                 </div>
                 
@@ -326,26 +293,47 @@
                     
                 </div>
                 
+                <div x-show="query == 'Edition.filter'" x-cloak>
+                    <center id="editionfilter-header">
+                        <h1>Edition.filter</h1>
+                        <ui-view-query-form alias="editionfilter" target="#editionfilter-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-edition-filter alias="editionfilter"></ui-edition-filter>
+
+                    <div id="editionfilter-container"></div>
+                    
+                    <ui-raw-data-list
+                            target="#editionfilter-container"
+                            alias="editionfilter"
+                            path="filter.resultset"></ui-raw-data-list>
+                    
+                </div>
+                
+                <div x-show="query == 'Edition.get'" x-cloak>
+                    <center id="editionget-header">
+                        <h1>Edition.get</h1>
+                        <ui-view-query-form alias="editionget" target="#editionget-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-edition-get alias="editionget"></ui-edition-get>
+
+                    <div id="editionget-container"></div>
+                    
+                    <ui-item-table alias="editionget"
+                                   path="get"
+                                   target="#editionget-container"></ui-item-table>
+                    
+                </div>
+                
             </div>
             <div class="col-2">
                 <h1>Queries</h1>
                 <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                     
                     <button type="button" class="btn btn-outline-primary"
-                            x-show="'edition.filter'.includes(search.toLowerCase())"
-                            @click="query = 'Edition.filter'">Edition.filter</button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'edition.get'.includes(search.toLowerCase())"
-                            @click="query = 'Edition.get'">Edition.get</button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'program.filter'.includes(search.toLowerCase())"
-                            @click="query = 'Program.filter'">Program.filter</button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'program.get'.includes(search.toLowerCase())"
-                            @click="query = 'Program.get'">Program.get</button>
+                            x-show="'talkproposal.filter'.includes(search.toLowerCase())"
+                            @click="query = 'TalkProposal.filter'">TalkProposal.filter</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'programitem.filter'.includes(search.toLowerCase())"
@@ -356,12 +344,16 @@
                             @click="query = 'ProgramItem.get'">ProgramItem.get</button>
                     
                     <button type="button" class="btn btn-outline-primary"
-                            x-show="'registrationmanager.get'.includes(search.toLowerCase())"
-                            @click="query = 'RegistrationManager.get'">RegistrationManager.get</button>
+                            x-show="'program.filter'.includes(search.toLowerCase())"
+                            @click="query = 'Program.filter'">Program.filter</button>
                     
                     <button type="button" class="btn btn-outline-primary"
-                            x-show="'talkproposal.filter'.includes(search.toLowerCase())"
-                            @click="query = 'TalkProposal.filter'">TalkProposal.filter</button>
+                            x-show="'program.get'.includes(search.toLowerCase())"
+                            @click="query = 'Program.get'">Program.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'registrationmanager.get'.includes(search.toLowerCase())"
+                            @click="query = 'RegistrationManager.get'">RegistrationManager.get</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'webpageelement.filter'.includes(search.toLowerCase())"
@@ -370,6 +362,14 @@
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'webpageelement.get'.includes(search.toLowerCase())"
                             @click="query = 'WebPageElement.get'">WebPageElement.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'edition.filter'.includes(search.toLowerCase())"
+                            @click="query = 'Edition.filter'">Edition.filter</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'edition.get'.includes(search.toLowerCase())"
+                            @click="query = 'Edition.get'">Edition.get</button>
                     
                 </div>
             </div>

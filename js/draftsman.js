@@ -47,13 +47,15 @@ script.setAttribute("src","https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis
 script.setAttribute("async","true");
 document.head.appendChild(script);
 
-setTimeout(function(){
-    //Make sure Draftsman framework is imported.
-    try {
-        Draftsman.contains_teleports = Draftsman.contains_teleports;
-    } catch (e) {
-        if (e instanceof ReferenceError) {
-            location.reload();
-        }
-    }
-},1000)
+//setTimeout(function(){
+//    //Make sure Draftsman framework is imported.
+//    try {
+//        Draftsman.contains_teleports = Draftsman.contains_teleports;
+//    } catch (e) {
+//        if (e instanceof ReferenceError) {
+//            location.reload();
+//        }
+//    }
+//},1000);
+
+var must_be_signed_in = false;
