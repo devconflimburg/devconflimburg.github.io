@@ -876,12 +876,14 @@ if snapshot.isDeleted != '':
 				<expect-value name="firstName" type="String" value="#firstName#"></expect-value>
 				<expect-value name="lastName" type="String" value="#lastName#"></expect-value>
 				<extract-value name="ticketId" put-key="ticketId"></extract-value>
+				<data-remediation domain="Conference" aggregate="Visitor" identifier="#email#"></data-remediation>
 			</activity>
 			<activity type="query" id="ymkyL4" path="Ticket.get" view="Ticket">
 				<input name="key" type="String" value="#ticketId#"></input>
 				<expect-value name="verified" type="Boolean" value="#false#"></expect-value>
 				<expect-value name="breakouts" type="String" value="#breakouts#"></expect-value>
 				<expect-value name="year" type="String" value="#year#"></expect-value>
+				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
 			</activity>
 		</scenario>
 		<scenario name="CreateProgram">
