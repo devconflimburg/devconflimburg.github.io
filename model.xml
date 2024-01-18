@@ -35,6 +35,7 @@
 			<field name="startTime" type="String" pattern="{{TimeNotation}}"></field>
 			<field name="title" type="String"></field>
 			<field name="room" type="String"></field>
+			<field name="id" type="String"></field>
 		</event>
 		<event name="RegisterVisitorConferenceRegistrationManagerRequested" authorization="anonymous" type="ActorEvent" graphql-name="registerVisitor" graphql-namespace="Conference.RegistrationManager">
 			<field name="firstName" type="String"></field>
@@ -153,7 +154,7 @@
 				<field name="endTime" type="String"></field>
 				<field name="title" type="String"></field>
 				<field name="room" type="String"></field>
-				<command name="Create" create-command="true">
+				<command name="Create" create-command="false">
 					<trigger key-field="id" source="ConferenceEditionProgramItemAdded">
 						<mapping value="id" target="id"></mapping>
 						<mapping value="title" target="title"></mapping>
@@ -216,7 +217,7 @@
 					<mapping value="room" target="room" operand="set"></mapping>
 				</event-handler>
 			</aggregate>
-			<aggregate name="Visitor" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
+			<aggregate name="Visitor" event-ttl="7776000" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
 				<field name="firstName" type="String"></field>
 				<field name="lastName" type="String"></field>
 				<field name="year" type="String"></field>
@@ -365,6 +366,7 @@
 						<mapping value="startTime" target="startTime"></mapping>
 						<mapping value="title" target="title"></mapping>
 						<mapping value="room" target="room"></mapping>
+						<mapping target="id" value="id"></mapping>
 					</trigger>
 					<processor type="code" handler="determine_id_and_breakouts" file="lib/ProgrammaManagement.py" id="UEQl9"></processor>
 					<processor type="emit-event" ref="ConferenceEditionProgramItemAdded" id="YIos2">
@@ -387,6 +389,7 @@
 						<input name="startTime" type="String" value="09:00"></input>
 						<input name="title" type="String" value="Dummy"></input>
 						<input name="room" type="String" value="Forum"></input>
+						<input name="id" type="String" value="2024-1"></input>
 						<expected domain-event="ConferenceEditionProgramItemAdded">
 							<field name="id" type="String" value="2024-1"></field>
 							<field name="breakout" type="Boolean" value="False"></field>
@@ -629,6 +632,21 @@
 			</snapshot-handler>
 			<query type="filter" authorization="role" role="administrator" field-name="filter" graphql-namespace="TalkProposal"></query>
 		</view>
+		<view name="Ticket" data-retention-days="-1" exclude-notification="false">
+			<field name="year" type="String"></field>
+			<field name="verified" type="Boolean"></field>
+			<field name="ticketId" type="String" pk="true"></field>
+			<field name="breakouts" type="String"></field>
+			<snapshot-handler id="Yzgy2w" sub-domain="Conference" aggregate="Ticket" key-mapping="ticketId" processor="item">
+				<mapping target="year" operand="set" value="year"></mapping>
+				<mapping target="verified" operand="set" value="verified"></mapping>
+				<mapping target="ticketId" operand="set" value="ticketId"></mapping>
+				<mapping target="breakouts" operand="set" value="breakouts"></mapping>
+				<delete condition="#snapshot.isDeleted != ''"></delete>
+			</snapshot-handler>
+			<query graphql-namespace="Ticket" field-name="get" type="get" authorization="role" role="administrator"></query>
+			<query graphql-namespace="Ticket" field-name="filter" type="filter" authorization="role" role="administrator"></query>
+		</view>
 		<view name="ProgramItem" data-retention-days="-1" exclude-notification="false">
 			<field name="summary" type="String"></field>
 			<field name="year" type="String"></field>
@@ -711,6 +729,24 @@ if snapshot.isDeleted != '':
 			<custom-handler sub-domain="Conference" aggregate="Edition" python-file="lib/ViewFunctions.py" method="determine_next_edition" id="VpQR4v"></custom-handler>
 			<query type="filter" authorization="anonymous" field-name="filter" graphql-namespace="WebSite.Element"></query>
 			<query type="get" authorization="anonymous" field-name="get" graphql-namespace="WebSite.Element"></query>
+		</view>
+		<view name="Visitor" data-retention-days="90" exclude-notification="false">
+			<field name="firstName" type="String"></field>
+			<field name="lastName" type="String"></field>
+			<field name="year" type="String"></field>
+			<field name="ticketId" type="String"></field>
+			<field name="email" type="String" pk="true"></field>
+			<field name="ticket" type="OneToOne" ref="Ticket" authorization="authenticated" foreign-key="ticketId"></field>
+			<snapshot-handler id="XvTaSi" sub-domain="Conference" aggregate="Visitor" key-mapping="ticketId" processor="item">
+				<mapping target="firstName" operand="set" value="firstName"></mapping>
+				<mapping target="lastName" operand="set" value="lastName"></mapping>
+				<mapping target="year" operand="set" value="year"></mapping>
+				<mapping target="ticketId" operand="set" value="ticketId"></mapping>
+				<mapping target="email" operand="set" value="email"></mapping>
+				<delete condition="#snapshot.isDeleted != ''"></delete>
+			</snapshot-handler>
+			<query graphql-namespace="Visitor" field-name="get" type="get" authorization="role" role="administrator"></query>
+			<query graphql-namespace="Visitor" field-name="filter" type="filter" authorization="role" role="administrator"></query>
 		</view>
 		<view name="Edition" data-retention-days="-1" exclude-notification="false">
 			<field name="date" type="String"></field>
@@ -802,6 +838,8 @@ if snapshot.isDeleted != '':
 				<input name="firstName" type="String" value="John"></input>
 				<input name="lastName" type="String" value="Doe"></input>
 				<input name="email" type="String" value="john.doe@example.com"></input>
+				<input name="false" type="Boolean" value="false"></input>
+				<input name="breakouts" type="String" value="2010-1"></input>
 			</activity>
 			<activity type="mutation" description="Initialiseer een editie" path="Conference.initializeEdition" id="BfMuF0">
 				<input name="date" type="String" value="29-03-2010"></input>
@@ -832,6 +870,18 @@ if snapshot.isDeleted != '':
 				<input name="breakouts" type="Nested" value="[{'id':'2010-1'}]"></input>
 				<input name="email" type="String" value="#email#"></input>
 				<expected-trace command="RegistrationManager.RegisterVisitor" status="Success"></expected-trace>
+			</activity>
+			<activity type="query" id="6ZBYus" description="Haal bezoeker op" path="Visitor.get" view="Visitor">
+				<input name="key" type="String" value="#email#"></input>
+				<expect-value name="firstName" type="String" value="#firstName#"></expect-value>
+				<expect-value name="lastName" type="String" value="#lastName#"></expect-value>
+				<extract-value name="ticketId" put-key="ticketId"></extract-value>
+			</activity>
+			<activity type="query" id="ymkyL4" path="Ticket.get" view="Ticket">
+				<input name="key" type="String" value="#ticketId#"></input>
+				<expect-value name="verified" type="Boolean" value="#false#"></expect-value>
+				<expect-value name="breakouts" type="String" value="#breakouts#"></expect-value>
+				<expect-value name="year" type="String" value="#year#"></expect-value>
 			</activity>
 		</scenario>
 		<scenario name="CreateProgram">
@@ -900,6 +950,7 @@ if snapshot.isDeleted != '':
 				<input name="startTime" type="String" value="09:00"></input>
 				<input name="title" type="String" value="Talk 1"></input>
 				<input name="room" type="String" value="Forum"></input>
+				<input name="id" type="String" value="2024-1"></input>
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
@@ -932,6 +983,7 @@ if snapshot.isDeleted != '':
 				<input name="startTime" type="String" value="09:50"></input>
 				<input name="title" type="String" value="Talk 2"></input>
 				<input name="room" type="String" value="Forum"></input>
+				<input name="id" type="String" value="2024-2"></input>
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
@@ -957,6 +1009,7 @@ if snapshot.isDeleted != '':
 				<input name="startTime" type="String" value="09:50"></input>
 				<input name="title" type="String" value="Talk 3"></input>
 				<input name="room" type="String" value="No-code-zone"></input>
+				<input name="id" type="String" value="2024-3"></input>
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
@@ -989,6 +1042,7 @@ if snapshot.isDeleted != '':
 				<input name="startTime" type="String" value="10:45"></input>
 				<input name="title" type="String" value="Talk 4"></input>
 				<input name="room" type="String" value="Forum"></input>
+				<input name="id" type="String" value="2024-4"></input>
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
@@ -1020,6 +1074,7 @@ if snapshot.isDeleted != '':
 				<input name="startTime" type="String" value="08:30"></input>
 				<input name="title" type="String" value="Registratie en koffie"></input>
 				<input name="room" type="String" value="Social zone"></input>
+				<input name="id" type="String" value="2024-5"></input>
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
