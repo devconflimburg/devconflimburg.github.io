@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <script src="/js/draftsman.js"></script>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="devConf, een DevOps conferentie in het zuiden" />
@@ -12,7 +13,6 @@
         <link href="/css/styles.css" rel="stylesheet" />
         <link href="/css/devconf.css" rel="stylesheet" />
         <script src="/js/configuration.js"></script>
-        <script src="/js/draftsman.js"></script>
         <script src="/js/variables.js"></script>
         <script src="/js/inschrijven.js"></script>
 
@@ -31,15 +31,12 @@
             <ui-navbar></ui-navbar>
             <ui-banner></ui-banner>
             <ui-call-to-action></ui-call-to-action>
-
-            <!--
             <ui-register></ui-register>
+            <!--
             <ui-signup-newsletter></ui-signup-newsletter>
             -->
         </main>
         <ui-footer></ui-footer>
-        <draftsman-query alias="next" x-include="/prepared-statements/next-edition.txt">
-        </draftsman-query>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/locale/nl.js"></script>

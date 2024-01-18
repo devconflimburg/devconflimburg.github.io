@@ -8,12 +8,17 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"
+                        x-cloak
+                        x-transition.delay.500ms
+                        x-show="$store.next.Element.get.edition.program.programItem.length != 0"><a class="nav-link" href="/programma">Programma</a></li>
                     <!--
-                    <li class="nav-item"><a class="nav-link" href="/programma">Programma</a></li>
                     <li class="nav-item"><a class="nav-link" href="/archief">Archief</a></li>
                     -->
                 </ul>
             </div>
         </div>
+        <draftsman-query alias="next" x-include="/prepared-statements/next-edition.txt">
+        </draftsman-query>
     </nav>
 </template>

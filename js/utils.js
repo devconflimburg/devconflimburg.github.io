@@ -9,3 +9,10 @@ convertMarkdownToHtml = function(markdown){
         return markdown;
     }
 }
+
+document.addEventListener('alpine:init', async () => {
+    setTimeout(function(){
+        Draftsman.contains_teleports = false;
+        Draftsman.disable_cache_for_page();
+    },1);
+});

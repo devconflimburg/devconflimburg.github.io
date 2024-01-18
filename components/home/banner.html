@@ -2,13 +2,15 @@
   <header class="bg-dark background-image py-5 data-element"
           @refresh="date = $store.next.Element.get.edition.date;
                     registrationManager = $store.next.Element.get.edition.registrationManager;"
-          x-data="{date: '', registrationManager: {}, closeText: '',opened: false}">
+          x-effect="$store.registrationOpen = opened"
+          x-data="{date: '', registrationManager: {}, closeText: '',opened: false, reason: ''}">
     <div class="container px-5">
       <div x-init="setInterval(function(){
             closeText = getCloseText(registrationManager);
             opened = inschrijvingGeopend(registrationManager);
+            reason = closedReason(registrationManager);
           },5000);"
-        x-effect="closeText = getCloseText(registrationManager);opened = inschrijvingGeopend(registrationManager);"></div>
+        x-effect="closeText = getCloseText(registrationManager);opened = inschrijvingGeopend(registrationManager);reason = closedReason(registrationManager);"></div>
       <div class="row gx-5 align-items-center justify-content-center">
         <div class="col-lg-8 col-xl-7 col-xxl-6">
           <div class="my-5 text-center text-xl-start">
@@ -25,7 +27,7 @@
             </template>
             <template x-if="!opened">
               <div class="d-grid gap-2 col-6 mx-auto">
-                <h6 class="text-white" x-text="closedReason(registrationManager)"></h6>
+                <h6 class="text-white" x-text="reason"></h6>
               </div>
             </template>
           </div>

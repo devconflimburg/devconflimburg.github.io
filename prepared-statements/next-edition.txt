@@ -3,12 +3,20 @@ query MyQuery {
     Element {
       get(key: "next-edition") {
         edition {
+          year
           date
           registrationManager {
             openDate
             closeDate
             maxVisitors
             registeredVisitors
+          }
+          program {
+            programItem {
+              id
+              title
+              
+            }
           }
         }
       }
