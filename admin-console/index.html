@@ -20,7 +20,7 @@
     </script>
 </head>
 <body class="d-flex flex-column h-100" x-data="{search: $persist('').using(sessionStorage),
-        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/WebSite/Element/update;commands/WebSite/Element/create;commands/Conference/TalkProposal/create;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/Conference/addProgramItem;commands/Conference/initializeEdition;views/TalkProposal/filter;views/Program/Item/filter;views/Program/Item/get;views/Program/filter;views/Program/get;views/Conference/RegistrationManager/get;views/WebSite/Element/filter;views/WebSite/Element/get;views/Edition/filter;views/Edition/get">
+        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/WebSite/Element/update;commands/WebSite/Element/create;commands/Conference/TalkProposal/create;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/Conference/addProgramItem;commands/Conference/initializeEdition;views/TalkProposal/filter;views/Ticket/get;views/Ticket/filter;views/Program/Item/filter;views/Program/Item/get;views/Program/filter;views/Program/get;views/Conference/RegistrationManager/get;views/WebSite/Element/filter;views/WebSite/Element/get;views/Visitor/get;views/Visitor/filter;views/Edition/filter;views/Edition/get">
 <main class="flex-shrink-0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" x-transition>
         <div class="container px-5">
@@ -178,6 +178,39 @@
                     
                 </div>
                 
+                <div x-show="query == 'Ticket.get'" x-cloak>
+                    <center id="ticketget-header">
+                        <h1>Ticket.get</h1>
+                        <ui-view-query-form alias="ticketget" target="#ticketget-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-ticket-get alias="ticketget"></ui-ticket-get>
+
+                    <div id="ticketget-container"></div>
+                    
+                    <ui-item-table alias="ticketget"
+                                   path="get"
+                                   target="#ticketget-container"></ui-item-table>
+                    
+                </div>
+                
+                <div x-show="query == 'Ticket.filter'" x-cloak>
+                    <center id="ticketfilter-header">
+                        <h1>Ticket.filter</h1>
+                        <ui-view-query-form alias="ticketfilter" target="#ticketfilter-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-ticket-filter alias="ticketfilter"></ui-ticket-filter>
+
+                    <div id="ticketfilter-container"></div>
+                    
+                    <ui-raw-data-list
+                            target="#ticketfilter-container"
+                            alias="ticketfilter"
+                            path="filter.resultset"></ui-raw-data-list>
+                    
+                </div>
+                
                 <div x-show="query == 'ProgramItem.filter'" x-cloak>
                     <center id="programitemfilter-header">
                         <h1>ProgramItem.filter</h1>
@@ -293,6 +326,39 @@
                     
                 </div>
                 
+                <div x-show="query == 'Visitor.get'" x-cloak>
+                    <center id="visitorget-header">
+                        <h1>Visitor.get</h1>
+                        <ui-view-query-form alias="visitorget" target="#visitorget-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-visitor-get alias="visitorget"></ui-visitor-get>
+
+                    <div id="visitorget-container"></div>
+                    
+                    <ui-item-table alias="visitorget"
+                                   path="get"
+                                   target="#visitorget-container"></ui-item-table>
+                    
+                </div>
+                
+                <div x-show="query == 'Visitor.filter'" x-cloak>
+                    <center id="visitorfilter-header">
+                        <h1>Visitor.filter</h1>
+                        <ui-view-query-form alias="visitorfilter" target="#visitorfilter-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-visitor-filter alias="visitorfilter"></ui-visitor-filter>
+
+                    <div id="visitorfilter-container"></div>
+                    
+                    <ui-raw-data-list
+                            target="#visitorfilter-container"
+                            alias="visitorfilter"
+                            path="filter.resultset"></ui-raw-data-list>
+                    
+                </div>
+                
                 <div x-show="query == 'Edition.filter'" x-cloak>
                     <center id="editionfilter-header">
                         <h1>Edition.filter</h1>
@@ -336,6 +402,14 @@
                             @click="query = 'TalkProposal.filter'">TalkProposal.filter</button>
                     
                     <button type="button" class="btn btn-outline-primary"
+                            x-show="'ticket.get'.includes(search.toLowerCase())"
+                            @click="query = 'Ticket.get'">Ticket.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'ticket.filter'.includes(search.toLowerCase())"
+                            @click="query = 'Ticket.filter'">Ticket.filter</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
                             x-show="'programitem.filter'.includes(search.toLowerCase())"
                             @click="query = 'ProgramItem.filter'">ProgramItem.filter</button>
                     
@@ -362,6 +436,14 @@
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'webpageelement.get'.includes(search.toLowerCase())"
                             @click="query = 'WebPageElement.get'">WebPageElement.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'visitor.get'.includes(search.toLowerCase())"
+                            @click="query = 'Visitor.get'">Visitor.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'visitor.filter'.includes(search.toLowerCase())"
+                            @click="query = 'Visitor.filter'">Visitor.filter</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'edition.filter'.includes(search.toLowerCase())"

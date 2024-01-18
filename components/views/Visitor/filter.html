@@ -1,0 +1,27 @@
+<!--
+This file is managed by the tracepaper modeler, if you want to customize this view
+please make sure you rename the file.
+-->
+<template x-component="visitor-filter">
+    <div>
+        <draftsman-query :alias="$prop('alias')" authenticated>
+     query FilterVisitor {
+       Visitor {
+         filter {
+            resultset { 
+             key
+             firstName
+             lastName
+             year
+             ticketId
+             email
+           }
+         }
+       }
+     }
+        </draftsman-query>
+        <div x-init="$store.forms[$prop('alias')] = $el.innerHTML" style="display:none;">
+[]
+        </div>
+    </div>
+</template>
