@@ -8,7 +8,7 @@ please make sure you rename the file first.
      mutation RegisterVisitor($firstName: String = "", $lastName: String = "", $year: String = "", $email: String = "", $breakoutss: [RegisterVisitorConferenceRegistrationManager_Breakouts!] = []) {
        Conference{
          RegistrationManager{
-           registerVisitor(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,breakoutss: $breakoutss}) {
+           registerVisitor(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,breakouts: $breakouts}) {
               correlationId
            }
          }
