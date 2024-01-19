@@ -8,6 +8,10 @@
 		<pattern name="Date" regex="^\d{2}-\d{2}-(?:20)\d{2}$"></pattern>
 	</global>
 	<events>
+		<event graphql-namespace="Ticket" graphql-name="verify" name="VerifyTicketRequested" authorization="anonymous" type="ActorEvent">
+			<field name="ticketId" type="String"></field>
+			<field name="control" type="String"></field>
+		</event>
 		<event name="UpdateWebSiteElementRequested" authorization="authenticated" type="ActorEvent" graphql-name="update" graphql-namespace="WebSite.Element">
 			<field name="name" type="String"></field>
 			<field name="content" type="String"></field>
@@ -47,6 +51,9 @@
 				<field name="id" type="String"></field>
 			</nested-object>
 		</event>
+		<event graphql-namespace="Ticket" graphql-name="redeem" name="RedeemTicketRequested" authorization="role" type="ActorEvent" role="administrator">
+			<field name="ticketId" type="String"></field>
+		</event>
 		<event name="InitializeEditionConferenceRequested" authorization="role" role="administrator" type="ActorEvent" graphql-name="initializeEdition" graphql-namespace="Conference">
 			<field name="date" type="String" pattern="{{Date}}"></field>
 			<field name="year" type="String" pattern="{{Year}}"></field>
@@ -79,6 +86,14 @@
 			<field name="ticketId" type="String"></field>
 			<field name="breakouts" type="String"></field>
 			<field name="control" type="String"></field>
+		</event>
+		<event name="ConferenceTicketVerified" source="Conference.Ticket" type="DomainEvent">
+			<field name="ticketId" type="String"></field>
+			<field name="verified" type="Boolean" default="false"></field>
+		</event>
+		<event name="ConferenceTicketRedeemed" source="Conference.Ticket" type="DomainEvent">
+			<field name="ticketId" type="String"></field>
+			<field name="redeemed" type="Boolean" default="true"></field>
 		</event>
 		<event name="ConferenceTalkProposalCreated" source="Conference.TalkProposal" type="DomainEvent">
 			<field name="difficultyLevel" type="String"></field>
@@ -286,11 +301,79 @@
 						<expected-state pk="devconf-ticket:189673085831463618233454140431942137832">{"year": "2024", "ticketId": "devconf-ticket:189673085831463618233454140431942137832", "breakouts": "2024-1,2024-2","control":"d7e4aee8-e0fa-4873-84f8-3f4685ceaa32","verified":false,"redeemed":false}</expected-state>
 					</test-case>
 				</command>
+				<command name="Verify">
+					<trigger source="VerifyTicketRequested" key-field="ticketId">
+						<mapping target="ticketId" value="ticketId"></mapping>
+						<mapping target="control" value="control"></mapping>
+						<mapping target="verified" value="#True"></mapping>
+					</trigger>
+					<processor type="validator" id="M1vejN" condition="flow.control == flow.entity.control" exception="Control value [{flow.control}] does not match the ticket [{flow.entity.control}]"></processor>
+					<processor type="emit-event" id="9iWObF" ref="ConferenceTicketVerified">
+						<mapping target="ticketId" value="#flow.ticketId"></mapping>
+						<mapping target="verified" value="#flow.verified"></mapping>
+					</processor>
+					<test-case name="HappyFlow" trigger-event="VerifyTicketRequested">
+						<input name="ticketId" value="123" type="String"></input>
+						<input name="control" value="456" type="String"></input>
+						<expected domain-event="ConferenceTicketVerified">
+							<field value="123" name="ticketId" type="String"></field>
+						</expected>
+						<state>{
+  "verified": false,
+  "ticketId": "123",
+  "control": "456"
+}</state>
+						<expected-state pk="123">{
+  "verified": true
+}</expected-state>
+					</test-case>
+				</command>
+				<command name="Redeem">
+					<trigger source="RedeemTicketRequested" key-field="ticketId">
+						<mapping target="ticketId" value="ticketId"></mapping>
+						<mapping target="redeemed" value="#True"></mapping>
+					</trigger>
+					<processor type="validator" id="1toC90" condition="flow.entity.redeemed == False" exception="Ticket alreadt redeemed"></processor>
+					<processor type="validator" id="7Z6hZr" condition="flow.entity.verified == True" exception="Invalid ticket"></processor>
+					<processor type="emit-event" id="aqeUGS" ref="ConferenceTicketRedeemed">
+						<mapping target="ticketId" value="#flow.ticketId"></mapping>
+						<mapping target="redeemed" value="#flow.redeemed"></mapping>
+					</processor>
+					<test-case name="HappyFlow" trigger-event="RedeemTicketRequested">
+						<input name="ticketId" value="123" type="String"></input>
+						<expected domain-event="ConferenceTicketRedeemed">
+							<field value="123" name="ticketId" type="String"></field>
+							<field value="true" name="redeemed" type="Boolean"></field>
+						</expected>
+						<state>{
+  "verified": true,
+  "ticketId": "123",
+  "redeemed": false
+}</state>
+						<expected-state pk="123">{
+  "verified": true,
+  "ticketId": "123",
+  "redeemed": true
+}</expected-state>
+					</test-case>
+					<test-case name="InvalidTicket" trigger-event="RedeemTicketRequested" expected-processing-status="error">
+						<input name="ticketId" value="123" type="String"></input>
+					</test-case>
+					<test-case name="AlreadyRedeemed" trigger-event="RedeemTicketRequested" expected-processing-status="error">
+						<input name="ticketId" value="123" type="String"></input>
+					</test-case>
+				</command>
 				<event-handler on="ConferenceTicketCreated">
 					<mapping value="year" target="year" operand="set"></mapping>
 					<mapping value="ticketId" target="ticketId" operand="set"></mapping>
 					<mapping value="breakouts" target="breakouts" operand="set"></mapping>
 					<mapping target="control" operand="set" value="control"></mapping>
+				</event-handler>
+				<event-handler on="ConferenceTicketVerified">
+					<mapping target="verified" operand="set" value="verified"></mapping>
+				</event-handler>
+				<event-handler on="ConferenceTicketRedeemed">
+					<mapping target="redeemed" operand="set" value="redeemed"></mapping>
 				</event-handler>
 			</aggregate>
 			<aggregate name="TalkProposal" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
@@ -632,11 +715,15 @@
 			<field name="verified" type="Boolean"></field>
 			<field name="ticketId" type="String" pk="true"></field>
 			<field name="breakouts" type="String"></field>
+			<field name="redeemed" type="Boolean"></field>
+			<field name="control" type="String"></field>
 			<snapshot-handler id="Yzgy2w" sub-domain="Conference" aggregate="Ticket" key-mapping="ticketId" processor="item">
 				<mapping target="year" operand="set" value="year"></mapping>
 				<mapping target="verified" operand="set" value="verified"></mapping>
 				<mapping target="ticketId" operand="set" value="ticketId"></mapping>
 				<mapping target="breakouts" operand="set" value="breakouts"></mapping>
+				<mapping target="redeemed" operand="set" value="redeemed"></mapping>
+				<mapping target="control" operand="set" value="control"></mapping>
 				<delete condition="#snapshot.isDeleted != ''"></delete>
 			</snapshot-handler>
 			<query graphql-namespace="Ticket" field-name="get" type="get" authorization="role" role="administrator"></query>
@@ -835,6 +922,7 @@ if snapshot.isDeleted != '':
 				<input name="email" type="String" value="john.doe@example.com"></input>
 				<input name="false" type="Boolean" value="false"></input>
 				<input name="breakouts" type="String" value="2010-1"></input>
+				<input name="true" type="Boolean" value="true"></input>
 			</activity>
 			<activity type="mutation" description="Initialiseer een editie" path="Conference.initializeEdition" id="BfMuF0">
 				<input name="date" type="String" value="29-03-2010"></input>
@@ -873,12 +961,41 @@ if snapshot.isDeleted != '':
 				<extract-value name="ticketId" put-key="ticketId"></extract-value>
 				<data-remediation domain="Conference" aggregate="Visitor" identifier="#email#"></data-remediation>
 			</activity>
-			<activity type="query" id="ymkyL4" path="Ticket.get" view="Ticket">
+			<activity type="query" id="ymkyL4" path="Ticket.get" view="Ticket" description="Controleer of ticket is aangemaakt">
 				<input name="key" type="String" value="#ticketId#"></input>
 				<expect-value name="verified" type="Boolean" value="#false#"></expect-value>
 				<expect-value name="breakouts" type="String" value="#breakouts#"></expect-value>
 				<expect-value name="year" type="String" value="#year#"></expect-value>
+				<expect-value name="redeemed" type="Boolean" value="#false#"></expect-value>
 				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
+				<extract-value name="control" put-key="control"></extract-value>
+			</activity>
+			<activity type="mutation" id="Hk19rJ" path="Ticket.verify" description="Verify ticket">
+				<input name="ticketId" type="String" value="#ticketId#"></input>
+				<input name="control" type="String" value="#control#"></input>
+				<expected-trace command="Conference.Ticket.Verify" status="success"></expected-trace>
+			</activity>
+			<activity type="query" id="1aE4iU" description="Check if ticket is verified" path="Ticket.get" view="Ticket">
+				<input name="key" type="String" value="#ticketId#"></input>
+				<expect-value name="verified" type="Boolean" value="#true#"></expect-value>
+				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
+			</activity>
+			<activity type="mutation" id="wQ2Lwa" description="Redeem Invalid Ticket" path="Ticket.redeem">
+				<input name="ticketId" type="String" value="#email#"></input>
+				<expected-trace command="Conference.Ticket.Redeem" status="error"></expected-trace>
+			</activity>
+			<activity type="mutation" id="cBRxbm" path="Ticket.redeem" description="Redeem ticket">
+				<input name="ticketId" type="String" value="#ticketId#"></input>
+				<expected-trace command="Conference.Ticket.Redeem" status="success"></expected-trace>
+			</activity>
+			<activity type="query" id="1zegUU" path="Ticket.get" view="Ticket" description="Check if ticket is redeemed">
+				<input name="key" type="String" value="#ticketId#"></input>
+				<expect-value name="redeemed" type="Boolean" value="#true#"></expect-value>
+				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
+			</activity>
+			<activity type="mutation" id="CiX5ai" description="Try to redeem the ticket for a second time" path="Ticket.redeem">
+				<input name="ticketId" type="String" value="#ticketId#"></input>
+				<expected-trace command="Conference.Ticket.Redeem" status="error"></expected-trace>
 			</activity>
 		</scenario>
 		<scenario name="CreateProgram">
