@@ -78,6 +78,7 @@
 			<field name="year" type="String"></field>
 			<field name="ticketId" type="String"></field>
 			<field name="breakouts" type="String"></field>
+			<field name="control" type="String"></field>
 		</event>
 		<event name="ConferenceTalkProposalCreated" source="Conference.TalkProposal" type="DomainEvent">
 			<field name="difficultyLevel" type="String"></field>
@@ -253,33 +254,43 @@
 				<field name="verified" type="Boolean"></field>
 				<field name="ticketId" type="String"></field>
 				<field name="breakouts" type="String"></field>
+				<field name="control" type="String"></field>
+				<field name="redeemed" type="Boolean"></field>
 				<command name="Create" create-command="true">
 					<trigger key-field="ticketId" source="ConferenceRegistrationManagerVisitorRegistered">
 						<mapping value="year" target="year"></mapping>
 						<mapping value="ticketId" target="ticketId"></mapping>
 						<mapping value="breakouts" target="breakouts"></mapping>
+						<mapping target="control" value="control"></mapping>
 					</trigger>
 					<processor type="emit-event" ref="ConferenceTicketCreated" id="3BC8k">
 						<mapping target="year" value="#flow.year"></mapping>
 						<mapping target="ticketId" value="#flow.ticketId"></mapping>
 						<mapping target="breakouts" value="#flow.breakouts"></mapping>
+						<mapping target="control" value="#flow.control"></mapping>
 					</processor>
 					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConferenceRegistrationManagerVisitorRegistered" user="systemuser">
-						<input name="year" type="String" value="2024"></input>
-						<input name="ticketId" type="String" value="devconf-ticket:189673085831463618233454140431942137832"></input>
-						<input name="breakouts" type="String" value="2024-1,2024-2"></input>
+						<input name="year" value="2024" type="String"></input>
+						<input name="ticketId" value="devconf-ticket:189673085831463618233454140431942137832" type="String"></input>
+						<input name="firstName" value="" type="String"></input>
+						<input name="lastName" value="" type="String"></input>
+						<input name="email" value="" type="String"></input>
+						<input name="breakouts" value="2024-1,2024-2" type="String"></input>
+						<input name="control" value="d7e4aee8-e0fa-4873-84f8-3f4685ceaa32" type="String"></input>
 						<expected domain-event="ConferenceTicketCreated">
-							<field name="year" type="String" value="2024"></field>
-							<field name="ticketId" type="String" value="devconf-ticket:189673085831463618233454140431942137832"></field>
-							<field name="breakouts" type="String" value="2024-1,2024-2"></field>
+							<field value="2024" name="year" type="String"></field>
+							<field value="devconf-ticket:189673085831463618233454140431942137832" name="ticketId" type="String"></field>
+							<field value="2024-1,2024-2" name="breakouts" type="String"></field>
+							<field value="d7e4aee8-e0fa-4873-84f8-3f4685ceaa32" name="control" type="String"></field>
 						</expected>
-						<expected-state pk="devconf-ticket:189673085831463618233454140431942137832">{"year": "2024", "ticketId": "devconf-ticket:189673085831463618233454140431942137832", "breakouts": "2024-1,2024-2"}</expected-state>
+						<expected-state pk="devconf-ticket:189673085831463618233454140431942137832">{"year": "2024", "ticketId": "devconf-ticket:189673085831463618233454140431942137832", "breakouts": "2024-1,2024-2","control":"d7e4aee8-e0fa-4873-84f8-3f4685ceaa32","verified":false,"redeemed":false}</expected-state>
 					</test-case>
 				</command>
 				<event-handler on="ConferenceTicketCreated">
 					<mapping value="year" target="year" operand="set"></mapping>
 					<mapping value="ticketId" target="ticketId" operand="set"></mapping>
 					<mapping value="breakouts" target="breakouts" operand="set"></mapping>
+					<mapping target="control" operand="set" value="control"></mapping>
 				</event-handler>
 			</aggregate>
 			<aggregate name="TalkProposal" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
