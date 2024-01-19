@@ -920,9 +920,7 @@ if snapshot.isDeleted != '':
 				<input name="firstName" type="String" value="John"></input>
 				<input name="lastName" type="String" value="Doe"></input>
 				<input name="email" type="String" value="john.doe@example.com"></input>
-				<input name="false" type="Boolean" value="false"></input>
 				<input name="breakouts" type="String" value="2010-1"></input>
-				<input name="true" type="Boolean" value="true"></input>
 			</activity>
 			<activity type="mutation" description="Initialiseer een editie" path="Conference.initializeEdition" id="BfMuF0">
 				<input name="date" type="String" value="29-03-2010"></input>
@@ -963,10 +961,10 @@ if snapshot.isDeleted != '':
 			</activity>
 			<activity type="query" id="ymkyL4" path="Ticket.get" view="Ticket" description="Controleer of ticket is aangemaakt">
 				<input name="key" type="String" value="#ticketId#"></input>
-				<expect-value name="verified" type="Boolean" value="#false#"></expect-value>
+				<expect-value name="verified" type="Boolean" value="false"></expect-value>
 				<expect-value name="breakouts" type="String" value="#breakouts#"></expect-value>
 				<expect-value name="year" type="String" value="#year#"></expect-value>
-				<expect-value name="redeemed" type="Boolean" value="#false#"></expect-value>
+				<expect-value name="redeemed" type="Boolean" value="false"></expect-value>
 				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
 				<extract-value name="control" put-key="control"></extract-value>
 			</activity>
@@ -977,7 +975,7 @@ if snapshot.isDeleted != '':
 			</activity>
 			<activity type="query" id="1aE4iU" description="Check if ticket is verified" path="Ticket.get" view="Ticket">
 				<input name="key" type="String" value="#ticketId#"></input>
-				<expect-value name="verified" type="Boolean" value="#true#"></expect-value>
+				<expect-value name="verified" type="Boolean" value="true"></expect-value>
 				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
 			</activity>
 			<activity type="mutation" id="wQ2Lwa" description="Redeem Invalid Ticket" path="Ticket.redeem">
@@ -990,7 +988,7 @@ if snapshot.isDeleted != '':
 			</activity>
 			<activity type="query" id="1zegUU" path="Ticket.get" view="Ticket" description="Check if ticket is redeemed">
 				<input name="key" type="String" value="#ticketId#"></input>
-				<expect-value name="redeemed" type="Boolean" value="#true#"></expect-value>
+				<expect-value name="redeemed" type="Boolean" value="true"></expect-value>
 				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
 			</activity>
 			<activity type="mutation" id="CiX5ai" description="Try to redeem the ticket for a second time" path="Ticket.redeem">
