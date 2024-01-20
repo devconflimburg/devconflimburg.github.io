@@ -873,7 +873,7 @@ if snapshot.isDeleted != '':
 			</trigger>
 			<activity type="fetch-property" id="LanEWy" name="apiKey" key="mailgunKey"></activity>
 			<activity type="call-internal-api" id="gkHtJy" name="ticketResult" query='query MyQuery {|LB|  Visitor {|LB|    filter(ticketId_equals: "{{flow.ticketId}}") {|LB|      resultset {|LB|        email|LB|        firstName|LB|      }|LB|    }|LB|  }|LB|  Ticket {|LB|    get(key: "{{flow.ticketId}}") {|LB|      breakouts|LB|      year|LB|    }|LB|  }|LB|}|LB|'></activity>
-			<activity type="call-internal-api" id="eveMiC" name="programResult" query='query MyQuery {|LB|  Program {|LB|    get(key: "{{flow.ticketResult.data.Ticket.get.year}}") {|LB|      edition {|LB|            date|LB|      }|LB|      programItem {|LB|        breakout|LB|        startTime|LB|        endTime|LB|        session|LB|        speaker|LB|        title|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
+			<activity type="call-internal-api" id="eveMiC" name="programResult" query='query MyQuery {|LB|  Program {|LB|    get(key: "{{flow.ticketResult.data.Ticket.get.year}}") {|LB|      edition {|LB|            date|LB|      }|LB|      programItem {|LB|        breakout|LB|        startTime|LB|        room|LB|        session|LB|        speaker|LB|        title|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
 			<activity type="code" id="RWPf3Y" python-file="lib/TicketUtils.py" handler="prepare_ticket_mail"></activity>
 			<activity type="render-template" id="y41GHO" name="html" template-file="templates/TicketMail.html"></activity>
 			<activity type="render-template" id="KOeswM" name="text" template-file="templates/TicketMail.txt"></activity>
@@ -963,6 +963,54 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Edition.Initialize" status="Success"></expected-trace>
 				<expected-trace command="RegistrationManager.Initialize" status="Success"></expected-trace>
 			</activity>
+			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem" id="qftSOr">
+				<input name="summary" type="String" value="test 123"></input>
+				<input name="duration" type="Numeric" value="45"></input>
+				<input name="year" type="String" value="2010"></input>
+				<input name="speaker" type="String" value="Speaker 1"></input>
+				<input name="startTime" type="String" value="09:00"></input>
+				<input name="title" type="String" value="Talk 1"></input>
+				<input name="room" type="String" value="Forum"></input>
+				<input name="id" type="String" value="2010-1"></input>
+				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
+				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
+			</activity>
+			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem" id="qftSOY">
+				<input name="summary" type="String" value="test 123"></input>
+				<input name="duration" type="Numeric" value="45"></input>
+				<input name="year" type="String" value="2010"></input>
+				<input name="speaker" type="String" value="Speaker 2"></input>
+				<input name="startTime" type="String" value="09:45"></input>
+				<input name="title" type="String" value="Talk 2"></input>
+				<input name="room" type="String" value="Forum"></input>
+				<input name="id" type="String" value="2010-2"></input>
+				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
+				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
+			</activity>
+			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem" id="qftSOp">
+				<input name="summary" type="String" value="test 123"></input>
+				<input name="duration" type="Numeric" value="45"></input>
+				<input name="year" type="String" value="2010"></input>
+				<input name="speaker" type="String" value="Speaker 3"></input>
+				<input name="startTime" type="String" value="09:45"></input>
+				<input name="title" type="String" value="Talk 3"></input>
+				<input name="room" type="String" value="Hackerdorm"></input>
+				<input name="id" type="String" value="2010-3"></input>
+				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
+				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
+			</activity>
+			<activity type="mutation" description="Voeg inloop item toe aan programma" path="Conference.addProgramItem" id="YnPFZR">
+				<input name="summary" type="String" value="Inloop"></input>
+				<input name="duration" type="Numeric" value="30"></input>
+				<input name="year" type="String" value="2010"></input>
+				<input name="speaker" type="String" value=""></input>
+				<input name="startTime" type="String" value="08:30"></input>
+				<input name="title" type="String" value="Registratie en koffie"></input>
+				<input name="room" type="String" value="Social zone"></input>
+				<input name="id" type="String" value="2010-4"></input>
+				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
+				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
+			</activity>
 			<activity type="mutation" description="Probeer bezoeker te registreren, faalt omdat de registratie niet geopend is." path="Conference.RegistrationManager.registerVisitor" id="LR7iIJ">
 				<input name="firstName" type="String" value="#firstName#"></input>
 				<input name="lastName" type="String" value="#lastName#"></input>
@@ -982,7 +1030,7 @@ if snapshot.isDeleted != '':
 				<input name="firstName" type="String" value="#firstName#"></input>
 				<input name="lastName" type="String" value="#lastName#"></input>
 				<input name="year" type="String" value="#year#"></input>
-				<input name="breakouts" type="Nested" value="[{'id':'2010-1'}]"></input>
+				<input name="breakouts" type="Nested" value="[{'id':'2010-2'}]"></input>
 				<input name="email" type="String" value="#email#"></input>
 				<expected-trace command="RegistrationManager.RegisterVisitor" status="Success"></expected-trace>
 			</activity>
