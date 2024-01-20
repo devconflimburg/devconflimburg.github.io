@@ -871,6 +871,7 @@ if snapshot.isDeleted != '':
 				<mapping target="ticketId" value="ticketId"></mapping>
 				<mapping target="verified" value="verified"></mapping>
 			</trigger>
+			<activity type="fetch-property" id="LanEWy" name="apiKey" key="mailgunKey"></activity>
 			<activity type="call-internal-api" id="gkHtJy" name="ticketResult" query='query MyQuery {|LB|  Visitor {|LB|    filter(ticketId_equals: "{{flow.ticketId}}") {|LB|      resultset {|LB|        email|LB|        firstName|LB|      }|LB|    }|LB|  }|LB|  Ticket {|LB|    get(key: "{{flow.ticketId}}") {|LB|      breakouts|LB|      year|LB|    }|LB|  }|LB|}|LB|'></activity>
 			<activity type="call-internal-api" id="eveMiC" name="programResult" query='query MyQuery {|LB|  Program {|LB|    get(key: "{{flow.ticketResult.data.Ticket.get.year}}") {|LB|      edition {|LB|            date|LB|      }|LB|      programItem {|LB|        breakout|LB|        startTime|LB|        endTime|LB|        session|LB|        speaker|LB|        title|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
 			<activity type="code" id="RWPf3Y" python-file="lib/TicketUtils.py" handler="prepare_ticket_mail"></activity>
