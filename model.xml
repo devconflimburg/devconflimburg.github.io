@@ -828,7 +828,9 @@ if snapshot.isDeleted != '':
 				<delete condition="#snapshot.isDeleted != ''"></delete>
 			</snapshot-handler>
 			<query graphql-namespace="Visitor" field-name="get" type="get" authorization="role" role="administrator"></query>
-			<query graphql-namespace="Visitor" field-name="filter" type="filter" authorization="role" role="administrator"></query>
+			<query graphql-namespace="Visitor" field-name="filter" type="filter" authorization="role" role="administrator">
+				<filter-clause field-name="ticketId" operand="equals"></filter-clause>
+			</query>
 		</view>
 		<view name="Edition" data-retention-days="-1" exclude-notification="false">
 			<field name="date" type="String"></field>
@@ -848,11 +850,41 @@ if snapshot.isDeleted != '':
 	<projections>
 	</projections>
 	<notifiers>
+		<notifier name="SendTicketVerification">
+			<trigger source="ConferenceRegistrationManagerVisitorRegistered">
+				<mapping target="year" value="year"></mapping>
+				<mapping target="ticketId" value="ticketId"></mapping>
+				<mapping target="firstName" value="firstName"></mapping>
+				<mapping target="lastName" value="lastName"></mapping>
+				<mapping target="email" value="email"></mapping>
+				<mapping target="control" value="control"></mapping>
+			</trigger>
+			<activity type="fetch-property" id="LanEWy" name="apiKey" key="mailgunKey"></activity>
+			<activity type="set-variable" id="9wrt54" name="host" expression="'http://localhost:8181' if os.environ['Stage'] == 'staging' else 'https://devconf.nl'"></activity>
+			<activity type="set-variable" id="8n3Dtb" name="subject" expression="#'Je inschrijving is bijna klaar!'"></activity>
+			<activity type="render-template" id="y41GHO" name="html" template-file="templates/TicketVerificationMail.html"></activity>
+			<activity type="render-template" id="KOeswM" name="text" template-file="templates/TicketVerificationMail.txt"></activity>
+			<activity type="code" id="RWPf3X" python-file="lib/MailGun.py" handler="send"></activity>
+		</notifier>
+		<notifier name="SendTicket">
+			<trigger source="ConferenceTicketVerified">
+				<mapping target="ticketId" value="ticketId"></mapping>
+				<mapping target="verified" value="verified"></mapping>
+			</trigger>
+			<activity type="call-internal-api" id="gkHtJy" name="ticketResult" query='query MyQuery {|LB|  Visitor {|LB|    filter(ticketId_equals: "{{flow.ticketId}}") {|LB|      resultset {|LB|        email|LB|        firstName|LB|      }|LB|    }|LB|  }|LB|  Ticket {|LB|    get(key: "{{flow.ticketId}}") {|LB|      breakouts|LB|      year|LB|    }|LB|  }|LB|}|LB|'></activity>
+			<activity type="call-internal-api" id="eveMiC" name="programResult" query='query MyQuery {|LB|  Program {|LB|    get(key: "{{flow.ticketResult.data.Ticket.get.year}}") {|LB|      edition {|LB|            date|LB|      }|LB|      programItem {|LB|        breakout|LB|        startTime|LB|        endTime|LB|        session|LB|        speaker|LB|        title|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
+			<activity type="code" id="RWPf3Y" python-file="lib/TicketUtils.py" handler="prepare_ticket_mail"></activity>
+			<activity type="render-template" id="y41GHO" name="html" template-file="templates/TicketMail.html"></activity>
+			<activity type="render-template" id="KOeswM" name="text" template-file="templates/TicketMail.txt"></activity>
+			<activity type="code" id="RWPf3X" python-file="lib/MailGun.py" handler="send"></activity>
+		</notifier>
 		<notifier name="InitializeSystemUser">
 			<trigger source="@afterDeployment">
-				<mapping target="dummy" value="#''"></mapping>
+				<mapping target="role" value="#'administrator'"></mapping>
+				<mapping target="user" value="#'system-user'"></mapping>
 			</trigger>
 			<activity type="iam-create-systemuser" fail-silent="true" id="vMB9LZ"></activity>
+			<activity type="add-user-to-iam-group" id="gLpzK8" group-name="#flow.role" username="#flow.user"></activity>
 		</notifier>
 		<notifier name="SendProposalConfirmation" file_path="notifiers/SendProposalConfirmation.xml">
 			<trigger source="ConferenceTalkProposalCreated">
@@ -866,8 +898,9 @@ if snapshot.isDeleted != '':
 			</trigger>
 			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="c4NcAD"></activity>
 			<activity type="set-variable" expression='#"Bedankt voor je proposal"' name="subject" id="p5oUyS"></activity>
-			<activity type="render-template" template-file="templates/ConfirmationMail.html" name="content" id="KLiO9o"></activity>
-			<activity type="code" handler="send" python-file="lib/MailGun.py" id="2LjgLd"></activity>
+			<activity type="render-template" template-file="templates/ConfirmationMail.html" name="html" id="KLiO9o"></activity>
+			<activity type="render-template" id="DHXCaW" template-file="templates/ConfirmationMail.txt" name="text"></activity>
+			<activity type="code" handler="send_with_copy_to_mailbox" python-file="lib/MailGun.py" id="2LjgLd"></activity>
 		</notifier>
 	</notifiers>
 	<functional-scenarios clean-db="true" clean-iam="false" minimum-event-coverage="80" minimum-view-coverage="80">
@@ -919,7 +952,7 @@ if snapshot.isDeleted != '':
 				<input name="year" type="String" value="2010"></input>
 				<input name="firstName" type="String" value="John"></input>
 				<input name="lastName" type="String" value="Doe"></input>
-				<input name="email" type="String" value="john.doe@example.com"></input>
+				<input name="email" type="String" value="bo.hanssen@hey.com"></input>
 				<input name="breakouts" type="String" value="2010-1"></input>
 			</activity>
 			<activity type="mutation" description="Initialiseer een editie" path="Conference.initializeEdition" id="BfMuF0">
@@ -1130,6 +1163,7 @@ if snapshot.isDeleted != '':
 				<expect-value name="session" type="Numeric" value="1"></expect-value>
 				<expect-value name="breakout" type="Boolean" value="true"></expect-value>
 				<data-remediation domain="Conference" aggregate="Edition" identifier="year"></data-remediation>
+				<data-remediation domain="Conference" aggregate="ProgramItem" identifier="2024-2"></data-remediation>
 			</activity>
 			<activity type="query" description="Controleer of programma item 3 correct gevuld is [breakout]" path="Program.Item.get" view="ProgramItem" id="fHhnpY">
 				<input name="key" type="ID" value="2024-3"></input>
