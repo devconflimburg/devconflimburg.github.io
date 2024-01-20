@@ -860,7 +860,7 @@ if snapshot.isDeleted != '':
 				<mapping target="control" value="control"></mapping>
 			</trigger>
 			<activity type="fetch-property" id="LanEWy" name="apiKey" key="mailgunKey"></activity>
-			<activity type="set-variable" id="9wrt54" name="host" expression="'http://localhost:8181' if os.environ['Stage'] == 'staging' else 'https://devconf.nl'"></activity>
+			<activity type="set-variable" id="9wrt54" name="host" expression="#'http://localhost:8181' if os.environ['Stage'] == 'staging' else 'https://devconf.nl'"></activity>
 			<activity type="set-variable" id="8n3Dtb" name="subject" expression="#'Je inschrijving is bijna klaar!'"></activity>
 			<activity type="render-template" id="y41GHO" name="html" template-file="templates/TicketVerificationMail.html"></activity>
 			<activity type="render-template" id="KOeswM" name="text" template-file="templates/TicketVerificationMail.txt"></activity>
