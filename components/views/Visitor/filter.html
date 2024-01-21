@@ -5,9 +5,9 @@ please make sure you rename the file.
 <template x-component="visitor-filter">
     <div>
         <draftsman-query :alias="$prop('alias')" authenticated>
-     query FilterVisitor {
+     query FilterVisitor($ticketId_equals: String = "") {
        Visitor {
-         filter {
+         filter(ticketId_equals: $ticketId_equals) {
             resultset { 
              key
              firstName
@@ -21,7 +21,13 @@ please make sure you rename the file.
      }
         </draftsman-query>
         <div x-init="$store.forms[$prop('alias')] = $el.innerHTML" style="display:none;">
-[]
+[
+  {
+    "name": "ticketId_equals",
+    "type": "String",
+    "title": "Ticketid Equals"
+  }
+]
         </div>
     </div>
 </template>
