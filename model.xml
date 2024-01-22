@@ -8,6 +8,14 @@
 		<pattern name="Date" regex="^\d{2}-\d{2}-(?:20)\d{2}$"></pattern>
 	</global>
 	<events>
+		<event name="ResendVerificationTicketRequested" authorization="role" role="administrator" type="ActorEvent" graphql-name="resendVerification" graphql-namespace="Ticket">
+			<field name="firstName" type="String"></field>
+			<field name="lastName" type="String"></field>
+			<field name="year" type="String" pattern="{{Year}}"></field>
+			<field name="email" type="String" pattern="{{Email}}"></field>
+			<field name="control" type="String" auto-fill="uuid"></field>
+			<field name="ticketId" type="String"></field>
+		</event>
 		<event graphql-namespace="Ticket" graphql-name="verify" name="VerifyTicketRequested" authorization="anonymous" type="ActorEvent">
 			<field name="ticketId" type="String"></field>
 			<field name="control" type="String"></field>
@@ -15,6 +23,9 @@
 		<event name="UpdateWebSiteElementRequested" authorization="authenticated" type="ActorEvent" graphql-name="update" graphql-namespace="WebSite.Element">
 			<field name="name" type="String"></field>
 			<field name="content" type="String"></field>
+		</event>
+		<event graphql-namespace="Ticket" graphql-name="handleLost" name="HandleLostTicketRequested" authorization="anonymous" type="ActorEvent">
+			<field name="ticketId" type="String"></field>
 		</event>
 		<event name="CreateConferenceTalkProposalRequested" authorization="anonymous" type="ActorEvent" graphql-name="create" graphql-namespace="Conference.TalkProposal">
 			<field name="difficultyLevel" type="String"></field>
@@ -62,6 +73,9 @@
 		<event name="CreateWebSiteElementRequested" authorization="role" role="administrator" type="ActorEvent" graphql-name="create" graphql-namespace="WebSite.Element">
 			<field name="name" type="String"></field>
 			<field name="content" type="String"></field>
+		</event>
+		<event graphql-namespace="Ticket" graphql-name="resend" name="ResendTicketRequested" authorization="role" type="ActorEvent" role="administrator">
+			<field name="ticketId" type="String"></field>
 		</event>
 		<event name="ConferenceProgramItemCreated" source="Conference.ProgramItem" type="DomainEvent">
 			<field name="summary" type="String"></field>
@@ -859,6 +873,14 @@ if snapshot.isDeleted != '':
 				<mapping target="email" value="email"></mapping>
 				<mapping target="control" value="control"></mapping>
 			</trigger>
+			<trigger source="ResendVerificationTicketRequested">
+				<mapping target="year" value="year"></mapping>
+				<mapping target="ticketId" value="ticketId"></mapping>
+				<mapping target="firstName" value="firstName"></mapping>
+				<mapping target="lastName" value="lastName"></mapping>
+				<mapping target="email" value="email"></mapping>
+				<mapping target="control" value="control"></mapping>
+			</trigger>
 			<activity type="fetch-property" id="LanEWy" name="apiKey" key="mailgunKey"></activity>
 			<activity type="set-variable" id="9wrt54" name="host" expression="#'http://localhost:8181' if os.environ['Stage'] == 'staging' else 'https://devconf.nl'"></activity>
 			<activity type="set-variable" id="8n3Dtb" name="subject" expression="#'Je inschrijving is bijna klaar!'"></activity>
@@ -870,6 +892,10 @@ if snapshot.isDeleted != '':
 			<trigger source="ConferenceTicketVerified">
 				<mapping target="ticketId" value="ticketId"></mapping>
 				<mapping target="verified" value="verified"></mapping>
+			</trigger>
+			<trigger source="ResendTicketRequested">
+				<mapping target="ticketId" value="ticketId"></mapping>
+				<mapping target="verified" value="#True"></mapping>
 			</trigger>
 			<activity type="fetch-property" id="LanEWy" name="apiKey" key="mailgunKey"></activity>
 			<activity type="call-internal-api" id="gkHtJy" name="ticketResult" query='query MyQuery {|LB|  Visitor {|LB|    filter(ticketId_equals: "{{flow.ticketId}}") {|LB|      resultset {|LB|        email|LB|        firstName|LB|      }|LB|    }|LB|  }|LB|  Ticket {|LB|    get(key: "{{flow.ticketId}}") {|LB|      breakouts|LB|      year|LB|    }|LB|  }|LB|}|LB|'></activity>
@@ -886,6 +912,15 @@ if snapshot.isDeleted != '':
 			</trigger>
 			<activity type="iam-create-systemuser" fail-silent="true" id="vMB9LZ"></activity>
 			<activity type="add-user-to-iam-group" id="gLpzK8" group-name="#flow.role" username="#flow.user"></activity>
+		</notifier>
+		<notifier name="HandleResenRequest">
+			<trigger source="HandleLostTicketRequested">
+				<mapping target="ticketId" value="ticketId"></mapping>
+			</trigger>
+			<activity type="call-internal-api" id="Mrxitu" name="ticket" query='query MyQuery {|LB|  Ticket {|LB|    get(key: "{{flow.ticketId}}") {|LB|      control|LB|      verified|LB|    }|LB|  }|LB|  Visitor {|LB|    filter(ticketId_equals: "{{flow.ticketId}}") {|LB|      resultset {|LB|        email|LB|        firstName|LB|        lastName|LB|        year|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
+			<activity type="set-variable" id="RGPflM" name="visitor" expression="#flow.ticket.Visitor.filter.resultset[0]"></activity>
+			<activity type="call-internal-api" id="t5izl3" name="mutation" condition="flow.ticket.data.Ticket.get.verified == False" query='mutation MyMutation {|LB|  Ticket {|LB|      resendVerification(input: {firstName: "{{flow.visitor.firstName}}", lastName: "{{flow.visitor.lastName}}", year: "{{flow.visitor.year}}", email: "{{flow.visitor.email}}", control: "{{flow.ticket.data.Ticket.get.control }}", ticketId: "{{flow.ticketId}}"}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
+			<activity type="call-internal-api" id="gaFVDO" name="mutation" condition="flow.ticket.data.Ticket.get.verified == True" query='mutation MyMutation {|LB|  Ticket {|LB|      resend(input: {ticketId: "{{flow.ticketId}}"}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
 		</notifier>
 		<notifier name="SendProposalConfirmation" file_path="notifiers/SendProposalConfirmation.xml">
 			<trigger source="ConferenceTalkProposalCreated">

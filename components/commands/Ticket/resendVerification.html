@@ -2,15 +2,13 @@
 This file is managed by the tracepaper modeler, if you want to customize this command
 please make sure you rename the file first.
 -->
-<template x-component="register-visitor-conference-registration-manager">
+<template x-component="resend-verification-ticket">
   <div>
-    <draftsman-mutation :command="$prop('command')" >
-     mutation RegisterVisitor($firstName: String = "", $lastName: String = "", $year: String = "", $email: String = "", $breakouts: [RegisterVisitorConferenceRegistrationManager_Breakouts!] = []) {
-       Conference{
-         RegistrationManager{
-           registerVisitor(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,breakouts: $breakouts}) {
-              correlationId
-           }
+    <draftsman-mutation :command="$prop('command')"  authenticated>
+     mutation ResendVerification($firstName: String = "", $lastName: String = "", $year: String = "", $email: String = "", $ticketId: String = "") {
+       Ticket{
+         resendVerification(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,ticketId: $ticketId}) {
+            correlationId
          }
        }
      }
@@ -50,19 +48,12 @@ please make sure you rename the file first.
     "default": ""
   },
   {
-    "name": "breakouts",
-    "title": "Breakouts",
-    "type": "nested",
-    "fields": [
-      {
-        "name": "id",
-        "title": "Id",
-        "type": "String",
-        "pattern": "",
-        "placeholder": "",
-        "default": ""
-      }
-    ]
+    "name": "ticketId",
+    "title": "Ticketid",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
   }
 ]
     </div>

@@ -21,7 +21,7 @@
     </script>
 </head>
 <body class="d-flex flex-column h-100" x-data="{search: $persist('').using(sessionStorage),
-        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Ticket/verify;commands/Ticket/redeem;commands/WebSite/Element/update;commands/WebSite/Element/create;commands/Conference/TalkProposal/create;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/Conference/addProgramItem;commands/Conference/initializeEdition;views/TalkProposal/filter;views/Ticket/get;views/Ticket/filter;views/Program/Item/filter;views/Program/Item/get;views/Program/filter;views/Program/get;views/Conference/RegistrationManager/get;views/WebSite/Element/filter;views/WebSite/Element/get;views/Visitor/get;views/Visitor/filter;views/Edition/filter;views/Edition/get">
+        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Ticket/resendVerification;commands/Ticket/verify;commands/Ticket/handleLost;commands/Ticket/redeem;commands/Ticket/resend;commands/WebSite/Element/update;commands/WebSite/Element/create;commands/Conference/TalkProposal/create;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/Conference/addProgramItem;commands/Conference/initializeEdition;views/TalkProposal/filter;views/Ticket/get;views/Ticket/filter;views/Program/Item/filter;views/Program/Item/get;views/Program/filter;views/Program/get;views/Conference/RegistrationManager/get;views/WebSite/Element/filter;views/WebSite/Element/get;views/Visitor/get;views/Visitor/filter;views/Edition/filter;views/Edition/get">
 <main class="flex-shrink-0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" x-transition>
         <div class="container px-5">
@@ -60,6 +60,17 @@
                     <h6>Ticket</h6>
                     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                         
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'resendverificationticket'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_resendverificationticket">
+                                ResendVerificationTicket
+                            </button>
+                            <ui-resend-verification-ticket command="resendverificationticket"></ui-resend-verification-ticket>
+                            <ui-basic-modal
+                                        title="Command: ResendVerificationTicket"
+                                        alias="resendverificationticket"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_resendverificationticket"></ui-trace-table>
+                            <ui-basic-form alias="resendverificationticket" target="#modal_body_resendverificationticket"></ui-basic-form>
+                        
                             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'verifyticket'.includes(search.toLowerCase())"
                                     data-bs-target="#modal_verifyticket">
                                 VerifyTicket
@@ -71,6 +82,17 @@
                             <ui-trace-table target="#modal_body_verifyticket"></ui-trace-table>
                             <ui-basic-form alias="verifyticket" target="#modal_body_verifyticket"></ui-basic-form>
                         
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'handlelostticket'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_handlelostticket">
+                                HandleLostTicket
+                            </button>
+                            <ui-handle-lost-ticket command="handlelostticket"></ui-handle-lost-ticket>
+                            <ui-basic-modal
+                                        title="Command: HandleLostTicket"
+                                        alias="handlelostticket"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_handlelostticket"></ui-trace-table>
+                            <ui-basic-form alias="handlelostticket" target="#modal_body_handlelostticket"></ui-basic-form>
+                        
                             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'redeemticket'.includes(search.toLowerCase())"
                                     data-bs-target="#modal_redeemticket">
                                 RedeemTicket
@@ -81,6 +103,17 @@
                                         alias="redeemticket"></ui-basic-modal>
                             <ui-trace-table target="#modal_body_redeemticket"></ui-trace-table>
                             <ui-basic-form alias="redeemticket" target="#modal_body_redeemticket"></ui-basic-form>
+                        
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'resendticket'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_resendticket">
+                                ResendTicket
+                            </button>
+                            <ui-resend-ticket command="resendticket"></ui-resend-ticket>
+                            <ui-basic-modal
+                                        title="Command: ResendTicket"
+                                        alias="resendticket"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_resendticket"></ui-trace-table>
+                            <ui-basic-form alias="resendticket" target="#modal_body_resendticket"></ui-basic-form>
                         
                     </div>
                     <hr>
