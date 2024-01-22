@@ -3,7 +3,7 @@ var api_url = "";
 var api_ws = "";
 var api_key = "";
 
-if (!window.location.search.includes("staging")){
+if (!localStorage["staging-environment"]  || localStorage["staging-environment"] == 'false'){
     console.log("Connected to production");
     localStorage["aws-congnito-user-pool-id"] = "eu-central-1_HNt1QehSI";
     localStorage["aws-congnito-app-id"] = "464mjnisild08l6cvvga00cho8";

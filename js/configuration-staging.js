@@ -1,4 +1,4 @@
-if (window.location.search.includes("staging")){
+if (localStorage["staging-environment"] && localStorage["staging-environment"] == 'true'){
     console.log("Connected to staging");
     localStorage["aws-congnito-user-pool-id"] = "eu-central-1_DkbPGBi2e";
     localStorage["aws-congnito-app-id"] = "bmn1tkt5uoc6jopumotfcs310";

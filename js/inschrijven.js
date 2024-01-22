@@ -1,5 +1,3 @@
-//closeDate "20-03-2024"
-//openDate"31-01-2024"
 
 function inschrijvingGeopend(registrationManager){
     try{
@@ -31,3 +29,135 @@ function closedReason(registrationManager){
 function getCloseText(registrationManager){
     return moment(registrationManager.closeDate, 'DD-MM-YYYY').add(1,'days').fromNow()
 }
+
+function get_breakouts(program){
+    let breakouts = {};
+    program.forEach(item =>{
+        if (item.session == 0)
+            return;
+        if (!(item.session in breakouts))
+            breakouts[item.session] = [];
+        breakouts[item.session].push(item);
+    });
+    return breakouts;
+}
+
+function open_registration_window(){
+    let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=${screen.width * 0.5},height=${screen.height * 0.5},left=10,top=10`;
+    open('/inschrijf-terminal', 'inschrijf-terminal', params);
+}
+
+/// Terminal flow
+var flow = ["firstName","lastName","email"]
+var breakouts = {};
+var current_state = "";
+var form = {};
+var submitted = false;
+
+function start_registration(edition){
+    write_log("Welkom bij de inschrijf applicatie voor devConf " + edition.year);
+    write_log("Het event vind plaats op woensdag " + edition.date);
+    write_log("Gedurende deze registratie vragen we ook om een voorkeur voor de breakout sessies op te geven, dit is niet bindend. We gebruiken deze data als input voor de zaal indeling.")
+    write_log("Door het commando 'reset' uit te voeren kun je alle ingevoerde data verwijderen zonder te registreren.")
+    write_log("&nbsp;");
+    breakouts = get_breakouts(edition.program.programItem);
+    form.year = edition.year;
+    form.breakouts = [];
+    for (let i = 0; i < Object.keys(breakouts).length; i++){
+        flow.push("breakout-" + (i+1))
+    }
+    flow.push("submit");
+    next_command();
+}
+
+function next_command(){
+    if (flow.length == 0){
+        return;
+    }
+    current_state = flow.shift();
+    if (current_state == "firstName"){
+        command.instruction = "Voer je voornaam in";
+    } else if (current_state == "lastName"){
+       command.instruction = "Voer je achternaam in";
+    } else if (current_state == "email"){
+       command.instruction = "Voer je e-mailadres in";
+    } else if (current_state.startsWith("breakout")){
+       let session = parseInt(current_state.replace("breakout-",""));
+       write_log("Breakout sessie " + session);
+       breakouts[session].forEach((breakout,index) => {
+        write_log(index + ") " + breakout.title);
+       });
+       command.instruction = "Selecteer een van de breakout sessies [0-" + (breakouts[session].length-1) + "]";
+    } else if (current_state == "submit"){
+        command.instruction = "Is bovenstaande informatie correct? [ja/reset]"
+    }
+}
+
+function enter_command(element){
+    console.log(current_state);
+    if (element.innerText.trim() == "reset"){
+        location.reload();
+    }
+    if (current_state == "email"){
+        element.innerText = element.innerText.trim().toLowerCase();
+    }
+    if (current_state == "submit"){
+        console.log(element.innerText.trim().toLowerCase(),submitted);
+        if (element.innerText.trim().toLowerCase() != "ja"){
+            throw "invalid input";
+        }
+        if (!submitted){
+            setTimeout(function(){
+                write_log("We gaan je ticket aanmaken, een moment...");
+            },1);
+            send_mutation("register",form);
+            submitted = true;
+        }
+    } else if (!current_state.startsWith("breakout")){
+        form[current_state] = element.innerText.trim();
+    } else {
+        let session = parseInt(current_state.replace("breakout-",""));
+        let index = parseInt(element.innerText);
+        form.breakouts.push({
+            id: breakouts[session][index].id
+        });
+    }
+    write_log(command.instruction + "> " + element.innerText);
+    element.innerText = "";
+    command.instruction = "";
+    console.log(form);
+    next_command();
+    element.focus();
+}
+
+function append_tracelog(log_message){
+    console.log(log_message);
+    let message = log_message.detail;
+    write_log(`${message.command ? message.command : message.event} ${message.status}: ${message.message}`);
+    if(message.command == "SendTicketVerification-Notifier" && message.status == "success"){
+        setTimeout(function(){
+            write_log(`Er is een verificatie e-mail naar <i>${form.email}</i> gestuurd, gebruik de link om de inschrijving af te ronden.`);
+        },1000);
+    }
+}
+
+function write_log(message){
+    logs.push(message);
+    let element = document.getElementById("console");
+    element.scrollTo(0, element.scrollHeight);
+}
+
+var logs = [];
+var command = {instruction: ""};
+document.addEventListener('alpine:init', async () => {
+    logs = Alpine.reactive(logs);
+    command = Alpine.reactive(command);
+    Alpine.data('session', () => ({
+        logs: logs,
+        command: command
+    }));
+    setTimeout(function(){
+        Draftsman.contains_teleports = false;
+        Draftsman.disable_cache_for_page();
+    },1);
+});

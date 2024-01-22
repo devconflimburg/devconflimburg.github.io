@@ -16,3 +16,12 @@ document.addEventListener('alpine:init', async () => {
         Draftsman.disable_cache_for_page();
     },1);
 });
+
+var must_be_signed_in = false;
+
+$vui.config = {
+    namespace: 'ui'
+}
+$vui.config.importMap = {
+    "*": '/components/${path}${component}.html'
+}

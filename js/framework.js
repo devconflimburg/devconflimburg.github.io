@@ -9,8 +9,9 @@ document.addEventListener("beforeunload", (event) => {
 });
 var mutation_queries = {};
 var request_cache = []
-
+var inflight = "";
 function send_mutation(command,data){
+    inflight = command;
     empty_track_and_trace_log();
     var cache_key = JSON.stringify({command: command,data: data});
     if (request_cache.includes(cache_key)){
@@ -65,7 +66,6 @@ function send_mutation(command,data){
               }`;
             trace_socket = Draftsman.subscribe(query_string,(data,errors) => {
                 add_trace(data["onTrace"]);
-                evaluate_trace_subscribers(command,data["onTrace"]);
             },variables={"correlationId":cid});
         }
     },data,anonymous);
@@ -627,6 +627,7 @@ function evaluate_trace_subscribers(command,trace_message){
 
 function add_trace(message){
     Alpine.store("trace").unshift(message);
+    evaluate_trace_subscribers(inflight,message);
 }
 
 function empty_track_and_trace_log(){
