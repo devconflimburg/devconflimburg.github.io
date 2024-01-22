@@ -5,9 +5,9 @@ please make sure you rename the file first.
 <template x-component="handle-lost-ticket">
   <div>
     <draftsman-mutation :command="$prop('command')" >
-     mutation HandleLost($ticketId: String = "") {
+     mutation HandleLost($email: String = "") {
        Ticket{
-         handleLost(input: {ticketId: $ticketId}) {
+         handleLost(input: {email: $email}) {
             correlationId
          }
        }
@@ -16,8 +16,8 @@ please make sure you rename the file first.
     <div x-init="$store.forms[$prop('command')] = $el.innerHTML" style="display:none;">
 [
   {
-    "name": "ticketId",
-    "title": "Ticketid",
+    "name": "email",
+    "title": "Email",
     "type": "String",
     "pattern": "",
     "placeholder": "",

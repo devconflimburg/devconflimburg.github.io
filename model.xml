@@ -25,7 +25,7 @@
 			<field name="content" type="String"></field>
 		</event>
 		<event graphql-namespace="Ticket" graphql-name="handleLost" name="HandleLostTicketRequested" authorization="anonymous" type="ActorEvent">
-			<field name="ticketId" type="String"></field>
+			<field name="email" type="String"></field>
 		</event>
 		<event name="CreateConferenceTalkProposalRequested" authorization="anonymous" type="ActorEvent" graphql-name="create" graphql-namespace="Conference.TalkProposal">
 			<field name="difficultyLevel" type="String"></field>
@@ -915,12 +915,13 @@ if snapshot.isDeleted != '':
 		</notifier>
 		<notifier name="HandleResenRequest">
 			<trigger source="HandleLostTicketRequested">
-				<mapping target="ticketId" value="ticketId"></mapping>
+				<mapping target="email" value="email"></mapping>
 			</trigger>
-			<activity type="call-internal-api" id="Mrxitu" name="ticket" query='query MyQuery {|LB|  Ticket {|LB|    get(key: "{{flow.ticketId}}") {|LB|      control|LB|      verified|LB|    }|LB|  }|LB|  Visitor {|LB|    filter(ticketId_equals: "{{flow.ticketId}}") {|LB|      resultset {|LB|        email|LB|        firstName|LB|        lastName|LB|        year|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
-			<activity type="set-variable" id="RGPflM" name="visitor" expression="#flow.ticket.Visitor.filter.resultset[0]"></activity>
-			<activity type="call-internal-api" id="t5izl3" name="mutation" condition="flow.ticket.data.Ticket.get.verified == False" query='mutation MyMutation {|LB|  Ticket {|LB|      resendVerification(input: {firstName: "{{flow.visitor.firstName}}", lastName: "{{flow.visitor.lastName}}", year: "{{flow.visitor.year}}", email: "{{flow.visitor.email}}", control: "{{flow.ticket.data.Ticket.get.control }}", ticketId: "{{flow.ticketId}}"}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
-			<activity type="call-internal-api" id="gaFVDO" name="mutation" condition="flow.ticket.data.Ticket.get.verified == True" query='mutation MyMutation {|LB|  Ticket {|LB|      resend(input: {ticketId: "{{flow.ticketId}}"}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
+			<activity type="call-internal-api" id="Mrxitu" name="visitorResult" query='query MyQuery {|LB|  Visitor {|LB|    get(key: "{{flow.email}}") {|LB|      firstName|LB|      lastName|LB|      year|LB|      ticket {|LB|        control|LB|        ticketId|LB|        verified|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
+			<activity type="set-variable" id="RGPflM" name="visitor" expression="#flow.visitorResult.data.Visitor.get"></activity>
+			<activity type="set-variable" id="EL6Gu5" name="ticket" expression="#flow.visitor.ticket"></activity>
+			<activity type="call-internal-api" id="t5izl3" name="mutation" condition="flow.ticket.verified == False" query='mutation MyMutation {|LB|  Ticket {|LB|      resendVerification(input: {firstName: "{{flow.visitor.firstName}}", lastName: "{{flow.visitor.lastName}}", year: "{{flow.visitor.year}}", email: "{{flow.visitor.email}}", control: "{{flow.ticket.control }}", ticketId: "{{flow.ticket.ticketId}}"}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
+			<activity type="call-internal-api" id="gaFVDO" name="mutation" condition="flow.ticket.verified == True" query='mutation MyMutation {|LB|  Ticket {|LB|      resend(input: {ticketId: "{{flow.ticket.ticketId}}"}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
 		</notifier>
 		<notifier name="SendProposalConfirmation" file_path="notifiers/SendProposalConfirmation.xml">
 			<trigger source="ConferenceTalkProposalCreated">
