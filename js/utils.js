@@ -17,8 +17,6 @@ document.addEventListener('alpine:init', async () => {
     },1);
 });
 
-var must_be_signed_in = false;
-
 $vui.config = {
     namespace: 'ui'
 }

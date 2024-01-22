@@ -1,3 +1,5 @@
+var must_be_signed_in = false;
+
 // Cleanup
 document.addEventListener("beforeunload", (event) => {
     if (notification_socket){

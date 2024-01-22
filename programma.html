@@ -14,7 +14,7 @@
   <script src="https://unpkg.com/alpinejs" defer></script>
   <script async defer data-domain="devconf.nl"
           src="https://analytics.bohanssen.com/js/plausible.js"></script>
-  
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="description" content="devConf, een DevOps conferentie in het zuiden" />
@@ -36,9 +36,16 @@
   <ui-navbar></ui-navbar>
 
   <div class="container data-element"
-       x-data="{programma: $store.programma}" @refresh="programma = $store.programma">
+       x-data="{programma: {}, rooms: [], gridlines: [], talkSets: [], talks: []}"
+       @refresh="
+        programma = $store.programma;
+        rooms = get_rooms(programma);
+        gridlines = get_grid_lines(programma);
+        talkSets = get_talks(programma);
+        talks = programma.get.programItem;
+      ">
     <div class="row" style="margin-left:40px;">
-      <template x-for="item in get_rooms(programma)">
+      <template x-for="item in rooms">
         <div class="col">
           <h6 x-text="item"></h6>
         </div>
@@ -46,7 +53,7 @@
     </div>
     <div class="programma-container">
       <div class="programma-element" style="z-index:-1;">
-        <template x-for="item in get_grid_lines(programma)">
+        <template x-for="item in gridlines">
           <div class="gridline">
             <span x-text="item"></span>
           </div>
@@ -54,7 +61,7 @@
       </div>
       <div class="programma-element">
         <div class="row" style="margin-left:40px;">
-          <template x-for="set in get_talks(programma)">
+          <template x-for="set in talkSets">
             <div class="col">
               <template x-for="element in set">
                 <div :class="'room ' + element.class"
@@ -72,7 +79,7 @@
       </div>
     </div>
 
-    <template x-for="talk in programma.get.programItem">
+    <template x-for="talk in talks">
       <div class="modal fade" :id="talk.id" tabindex="-1" role="dialog"
            :aria-labelledby="talk.id + 'Label'" aria-hidden="true">
         <div class="modal-dialog" role="document">
