@@ -1,0 +1,29 @@
+<!--
+This file is managed by the tracepaper modeler, if you want to customize this command
+please make sure you rename the file first.
+-->
+<template x-component="resend-ticket">
+  <div>
+    <draftsman-mutation :command="$prop('command')"  authenticated>
+     mutation Resend($ticketId: String = "") {
+       Ticket{
+         resend(input: {ticketId: $ticketId}) {
+            correlationId
+         }
+       }
+     }
+    </draftsman-mutation>
+    <div x-init="$store.forms[$prop('command')] = $el.innerHTML" style="display:none;">
+[
+  {
+    "name": "ticketId",
+    "title": "Ticketid",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  }
+]
+    </div>
+  </div>
+</template>
