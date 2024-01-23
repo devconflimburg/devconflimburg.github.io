@@ -25,7 +25,7 @@
 			<field name="content" type="String"></field>
 		</event>
 		<event graphql-namespace="Ticket" graphql-name="handleLost" name="HandleLostTicketRequested" authorization="anonymous" type="ActorEvent">
-			<field name="email" type="String"></field>
+			<field name="email" type="String" pattern="{{Email}}"></field>
 		</event>
 		<event name="CreateConferenceTalkProposalRequested" authorization="anonymous" type="ActorEvent" graphql-name="create" graphql-namespace="Conference.TalkProposal">
 			<field name="difficultyLevel" type="String"></field>
@@ -844,6 +844,7 @@ if snapshot.isDeleted != '':
 			<query graphql-namespace="Visitor" field-name="get" type="get" authorization="role" role="administrator"></query>
 			<query graphql-namespace="Visitor" field-name="filter" type="filter" authorization="role" role="administrator">
 				<filter-clause field-name="ticketId" operand="equals"></filter-clause>
+				<filter-clause field-name="year" operand="equals"></filter-clause>
 			</query>
 		</view>
 		<view name="Edition" data-retention-days="-1" exclude-notification="false">
@@ -907,11 +908,9 @@ if snapshot.isDeleted != '':
 		</notifier>
 		<notifier name="InitializeSystemUser">
 			<trigger source="@afterDeployment">
-				<mapping target="role" value="#'administrator'"></mapping>
-				<mapping target="user" value="#'system-user'"></mapping>
+				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
 			<activity type="iam-create-systemuser" fail-silent="true" id="vMB9LZ"></activity>
-			<activity type="add-user-to-iam-group" id="gLpzK8" group-name="#flow.role" username="#flow.user"></activity>
 		</notifier>
 		<notifier name="HandleResenRequest">
 			<trigger source="HandleLostTicketRequested">
@@ -943,7 +942,7 @@ if snapshot.isDeleted != '':
 	<functional-scenarios clean-db="true" clean-iam="false" minimum-event-coverage="80" minimum-view-coverage="80">
 		<scenario name="TalkProposal">
 			<activity type="set-variables" id="orhaBC">
-				<input name="email" type="String" value="bo.hanssen@hey.com"></input>
+				<input name="email" type="String" value="wogebe4286@wentcity.com"></input>
 			</activity>
 			<activity type="mutation" path="Conference.TalkProposal.create" id="mRaQOC">
 				<input name="difficultyLevel" type="String" value="novice"></input>
@@ -985,11 +984,11 @@ if snapshot.isDeleted != '':
 		</scenario>
 		<scenario name="RegistrationManagement">
 			<activity type="grant-role" role="administrator" id="mQyPTe"></activity>
-			<activity type="set-variables" id="KDq8ZJ">
+			<activity type="set-variables" id="KDq8ZJ" description="">
 				<input name="year" type="String" value="2010"></input>
 				<input name="firstName" type="String" value="John"></input>
 				<input name="lastName" type="String" value="Doe"></input>
-				<input name="email" type="String" value="bo.hanssen@hey.com"></input>
+				<input name="email" type="String" value="wogebe4286@wentcity.com"></input>
 				<input name="breakouts" type="String" value="2010-2"></input>
 			</activity>
 			<activity type="mutation" description="Initialiseer een editie" path="Conference.initializeEdition" id="BfMuF0">
