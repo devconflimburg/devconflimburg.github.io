@@ -916,7 +916,8 @@ if snapshot.isDeleted != '':
 			<trigger source="HandleLostTicketRequested">
 				<mapping target="email" value="email"></mapping>
 			</trigger>
-			<activity type="call-internal-api" id="Mrxitu" name="visitorResult" query='query MyQuery {|LB|  Visitor {|LB|    get(key: "{{flow.email}}") {|LB|      firstName|LB|      lastName|LB|      year|LB|      ticket {|LB|        control|LB|        ticketId|LB|        verified|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
+			<activity type="call-internal-api" id="Mrxitu" name="visitorResult" query='query MyQuery {|LB|  Visitor {|LB|    get(key: "{{flow.email}}") {|LB|      firstName|LB|      lastName|LB|      year|LB|      email|LB|      ticket {|LB|        control|LB|        ticketId|LB|        verified|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
+			<activity type="code" id="HuB5Bd" code='|LB|try:|LB|    print(flow.visitorResult.data.Visitor.get.verified)|LB|except:|LB|    raise Exception("No registration found for: " + flow.email)'></activity>
 			<activity type="set-variable" id="RGPflM" name="visitor" expression="#flow.visitorResult.data.Visitor.get"></activity>
 			<activity type="set-variable" id="EL6Gu5" name="ticket" expression="#flow.visitor.ticket"></activity>
 			<activity type="call-internal-api" id="t5izl3" name="mutation" condition="flow.ticket.verified == False" query='mutation MyMutation {|LB|  Ticket {|LB|      resendVerification(input: {firstName: "{{flow.visitor.firstName}}", lastName: "{{flow.visitor.lastName}}", year: "{{flow.visitor.year}}", email: "{{flow.visitor.email}}", control: "{{flow.ticket.control }}", ticketId: "{{flow.ticket.ticketId}}"}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
