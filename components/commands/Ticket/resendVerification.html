@@ -5,9 +5,9 @@ please make sure you rename the file first.
 <template x-component="resend-verification-ticket">
   <div>
     <draftsman-mutation :command="$prop('command')"  authenticated>
-     mutation ResendVerification($firstName: String = "", $lastName: String = "", $year: String = "", $email: String = "", $ticketId: String = "") {
+     mutation ResendVerification($firstName: String = "", $lastName: String = "", $year: String = "", $email: String = "", $control: String = "", $ticketId: String = "") {
        Ticket{
-         resendVerification(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,ticketId: $ticketId}) {
+         resendVerification(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,control: $control,ticketId: $ticketId}) {
             correlationId
          }
        }
@@ -44,6 +44,14 @@ please make sure you rename the file first.
     "title": "Email",
     "type": "String",
     "pattern": "^(.+)@(.+)$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "control",
+    "title": "Control",
+    "type": "String",
+    "pattern": "",
     "placeholder": "",
     "default": ""
   },

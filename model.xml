@@ -13,7 +13,7 @@
 			<field name="lastName" type="String"></field>
 			<field name="year" type="String" pattern="{{Year}}"></field>
 			<field name="email" type="String" pattern="{{Email}}"></field>
-			<field name="control" type="String" auto-fill="uuid"></field>
+			<field name="control" type="String"></field>
 			<field name="ticketId" type="String"></field>
 		</event>
 		<event graphql-namespace="Ticket" graphql-name="verify" name="VerifyTicketRequested" authorization="anonymous" type="ActorEvent">
