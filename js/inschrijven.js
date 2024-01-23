@@ -57,8 +57,11 @@ var submitted = false;
 function start_registration(edition){
     write_log("Welkom bij de inschrijf applicatie voor devConf " + edition.year);
     write_log("Het event vind plaats op woensdag " + edition.date);
+    write_log("&nbsp;");
     write_log("Gedurende deze registratie vragen we ook om een voorkeur voor de breakout sessies op te geven, dit is niet bindend. We gebruiken deze data als input voor de zaal indeling.")
+    write_log("&nbsp;");
     write_log("Door het commando 'reset' uit te voeren kun je alle ingevoerde data verwijderen zonder te registreren.")
+    write_log("Heb je je al eerder geregistreerd maar ben je de email kwijt? Voer dan het commando 'resend email' uit");
     write_log("&nbsp;");
     breakouts = get_breakouts(edition.program.programItem);
     form.year = edition.year;
@@ -68,6 +71,11 @@ function start_registration(edition){
     }
     flow.push("submit");
     next_command();
+    setInterval(function(){
+        if (document.hasFocus()) {
+          document.getElementById("input-element").focus();
+        }
+    },1000);
 }
 
 function next_command(){
@@ -90,6 +98,8 @@ function next_command(){
        command.instruction = "Selecteer een van de breakout sessies [0-" + (breakouts[session].length-1) + "]";
     } else if (current_state == "submit"){
         command.instruction = "Is bovenstaande informatie correct? [ja/reset]"
+    } else if (current_state == "resend"){
+        send_mutation("lost-email-command",form);
     }
 }
 
@@ -113,9 +123,9 @@ function enter_command(element){
             send_mutation("register",form);
             submitted = true;
         }
-    } else if (element.innerText.trim() == "resend" && form.email){
-        send_mutation("lost",form);
-        flow.unshift(current_state);
+    }
+    else if (element.innerText.trim() == "resend email"){
+        flow = ["email","resend"];
     } else if (!current_state.startsWith("breakout")){
         form[current_state] = element.innerText.trim();
     } else {

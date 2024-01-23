@@ -44,15 +44,15 @@
             <p x-html="line"></p>
         </template>
         <p>
-            <span x-text="command.instruction"></span>>&nbsp;<span contenteditable="true" autofocus @keyup.enter="enter_command($el)"></span>
+            <span x-text="command.instruction"></span>>&nbsp;<span id="input-element" contenteditable="true" autofocus @keyup.enter="enter_command($el)"></span>
         </p>
     </div>
     <div class="data-element" @refresh="start_registration($store.next.Element.get.edition)"></div>
     <draftsman-trace command="register" @trace="append_tracelog">
     </draftsman-trace>
-    <draftsman-trace command="lost" @trace="append_tracelog">
+    <draftsman-trace command="lost-email-command" @trace="append_tracelog">
     </draftsman-trace>
-    <ui-handle-lost-ticket command="lost"></ui-handle-lost-ticket>
+    <ui-handle-lost-ticket command="lost-email-command"></ui-handle-lost-ticket>
     <ui-register-visitor-conference-registration-manager command="register"></ui-register-visitor-conference-registration-manager>
     <draftsman-query alias="next" x-include="/prepared-statements/next-edition.txt">
     </draftsman-query>
