@@ -113,6 +113,9 @@ function enter_command(element){
             send_mutation("register",form);
             submitted = true;
         }
+    } else if (element.innerText.trim() == "resend" && form.email){
+        send_mutation("lost",form);
+        flow.unshift(current_state);
     } else if (!current_state.startsWith("breakout")){
         form[current_state] = element.innerText.trim();
     } else {
