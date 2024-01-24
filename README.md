@@ -15,4 +15,4 @@
 ## Github pages hosting
 De site wordt gehost door Github Pages: [https://devconflimburg.github.io/](https://devconflimburg.github.io/)
 Een push naar de main branch wordt automatisch gedeployed, zodra de pagina prd ready is 
-kan ons eigen domein ervoor gezet worden.
+kan ons eigen domein ervoor gezet worden. 
