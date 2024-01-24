@@ -35,75 +35,109 @@
 <main class="flex-shrink-0">
   <ui-navbar></ui-navbar>
 
-  <div class="container data-element"
-       x-data="{programma: {}, rooms: [], gridlines: [], talkSets: [], talks: []}"
-       @refresh="
+  <template x-if="!mobileCheck()">
+    <div class="container data-element"
+         x-data="{programma: {}, rooms: [], gridlines: [], talkSets: [], talks: []}"
+         @refresh="
         programma = $store.programma;
         rooms = get_rooms(programma);
         gridlines = get_grid_lines(programma);
         talkSets = get_talks(programma);
         talks = programma.get.programItem;
       ">
-    <div class="row" style="margin-left:40px;">
-      <template x-for="item in rooms">
-        <div class="col">
-          <h6 x-text="item"></h6>
-        </div>
-      </template>
-    </div>
-    <div class="programma-container">
-      <div class="programma-element" style="z-index:-1;">
-        <template x-for="item in gridlines">
-          <div class="gridline">
-            <span x-text="item"></span>
+      <div class="row" style="margin-left:40px;">
+        <template x-for="item in rooms">
+          <div class="col">
+            <h6 x-text="item"></h6>
           </div>
         </template>
       </div>
-      <div class="programma-element">
-        <div class="row" style="margin-left:40px;">
-          <template x-for="set in talkSets">
-            <div class="col">
-              <template x-for="element in set">
-                <div :class="'room ' + element.class"
-                      @click="$('#' + element.id).modal('show')"
-                     :style="`height: ${100 * element.duration / 15}px;margin-top: ${element.margin}px;`">
-                  <div style="float: left; font-size: 15px;" x-text="element.room"></div>
-                  <div class="pull-right" style="float: right;"><span style="font-size: 10px;"><span x-text="element.startTime"></span> - <span x-text="element.endTime"></span></span></div>
-                  <div class="title" style="font-size: 16px; padding-top: 20px;"><b x-text="element.title"></b></div>
-                  <div class="speaker" x-text="element.speaker"></div>
-                </div>
-              </template>
+      <div class="programma-container">
+        <div class="programma-element" style="z-index:-1;">
+          <template x-for="item in gridlines">
+            <div class="gridline">
+              <span x-text="item"></span>
             </div>
           </template>
         </div>
-      </div>
-    </div>
-
-    <template x-for="talk in talks">
-      <div class="modal fade" :id="talk.id" tabindex="-1" role="dialog"
-           :aria-labelledby="talk.id + 'Label'" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" :id="talk.id + 'Label'">
-                <span x-text="talk.speaker + ': '" x-show="talk.speaker && talk.speaker.trim() != ''"></span>
-                <span x-text="talk.title"></span>
-              </h5>
-            </div>
-            <div class="modal-body">
-              <div style="float: left; font-size: 15px;" x-text="talk.room"></div>
-              <div class="pull-right" style="float: right;">
-                <span style="font-size: 10px;">
-                  <span x-text="talk.startTime"></span> - <span x-text="talk.endTime"></span>
-                </span>
-              </div><br>
-              <div x-html="talk.summary"></div>
-            </div>
+        <div class="programma-element">
+          <div class="row" style="margin-left:40px;">
+            <template x-for="set in talkSets">
+              <div class="col">
+                <template x-for="element in set">
+                  <div :class="'room ' + element.class"
+                       @click="$('#' + element.id).modal('show')"
+                       :style="`height: ${100 * element.duration / 15}px;margin-top: ${element.margin}px;`">
+                    <div style="float: left; font-size: 15px;" x-text="element.room"></div>
+                    <div class="pull-right" style="float: right;"><span style="font-size: 10px;"><span x-text="element.startTime"></span> - <span x-text="element.endTime"></span></span></div>
+                    <div class="title" style="font-size: 16px; padding-top: 20px;"><b x-text="element.title"></b></div>
+                    <div class="speaker" x-text="element.speaker"></div>
+                  </div>
+                </template>
+              </div>
+            </template>
           </div>
         </div>
       </div>
-    </template>
-  </div>
+
+      <template x-for="talk in talks">
+        <div class="modal fade" :id="talk.id" tabindex="-1" role="dialog"
+             :aria-labelledby="talk.id + 'Label'" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" :id="talk.id + 'Label'">
+                  <span x-text="talk.speaker + ': '" x-show="talk.speaker && talk.speaker.trim() != ''"></span>
+                  <span x-text="talk.title"></span>
+                </h5>
+              </div>
+              <div class="modal-body">
+                <div style="float: left; font-size: 15px;" x-text="talk.room"></div>
+                <div class="pull-right" style="float: right;">
+                <span style="font-size: 10px;">
+                  <span x-text="talk.startTime"></span> - <span x-text="talk.endTime"></span>
+                </span>
+                </div><br>
+                <div x-html="talk.summary"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </template>
+
+
+  <template x-if="mobileCheck()">
+    <div class="container data-element"
+         x-data="{programma: {}}"
+         @refresh="
+        programma = $store.programma.get.programItem;
+        programma.sort( sort_program_items );
+      ">
+      <div class="accordion accordion-flush" id="programAccordion">
+        <template x-for="item in programma" :key="item.id">
+          <div class="accordion-item">
+            <h2 class="accordion-header" :id="item.id + 'heading'">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#talk' + item.id"
+                      aria-expanded="false" aria-controls="flush-collapseOne">
+                <b x-text="item.title"></b>&nbsp;
+                <small>
+                  <span x-text="item.speaker"></span>&nbsp;
+                  <span x-text="item.startTime"></span>-<span x-text="item.endTime"></span>
+                </small>
+              </button>
+            </h2>
+            <div :id="'talk' + item.id" class="accordion-collapse collapse"
+                 :aria-labelledby="item.id + 'heading'" data-bs-parent="#programAccordion">
+              <div class="accordion-body" x-html="item.summary"></div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+    </div>
+  </template>
 
   <draftsman-query alias="programma" x-include="/prepared-statements/programma.txt">
   </draftsman-query>
