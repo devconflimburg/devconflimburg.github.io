@@ -76,6 +76,9 @@ function start_registration(edition){
           document.getElementById("input-element").focus();
         }
     },1000);
+    document.getElementById("console").addEventListener("click", function(){
+        document.getElementById("input-element").focus();
+    });
 }
 
 function next_command(){
