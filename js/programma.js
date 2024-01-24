@@ -22,6 +22,16 @@ function get_grid_lines(programma){
     return lines;
 }
 
+function  sort_program_items( a, b ) {
+  if ( a.startTime < b.startTime ){
+    return -1;
+  }
+  if ( a.startTime > b.startTime ){
+    return 1;
+  }
+  return 0;
+}
+
 var rooms = ["Forum",
              "Social zone",
              "No-code-zone",
@@ -30,18 +40,21 @@ var rooms = ["Forum",
 var talks = rooms.map(x => []);
 var classes = ["one","two","three","four","five"]
 function get_talks(programma){
-    try {
-        var prev = rooms.map(x => programma.get.start);
-        console.log(programma.get.programItem);
-        programma.get.programItem.forEach(x => {
-            let index = rooms.indexOf(x.room);
-            let margin = Math.abs(toMinutes(x.startTime) - toMinutes(prev[index]));
-            x.margin = Math.round(margin/15 * 100);
-            x.class = classes[index];
-            talks[index].push(x);
-            prev[index] = x.endTime;
-        });
-    } catch {}
+    var prev = rooms.map(x => programma.get.start);
+    console.log(programma.get.programItem);
+    programma.get.programItem.sort( sort_program_items );
+    programma.get.programItem.forEach(x => {
+        try{
+        let index = rooms.indexOf(x.room);
+        let margin = Math.abs(toMinutes(x.startTime) - toMinutes(prev[index]));
+        x.margin = Math.round(margin/15 * 100);
+        x.class = classes[index];
+        talks[index].push(x);
+        prev[index] = x.endTime;
+        } catch (error){
+            console.error(error);
+        }
+    });
     talks = talks.filter(x => x.length != 0);
     return talks;
 }

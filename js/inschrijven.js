@@ -108,8 +108,12 @@ function next_command(){
 
 function enter_command(element){
     console.log(current_state);
-    if (element.innerText.trim() == "reset"){
+    if (element.innerText.trim().toLowerCase() == "reset"){
         location.reload();
+    }
+    if (element.innerText.trim().toLowerCase() == "resend email"){
+       flow = ["email","resend"];
+       current_state = "";
     }
     if (current_state == "email"){
         element.innerText = element.innerText.trim().toLowerCase();
@@ -127,9 +131,7 @@ function enter_command(element){
             submitted = true;
         }
     }
-    else if (element.innerText.trim() == "resend email"){
-        flow = ["email","resend"];
-    } else if (!current_state.startsWith("breakout")){
+    else if (!current_state.startsWith("breakout")){
         form[current_state] = element.innerText.trim();
     } else {
         let session = parseInt(current_state.replace("breakout-",""));
