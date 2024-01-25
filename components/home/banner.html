@@ -25,7 +25,7 @@
             </template>
             <template x-if="opened && !Draftsman.fetch_query_parameter('geslaagd')">
               <div class="d-grid gap-2 col-6 mx-auto">
-                <h6 class="text-white"><span x-text="registrationManager.maxVisitors - registrationManager.registeredVisitors"></span> seats beschikbaar, inschrijving sluit over <span x-text="closeText"></span></h6>
+                <h6 class="text-white"><span x-text="registrationManager.maxVisitors - registrationManager.registeredVisitors"></span> seats beschikbaar, inschrijving sluit <span x-text="closeText"></span></h6>
                 <a href="#"
                    @click="open_registration_window()"
                    class="btn btn-outline-light">Schrijf je nu in!</a>
