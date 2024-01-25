@@ -1,34 +1,19 @@
 
 const qrScanner = new QrScanner(
     document.getElementById("scanner-preview"),
-    result => console.log('decoded qr code:', result),
-    { /* your options or returnDetailedScanResult: true if you're not specifying any other options */ },
+    result => {
+        var ticketId = result.data;
+        if (data.startsWith("devconf-ticket:")){
+            on("Checking Ticket","#666666");
+            qrScanner.stop();
+            send_mutation("redeem-ticket",{ticketId: ticketId});
+        }
+    },
+    {
+        highlightScanRegion:true,
+        highlightCodeOutline:true
+    }
 );
-
-//const qrScanner = new QrScanner(
-//    document.getElementById("scanner-preview"),
-//    result => {
-//        var data = result.data;
-//        if (data.startsWith("devconf_")){
-//            on("Checking Ticket","#666666");
-//            qrScanner.stop();
-////            const token = data.replace("devconf_","");
-////            Draftsman.mutation(mutation_query,(data,errors) => {
-////                const cid = data.Ticket.scan.correlationId;
-////                trace(token,cid);
-////            },
-////            variables={"input" : {
-////                ticketId: token
-////            }},
-////            anonymous=false);
-////            getUser(token);
-//        }
-//    },
-//    {
-//        highlightScanRegion:true,
-//        highlightCodeOutline:true
-//    }
-//);
 
 function on(message,color) {
   document.getElementById("overlay").style["background-color"] = color;
@@ -45,4 +30,37 @@ function delayedOff(delay=3000) {
   },delay);
 }
 
+const custom_query = `query MyQuery($ticketId_equals: String = "") {
+    Visitor {
+      filter(ticketId_equals: $ticketId_equals) {
+        resultset {
+          firstName
+          lastName
+        }
+      }
+    }
+  }`;
+
+function getUser(ticketId){
+ (async () => {
+              const data = await Draftsman.query(custom_query,{
+                  ticketId_equals : ticketId
+            });
+              console.log(data)
+              let visitor = data.Visitor.filter.resultset[0];
+              document.getElementById("visitor").innerHTML = `${visitor.firstName} ${visitor.lastName}`;
+            })()
+}
+
+function on_trace(log_message){
+    let message = log_message.detail;
+    if (message.status == "error"){
+        on(message.message,"#B85450");
+        getUser(ticketId)
+    }
+    if (message.status == "success"){
+        on("Valid Ticket!","#82B366");
+        getUser(ticketId)
+    }
+}
 on("Ticket Scanner","#666666");

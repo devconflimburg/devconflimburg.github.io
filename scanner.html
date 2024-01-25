@@ -9,6 +9,7 @@
         <script src="/js/configuration-staging.js"></script>
 
         <link rel="stylesheet" href="/css/draftsman.css" />
+        <script>var must_be_signed_in = true;</script>
         <script src="/js/framework.js"></script>
         <script src="/js/cache.js"></script>
         <script src="https://unpkg.com/@vimesh/ui"></script>
@@ -18,7 +19,7 @@
         <script src="https://unpkg.com/alpinejs" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qr-scanner/1.4.2/qr-scanner.umd.min.js"
                 crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="/js/scanner.js"></script>
+
         <style>
             .overlay {
               position: fixed; /* Sit on top of the page content */
@@ -58,7 +59,9 @@
             $store.mutation.send('redeem-ticket',{ticketId: Draftsman.fetch_query_parameter('id')});"></div>
         <draftsman-trace command="redeem-ticket"
                          component="Ticket.Redeem"
-                         @trace="console.log">
+                         @trace="on_trace">
         </draftsman-trace>
+
+        <script src="/js/scanner.js"></script>
     </body>
 </html>

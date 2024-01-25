@@ -1,4 +1,4 @@
-var must_be_signed_in = false;
+if (!must_be_signed_in){var must_be_signed_in = false;}
 
 // Cleanup
 document.addEventListener("beforeunload", (event) => {
