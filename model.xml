@@ -347,7 +347,7 @@
 						<mapping target="ticketId" value="ticketId"></mapping>
 						<mapping target="redeemed" value="#True"></mapping>
 					</trigger>
-					<processor type="validator" id="1toC90" condition="flow.entity.redeemed == False" exception="Ticket alreadt redeemed"></processor>
+					<processor type="validator" id="1toC90" condition="flow.entity.redeemed == False" exception="Ticket already redeemed"></processor>
 					<processor type="validator" id="7Z6hZr" condition="flow.entity.verified == True" exception="Invalid ticket"></processor>
 					<processor type="emit-event" id="aqeUGS" ref="ConferenceTicketRedeemed">
 						<mapping target="ticketId" value="#flow.ticketId"></mapping>
