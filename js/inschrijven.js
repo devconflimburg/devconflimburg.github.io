@@ -151,7 +151,7 @@ function enter_command(element){
 function append_tracelog(log_message){
     console.log(log_message);
     let message = log_message.detail;
-    write_log(`${message.command ? message.command : message.event} ${message.status}: ${message.message}`);
+    write_log(`${message.command ? message.command : message.event} ${message.status} ${message.message}`);
     if(message.command == "SendTicketVerification-Notifier" && message.status == "success"){
         setTimeout(function(){
             write_log(`Er is een verificatie e-mail naar <i>${form.email}</i> gestuurd, gebruik de link om de inschrijving af te ronden.`);

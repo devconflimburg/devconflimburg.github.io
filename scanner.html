@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <title></title>
+        <script src="/js/configuration.js"></script>
+        <script src="/js/configuration-staging.js"></script>
+
+        <link rel="stylesheet" href="/css/draftsman.css" />
+        <script src="/js/framework.js"></script>
+        <script src="/js/cache.js"></script>
+        <script src="https://unpkg.com/@vimesh/ui"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+        <script src="/js/utils.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+        <script src="https://unpkg.com/alpinejs" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qr-scanner/1.4.2/qr-scanner.umd.min.js"
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="/js/scanner.js"></script>
+        <style>
+            .overlay {
+              position: fixed; /* Sit on top of the page content */
+              display: none; /* Hidden by default */
+              width: 100%; /* Full width (cover the whole page) */
+              height: 100%; /* Full height (cover the whole page) */
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+              z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+              cursor: pointer; /* Add a pointer on hover */
+            }
+            .message {
+                position: fixed;
+                width: 100%;
+                top: 30%;
+            }
+        </style>
+    </head>
+    <body x-data x-import="commands/Ticket/redeem">
+
+        <video id="scanner-preview"></video>
+        <div class="overlay" id="overlay">
+            <div class="message">
+                <center>
+                    <h1 id="message"></h1>
+                    <h2 id="visitor"></h2>
+                    <button type="button" class="btn btn-light" onclick="delayedOff(0);">Scan!</button>
+                </center>
+            </div>
+        </div>
+
+        <ui-redeem-ticket command="redeem-ticket"></ui-redeem-ticket>
+        <div x-dummy="
+            $store.mutation.send('redeem-ticket',{ticketId: Draftsman.fetch_query_parameter('id')});"></div>
+        <draftsman-trace command="redeem-ticket"
+                         component="Ticket.Redeem"
+                         @trace="console.log">
+        </draftsman-trace>
+    </body>
+</html>
