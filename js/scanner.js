@@ -1,9 +1,11 @@
+var ticketId = "";
 
 const qrScanner = new QrScanner(
     document.getElementById("scanner-preview"),
     result => {
-        var ticketId = result.data;
-        if (data.startsWith("devconf-ticket:")){
+        console.log(result);
+        ticketId = result.data;
+        if (ticketId.startsWith("devconf-ticket:")){
             on("Checking Ticket","#666666");
             qrScanner.stop();
             send_mutation("redeem-ticket",{ticketId: ticketId});
