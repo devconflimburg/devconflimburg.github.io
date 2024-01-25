@@ -18,7 +18,12 @@
             <h4 x-text="date != '' ? moment(date, 'DD-MM-YYYY').format('LL') : ''"
                 class="display-5 fw-bolder text-white mb-2 text-center">
             </h4>
-            <template x-if="opened">
+            <template x-if="Draftsman.fetch_query_parameter('geslaagd')">
+              <div class="d-grid gap-2 col-6 mx-auto">
+                <h6 class="text-white">Inschrijving afgerond, je ontvangt zo je ticket via e-mail</h6>
+              </div>
+            </template>
+            <template x-if="opened && !Draftsman.fetch_query_parameter('geslaagd')">
               <div class="d-grid gap-2 col-6 mx-auto">
                 <h6 class="text-white"><span x-text="registrationManager.maxVisitors - registrationManager.registeredVisitors"></span> seats beschikbaar, inschrijving sluit over <span x-text="closeText"></span></h6>
                 <a href="#"
@@ -26,7 +31,7 @@
                    class="btn btn-outline-light">Schrijf je nu in!</a>
               </div>
             </template>
-            <template x-if="!opened">
+            <template x-if="!opened && Draftsman.fetch_query_parameter('geslaagd')">
               <div class="d-grid gap-2 col-6 mx-auto">
                 <h6 class="text-white" x-text="reason"></h6>
               </div>

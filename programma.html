@@ -98,7 +98,7 @@
                   <span x-text="talk.startTime"></span> - <span x-text="talk.endTime"></span>
                 </span>
                 </div><br>
-                <div x-html="talk.summary"></div>
+                <div x-html="convertMarkdownToHtml(talk.summary)"></div>
               </div>
             </div>
           </div>
@@ -130,7 +130,7 @@
             </h2>
             <div :id="'talk' + item.id" class="accordion-collapse collapse"
                  :aria-labelledby="item.id + 'heading'" data-bs-parent="#programAccordion">
-              <div class="accordion-body" x-html="item.summary"></div>
+              <div class="accordion-body" x-html="convertMarkdownToHtml(item.summary)"></div>
             </div>
           </div>
         </template>
