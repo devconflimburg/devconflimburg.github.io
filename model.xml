@@ -100,14 +100,17 @@
 			<field name="ticketId" type="String"></field>
 			<field name="breakouts" type="String"></field>
 			<field name="control" type="String"></field>
+			<field name="createdAt" type="Int"></field>
 		</event>
 		<event name="ConferenceTicketVerified" source="Conference.Ticket" type="DomainEvent">
 			<field name="ticketId" type="String"></field>
 			<field name="verified" type="Boolean" default="false"></field>
+			<field name="verifiedAt" type="Int"></field>
 		</event>
 		<event name="ConferenceTicketRedeemed" source="Conference.Ticket" type="DomainEvent">
 			<field name="ticketId" type="String"></field>
 			<field name="redeemed" type="Boolean" default="true"></field>
+			<field name="redeemedAt" type="Int"></field>
 		</event>
 		<event name="ConferenceTalkProposalCreated" source="Conference.TalkProposal" type="DomainEvent">
 			<field name="difficultyLevel" type="String"></field>
@@ -285,6 +288,9 @@
 				<field name="breakouts" type="String"></field>
 				<field name="control" type="String"></field>
 				<field name="redeemed" type="Boolean"></field>
+				<field name="createdAt" type="Int"></field>
+				<field name="verifiedAt" type="Int"></field>
+				<field name="redeemedAt" type="Int"></field>
 				<command name="Create" create-command="true">
 					<trigger key-field="ticketId" source="ConferenceRegistrationManagerVisitorRegistered">
 						<mapping value="year" target="year"></mapping>
@@ -292,11 +298,13 @@
 						<mapping value="breakouts" target="breakouts"></mapping>
 						<mapping target="control" value="control"></mapping>
 					</trigger>
+					<processor type="code" id="4ZcAEI" file="lib/TicketUtils.py" handler="get_timestamp"></processor>
 					<processor type="emit-event" ref="ConferenceTicketCreated" id="3BC8k">
 						<mapping target="year" value="#flow.year"></mapping>
 						<mapping target="ticketId" value="#flow.ticketId"></mapping>
 						<mapping target="breakouts" value="#flow.breakouts"></mapping>
 						<mapping target="control" value="#flow.control"></mapping>
+						<mapping target="createdAt" value="#flow.timestamp"></mapping>
 					</processor>
 					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConferenceRegistrationManagerVisitorRegistered" user="systemuser">
 						<input name="year" value="2024" type="String"></input>
@@ -322,9 +330,11 @@
 						<mapping target="verified" value="#True"></mapping>
 					</trigger>
 					<processor type="validator" id="M1vejN" condition="flow.control == flow.entity.control" exception="Control value [{flow.control}] does not match the ticket [{flow.entity.control}]"></processor>
+					<processor type="code" id="Ki2o7X" file="lib/TicketUtils.py" handler="get_timestamp"></processor>
 					<processor type="emit-event" id="9iWObF" ref="ConferenceTicketVerified">
 						<mapping target="ticketId" value="#flow.ticketId"></mapping>
 						<mapping target="verified" value="#flow.verified"></mapping>
+						<mapping target="verifiedAt" value="#flow.timestamp"></mapping>
 					</processor>
 					<test-case name="HappyFlow" trigger-event="VerifyTicketRequested">
 						<input name="ticketId" value="123" type="String"></input>
@@ -349,9 +359,11 @@
 					</trigger>
 					<processor type="validator" id="1toC90" condition="flow.entity.redeemed == False" exception="Ticket already redeemed"></processor>
 					<processor type="validator" id="7Z6hZr" condition="flow.entity.verified == True" exception="Invalid ticket"></processor>
+					<processor type="code" id="0Ud7Dq" file="lib/TicketUtils.py" handler="get_timestamp"></processor>
 					<processor type="emit-event" id="aqeUGS" ref="ConferenceTicketRedeemed">
 						<mapping target="ticketId" value="#flow.ticketId"></mapping>
 						<mapping target="redeemed" value="#flow.redeemed"></mapping>
+						<mapping target="redeemedAt" value="#flow.timestamp"></mapping>
 					</processor>
 					<test-case name="HappyFlow" trigger-event="RedeemTicketRequested">
 						<input name="ticketId" value="123" type="String"></input>
@@ -382,12 +394,15 @@
 					<mapping value="ticketId" target="ticketId" operand="set"></mapping>
 					<mapping value="breakouts" target="breakouts" operand="set"></mapping>
 					<mapping target="control" operand="set" value="control"></mapping>
+					<mapping target="createdAt" operand="set" value="createdAt"></mapping>
 				</event-handler>
 				<event-handler on="ConferenceTicketVerified">
 					<mapping target="verified" operand="set" value="verified"></mapping>
+					<mapping target="verifiedAt" operand="set" value="verifiedAt"></mapping>
 				</event-handler>
 				<event-handler on="ConferenceTicketRedeemed">
 					<mapping target="redeemed" operand="set" value="redeemed"></mapping>
+					<mapping target="redeemedAt" operand="set" value="redeemedAt"></mapping>
 				</event-handler>
 			</aggregate>
 			<aggregate name="TalkProposal" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
@@ -573,12 +588,12 @@
 						<input name="breakouts" type="NestedObject">[{"id": "2024-1"}, {"id": "2024-2"}]</input>
 						<state>{"openDate": "01-01-2023", "closeDate": "01-01-2123", "maxVisitors": 10}</state>
 						<expected domain-event="ConferenceRegistrationManagerVisitorRegistered">
-							<field value="devconf-ticket:189673085831463618233454140431942137832" name="ticketId" type="String"></field>
+							<field value="devconf-ticket:328042609457990298653290252337988412086" name="ticketId" type="String"></field>
 							<field value="john.doe@example.com" name="email" type="String"></field>
 							<field value="2024-1,2024-2" name="breakouts" type="String"></field>
 							<field value="f94bff90-ab56-42ec-a916-d47540b832ce" name="control" type="String"></field>
 						</expected>
-						<expected-state pk="2024">{"visitors": ["devconf-ticket:189673085831463618233454140431942137832"], "registeredVisitors": 1}</expected-state>
+						<expected-state pk="2024">{"visitors": ["devconf-ticket:328042609457990298653290252337988412086"], "registeredVisitors": 1}</expected-state>
 					</test-case>
 					<test-case name="AlreadyRegistered" expected-processing-status="error" trigger-event="RegisterVisitorConferenceRegistrationManagerRequested" user="systemuser">
 						<input name="firstName" value="John" type="String"></input>
@@ -587,7 +602,7 @@
 						<input name="email" value="john.doe@example.com" type="String"></input>
 						<input name="control" value="f94bff90-ab56-42ec-a916-d47540b832ce" type="String"></input>
 						<input name="breakouts" type="NestedObject">[{"id": "2024-1"}, {"id": "2024-2"}]</input>
-						<state>{"openDate": "01-01-2023", "closeDate": "01-01-2123", "maxVisitors": 200, "visitors": ["devconf-ticket:189673085831463618233454140431942137832"], "registeredVisitors": 1}</state>
+						<state>{"openDate": "01-01-2023", "closeDate": "01-01-2123", "maxVisitors": 200, "visitors": ["devconf-ticket:328042609457990298653290252337988412086"], "registeredVisitors": 1}</state>
 					</test-case>
 				</command>
 				<command name="Initialize" create-command="true">
