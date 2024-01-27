@@ -746,6 +746,9 @@
 			<field name="breakouts" type="String"></field>
 			<field name="redeemed" type="Boolean"></field>
 			<field name="control" type="String"></field>
+			<field name="createdAt" type="Int"></field>
+			<field name="verifiedAt" type="Int"></field>
+			<field name="redeemedAt" type="Int"></field>
 			<snapshot-handler id="Yzgy2w" sub-domain="Conference" aggregate="Ticket" key-mapping="ticketId" processor="item">
 				<mapping target="year" operand="set" value="year"></mapping>
 				<mapping target="verified" operand="set" value="verified"></mapping>
@@ -753,6 +756,9 @@
 				<mapping target="breakouts" operand="set" value="breakouts"></mapping>
 				<mapping target="redeemed" operand="set" value="redeemed"></mapping>
 				<mapping target="control" operand="set" value="control"></mapping>
+				<mapping target="createdAt" operand="set" value="createdAt"></mapping>
+				<mapping target="verifiedAt" operand="set" value="verifiedAt"></mapping>
+				<mapping target="redeemedAt" operand="set" value="redeemedAt"></mapping>
 				<delete condition="#snapshot.isDeleted != ''"></delete>
 			</snapshot-handler>
 			<query graphql-namespace="Ticket" field-name="get" type="get" authorization="role" role="administrator"></query>
