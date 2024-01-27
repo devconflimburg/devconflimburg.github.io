@@ -1,4 +1,5 @@
 var ticketId = "";
+var scanned = false;
 
 const qrScanner = new QrScanner(
     document.getElementById("scanner-preview"),
@@ -9,6 +10,7 @@ const qrScanner = new QrScanner(
             on("Checking Ticket","#666666");
             qrScanner.stop();
             send_mutation("redeem-ticket",{ticketId: ticketId});
+            scanned = true;
         }
     },
     {
@@ -24,6 +26,9 @@ function on(message,color) {
 }
 
 function delayedOff(delay=3000) {
+  if (scanned){
+    location.reload();
+  }
   setTimeout(function(){
     qrScanner.start();
     document.getElementById("overlay").style.display = "none";
@@ -65,4 +70,10 @@ function on_trace(log_message){
         getUser(ticketId)
     }
 }
-on("Ticket Scanner","#666666");
+
+if (!sessionStorage.getItem("scanner")){
+    on("Ticket Scanner","#666666");
+    sessionStorage["scanner"] = "true";
+} else {
+    delayedOff(0);
+}
