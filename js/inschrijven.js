@@ -1,11 +1,12 @@
 
 function inschrijvingGeopend(registrationManager){
+    console.log(registrationManager);
     try{
         var openDate = moment(registrationManager.openDate, 'DD-MM-YYYY');
         var closeDate = moment(registrationManager.closeDate, 'DD-MM-YYYY');
         var check = new Date();
         return check >= openDate && check <= closeDate && registrationManager.registeredVisitors < registrationManager.maxVisitors;
-    } catch {
+    } catch(err) {
         return false;
     }
 }

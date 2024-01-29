@@ -31,7 +31,7 @@
                    class="btn btn-outline-light">Schrijf je nu in!</a>
               </div>
             </template>
-            <template x-if="!opened && Draftsman.fetch_query_parameter('geslaagd')">
+            <template x-if="!opened && !Draftsman.fetch_query_parameter('geslaagd')">
               <div class="d-grid gap-2 col-6 mx-auto">
                 <h6 class="text-white" x-text="reason"></h6>
               </div>
