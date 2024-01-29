@@ -5,9 +5,9 @@ please make sure you rename the file.
 <template x-component="ticket-filter">
     <div>
         <draftsman-query :alias="$prop('alias')" authenticated>
-     query FilterTicket {
+     query FilterTicket($year_equals: String = "", $verified_equals: Boolean = false, $redeemed_equals: Boolean = false) {
        Ticket {
-         filter {
+         filter(year_equals: $year_equals, verified_equals: $verified_equals, redeemed_equals: $redeemed_equals) {
             resultset { 
              key
              year
@@ -25,7 +25,23 @@ please make sure you rename the file.
      }
         </draftsman-query>
         <div x-init="$store.forms[$prop('alias')] = $el.innerHTML" style="display:none;">
-[]
+[
+  {
+    "name": "year_equals",
+    "type": "String",
+    "title": "Year Equals"
+  },
+  {
+    "name": "verified_equals",
+    "type": "Boolean",
+    "title": "Verified Equals"
+  },
+  {
+    "name": "redeemed_equals",
+    "type": "Boolean",
+    "title": "Redeemed Equals"
+  }
+]
         </div>
     </div>
 </template>

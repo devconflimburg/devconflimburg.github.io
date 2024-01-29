@@ -762,7 +762,11 @@
 				<delete condition="#snapshot.isDeleted != ''"></delete>
 			</snapshot-handler>
 			<query graphql-namespace="Ticket" field-name="get" type="get" authorization="role" role="administrator"></query>
-			<query graphql-namespace="Ticket" field-name="filter" type="filter" authorization="role" role="administrator"></query>
+			<query graphql-namespace="Ticket" field-name="filter" type="filter" authorization="role" role="administrator">
+				<filter-clause field-name="year" operand="equals"></filter-clause>
+				<filter-clause field-name="verified" operand="equals"></filter-clause>
+				<filter-clause field-name="redeemed" operand="equals"></filter-clause>
+			</query>
 		</view>
 		<view name="ProgramItem" data-retention-days="-1" exclude-notification="false">
 			<field name="summary" type="String"></field>
