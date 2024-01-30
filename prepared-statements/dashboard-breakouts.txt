@@ -1,0 +1,14 @@
+query MyQuery($year: ID = "2024") {
+  Program {
+    get(key: $year) {
+      programItem {
+        breakout
+        session
+        speaker
+        title
+        room
+        id
+      }
+    }
+  }
+}

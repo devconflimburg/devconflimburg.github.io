@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <title></title>
+        <script src="/js/configuration.js"></script>
+        <script src="/js/configuration-staging.js"></script>
+
+        <link rel="stylesheet" href="/css/draftsman.css" />
+        <script>var must_be_signed_in = true;</script>
+        <script src="/js/framework.js"></script>
+        <script src="/js/cache.js"></script>
+        <script src="https://unpkg.com/@vimesh/ui"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+        <script src="/js/utils.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+        <script src="https://unpkg.com/alpinejs" defer></script>
+        <script async defer data-domain="devconf.nl"
+                src="https://analytics.bohanssen.com/js/plausible.js"></script>
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+    </head>
+    <body x-data>
+
+    <div id="registrations"></div>
+    <div id="tickets"></div>
+    <div id="breakout_diagram"></div>
+
+    <div class="data-element" @refresh="draw_dashboard"></div>
+
+    <draftsman-query alias="tickets" x-include="/prepared-statements/dashboard-tickets.txt" authenticated>
+    </draftsman-query>
+    <draftsman-query alias="manager" x-include="/prepared-statements/dashboard-registrationmanager.txt" authenticated>
+    </draftsman-query>
+    <draftsman-query alias="breakouts" x-include="/prepared-statements/dashboard-breakouts.txt" authenticated>
+    </draftsman-query>
+
+    <draftsman-notification message="updated" type="Ticket"
+                            @notification="
+        console.log('Received message:',$event.detail);
+        Draftsman.reload_data();">
+    </draftsman-notification>
+
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="/js/dashboard.js"></script>
+</html>

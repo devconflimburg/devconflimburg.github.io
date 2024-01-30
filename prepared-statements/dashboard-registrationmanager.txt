@@ -1,0 +1,12 @@
+query MyQuery($year: ID = "2024") {
+  Conference {
+    RegistrationManager {
+      get(key: $year) {
+        closeDate
+        maxVisitors
+        openDate
+        registeredVisitors
+      }
+    }
+  }
+}

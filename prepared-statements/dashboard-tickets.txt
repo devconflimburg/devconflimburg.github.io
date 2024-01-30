@@ -1,0 +1,13 @@
+query MyQuery($year: String = "2024") {
+  Ticket {
+    filter(year_equals: $year) {
+      resultset {
+        breakouts
+        createdAt
+        verified
+        redeemed
+        redeemedAt
+      }
+    }
+  }
+}
