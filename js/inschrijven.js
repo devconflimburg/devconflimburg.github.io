@@ -1,6 +1,5 @@
 
 function inschrijvingGeopend(registrationManager){
-    console.log(registrationManager);
     try{
         var openDate = moment(registrationManager.openDate, 'DD-MM-YYYY');
         var closeDate = moment(registrationManager.closeDate, 'DD-MM-YYYY');
@@ -56,13 +55,13 @@ var form = {};
 var submitted = false;
 
 function start_registration(edition){
-    write_log("Welkom bij de inschrijf applicatie voor devConf " + edition.year);
-    write_log("Het event vind plaats op woensdag " + edition.date);
+    write_log("Welkom bij de aanmelding voor devConf " + edition.year);
+    write_log("Het event vindt plaats op woensdag " + moment(edition.date,'DD-MM-YYYY').format("YYYY-MM-DD"));
     write_log("&nbsp;");
-    write_log("Gedurende deze registratie vragen we ook om een voorkeur voor de breakout sessies op te geven, dit is niet bindend. We gebruiken deze data als input voor de zaal indeling.")
+    write_log("Gedurende deze registratie vragen we ook om een voorkeur op te geven voor de breakoutsessies, dit is niet bindend. We gebruiken deze data enkel als input voor de zaalindeling.")
     write_log("&nbsp;");
-    write_log("Door het commando 'reset' uit te voeren kun je alle ingevoerde data verwijderen zonder te registreren.")
-    write_log("Heb je je al eerder geregistreerd maar ben je de email kwijt? Voer dan het commando 'resend email' uit");
+    write_log("Door het commando ‘reset’ uit te voeren kun je alle ingevoerde data verwijderen zonder te registreren.")
+    write_log("Ben je al aangemeld, maar ben je de email kwijt? Voer dan het commando ‘resend email’ uit.");
     write_log("&nbsp;");
     breakouts = get_breakouts(edition.program.programItem);
     form.year = edition.year;
@@ -137,6 +136,11 @@ function enter_command(element){
     } else {
         let session = parseInt(current_state.replace("breakout-",""));
         let index = parseInt(element.innerText);
+        if (!breakouts[session][index]){
+            let options = breakouts[session].length - 1;
+            write_log("Please select a value between 0-" + options)
+            element.innerText = "";
+        }
         form.breakouts.push({
             id: breakouts[session][index].id
         });
