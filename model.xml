@@ -937,7 +937,7 @@ if snapshot.isDeleted != '':
 			</trigger>
 			<activity type="iam-create-systemuser" fail-silent="true" id="vMB9LZ"></activity>
 		</notifier>
-		<notifier name="HandleResenRequest">
+		<notifier name="HandleResendRequest">
 			<trigger source="HandleLostTicketRequested">
 				<mapping target="email" value="email"></mapping>
 			</trigger>
