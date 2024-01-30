@@ -138,6 +138,7 @@ function enter_command(element){
         let index = parseInt(element.innerText);
         if (!breakouts[session][index]){
             let options = breakouts[session].length - 1;
+            write_log(command.instruction + "> " + element.innerText);
             write_log("Please select a value between 0-" + options)
             element.innerText = "";
         }
