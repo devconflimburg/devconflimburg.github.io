@@ -38,24 +38,62 @@
   overflow-y:scroll;
 }
     </style>
-    <body x-data="session" x-import="commands/Conference/RegistrationManager/registerVisitor;commands/Ticket/handleLost">
+
+    <!-- is a reactive data-object initialized in inschrijven.js, bottom of the script
+         it has two attributes "command" and "logs" that are available within this page.
+    -->
+    <body x-data="session">
+
+    <!-- The visible part of the screen -->
     <div id="console">
+        <!-- The template tag is used to loop the lines in the log array, a paragraph
+             is appended to this div for each line -->
         <template x-for="(line,index) in logs" :key="index.toString()">
             <p x-html="line"></p>
         </template>
         <p>
-            <span x-text="command.instruction"></span>>&nbsp;<span id="input-element" contenteditable="true" autofocus @keyup.enter="enter_command($el)"></span>
+            <!-- The prompt, command.instruction is set from the javascript
+                 primarily from the "next_command" function. The other <span>
+                 is used as an input. When the enter key is used the "enter_command" function is invoked -->
+            <span x-text="command.instruction"></span>>&nbsp;
+            <span id="input-element" contenteditable="true" autofocus @keyup.enter="enter_command($el)"></span>
         </p>
     </div>
-    <div class="data-element" @refresh="start_registration($store.next.Element.get.edition)"></div>
-    <draftsman-trace command="register" @trace="append_tracelog">
-    </draftsman-trace>
-    <draftsman-trace command="lost-email-command" @trace="append_tracelog">
-    </draftsman-trace>
-    <ui-handle-lost-ticket command="lost-email-command"></ui-handle-lost-ticket>
-    <ui-register-visitor-conference-registration-manager command="register"></ui-register-visitor-conference-registration-manager>
+
+    <!-- And from here starts the invisible part of the screen -->
+
+    <!-- The query, a prepared API call that is automatically invoked after a page load,
+         but could be invoked again via javascript. A page could have multiple draftsman-query tags
+         these will be merged and executed as 1 API call. Data is accessible via the "alias" -->
     <draftsman-query alias="next" x-include="/prepared-statements/next-edition.txt">
     </draftsman-query>
+
+    <!-- The class "data-element" annotates that this div is dependent on the draftsman-query data retrieved via the API.
+         This annotation makes sure that a "refresh" event is triggered whenever the API call returns. And in this case
+         we invoke the function "start_registration". We pass data to this function, the data from the draftsman-query
+         is retrieved via the alias $store.next, from there we traverse the JSON path in the response data.
+         -->
+    <div class="data-element" @refresh="start_registration($store.next.Element.get.edition)"></div>
+
+    <!-- A command, a mutation that is send to the API.
+         The actual API call is triggered from javascript: send_mutation("register",data) -->
+    <draftsman-mutation command="register" x-include="/prepared-statements/commands/register-visitor.txt">
+    </draftsman-mutation>
+
+    <!-- Commands are handled asynchronously, the draftsman-trace tag makes sure we subscribe to
+         Track & Trace whenever the "register" command is executed. It makes use of GraphQL subscribers
+         that lean on websockets. On a trace event the "append_tracelog" function is triggered -->
+    <draftsman-trace command="register" @trace="append_tracelog">
+    </draftsman-trace>
+
+    <!-- The command when the user request to resend an e-mail -->
+    <draftsman-mutation command="lost-email-command" x-include="/prepared-statements/commands/handle-lost-ticket.txt">
+    </draftsman-mutation>
+
+    <!-- And the trace subscriber for the above command -->
+    <draftsman-trace command="lost-email-command" @trace="append_tracelog">
+    </draftsman-trace>
+
     </body>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
 </html>

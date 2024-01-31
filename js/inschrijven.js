@@ -139,7 +139,7 @@ function enter_command(element){
         if (!breakouts[session][index]){
             let options = breakouts[session].length - 1;
             write_log(command.instruction + "> " + element.innerText);
-            write_log("Please select a value between 0-" + options)
+            write_log("<i style='color:red;'>Please select a value between 0-" + options +"</i>")
             element.innerText = "";
         }
         form.breakouts.push({
@@ -157,7 +157,11 @@ function enter_command(element){
 function append_tracelog(log_message){
     console.log(log_message);
     let message = log_message.detail;
-    write_log(`${message.command ? message.command : message.event} ${message.status} ${message.message}`);
+    let line = `${message.command ? message.command : message.event} ${message.status} ${message.message}`;
+    if (message.status == "error"){
+        line = `<i style="color:red">${line}</i>`
+    }
+    write_log(line);
     if(message.command == "SendTicketVerification-Notifier" && message.status == "success"){
         setTimeout(function(){
             write_log(`Er is een verificatie e-mail naar <i>${form.email}</i> gestuurd, gebruik de link om de inschrijving af te ronden.`);

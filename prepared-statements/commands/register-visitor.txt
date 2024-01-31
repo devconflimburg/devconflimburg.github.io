@@ -1,0 +1,9 @@
+mutation RegisterVisitor($firstName: String = "", $lastName: String = "", $year: String = "", $email: String = "", $breakouts: [RegisterVisitorConferenceRegistrationManager_Breakouts!] = []) {
+   Conference{
+     RegistrationManager{
+       registerVisitor(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,breakouts: $breakouts}) {
+          correlationId
+       }
+     }
+   }
+ }
