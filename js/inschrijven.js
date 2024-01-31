@@ -79,6 +79,16 @@ function start_registration(edition){
     document.getElementById("console").addEventListener("click", function(){
         document.getElementById("input-element").focus();
     });
+
+    // Onderstaande functie is uit het GUI assist framework, deze wordt automatisch uitgevoerd.
+    // 31-01-2024 hadden we wat instabiliteit bij het laden van de mutaties, dit hebben we gemitigeerd
+    // door de mutaties op een vergelijkbare manier op de pagina te laden als de queries.
+    //
+    // De fout is echter niet reproduceerbaar omdat het een timings-issue is tussen het laden van scripts/resources
+    // en de uitvoer van scripts.
+    //
+    // We roepen hieronder de register_mutations functie opnieuw aan als additionele mitigerende maatregel.
+    setTimeout(register_mutations,1000);
 }
 
 function next_command(){
