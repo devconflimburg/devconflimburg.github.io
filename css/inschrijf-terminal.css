@@ -1,0 +1,15 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#console {
+  font-family: Courier;
+  background-color: #000000;
+  color: #99ff00;
+  display:block;
+  float:left;
+  width: 100vw;
+  height: 100vh;
+  overflow-y:scroll;
+}

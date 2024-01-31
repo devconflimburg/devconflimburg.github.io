@@ -4,11 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
-        <title></title>
+        <title>Command Prompt</title>
         <script src="/js/configuration.js"></script>
         <script src="/js/configuration-staging.js"></script>
 
         <link rel="stylesheet" href="/css/draftsman.css" />
+        <link rel="stylesheet" href="/css/inschrijf-terminal.css" />
+
         <script src="/js/framework.js"></script>
         <script src="/js/cache.js"></script>
         <script src="https://unpkg.com/@vimesh/ui"></script>
@@ -21,26 +23,10 @@
 
         <script src="/js/inschrijven.js"></script>
     </head>
-    <style>
-* {
-  margin: 0;
-  padding: 0;
-}
 
-#console {
-  font-family: Courier;
-  background-color: #000000;
-  color: #99ff00;
-  display:block;
-  float:left;
-  width: 100vw;
-  height: 100vh;
-  overflow-y:scroll;
-}
-    </style>
-
-    <!-- is a reactive data-object initialized in inschrijven.js, bottom of the script
+    <!-- "session" is a reactive data-object initialized in inschrijven.js, bottom of the script
          it has two attributes "command" and "logs" that are available within this page.
+         https://alpinejs.dev & https://github.com/vimeshjs/vimesh-ui
     -->
     <body x-data="session">
 
@@ -64,7 +50,8 @@
 
     <!-- The query, a prepared API call that is automatically invoked after a page load,
          but could be invoked again via javascript. A page could have multiple draftsman-query tags
-         these will be merged and executed as 1 API call. Data is accessible via the "alias" -->
+         these will be merged and executed as 1 API call. Data is accessible via the "alias".
+         -->
     <draftsman-query alias="next" x-include="/prepared-statements/next-edition.txt">
     </draftsman-query>
 
@@ -75,8 +62,8 @@
          -->
     <div class="data-element" @refresh="start_registration($store.next.Element.get.edition)"></div>
 
-    <!-- A command, a mutation that is send to the API.
-         The actual API call is triggered from javascript: send_mutation("register",data) -->
+    <!-- A mutation that is sent to the API.
+         The actual API call is triggered from javascript: send_mutation("register",{firstName: 'John', ...}) -->
     <draftsman-mutation command="register" x-include="/prepared-statements/commands/register-visitor.txt">
     </draftsman-mutation>
 

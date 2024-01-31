@@ -39,13 +39,9 @@
             <ui-navbar></ui-navbar>
             <ui-banner></ui-banner>
             <ui-call-to-action></ui-call-to-action>
-            <!--
-            <ui-signup-newsletter></ui-signup-newsletter>
-            -->
+            
             <draftsman-notification message="updated" type="RegistrationManager"
-                                    @notification="
-        console.log('Received message:',$event.detail);
-        Draftsman.reload_data();">
+                                    @notification="console.log('Received message:',$event.detail);Draftsman.reload_data();">
             </draftsman-notification>
         </main>
         <ui-footer></ui-footer>
