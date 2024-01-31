@@ -82,7 +82,6 @@ function register_mutations(){
     Array.prototype.slice.call(tags).forEach(mutation => {
         let name = mutation.getAttribute("command");
         let query_string = mutation.innerHTML.trim();
-        console.log("Found mutation -->",name)
         mutation_queries[name] = query_string;
         mutation_queries[name+"_anonymous"] = !mutation.hasAttribute("authenticated");
     });
