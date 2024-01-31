@@ -968,7 +968,7 @@ if snapshot.isDeleted != '':
 	<functional-scenarios clean-db="true" clean-iam="false" minimum-event-coverage="80" minimum-view-coverage="80">
 		<scenario name="TalkProposal">
 			<activity type="set-variables" id="orhaBC">
-				<input name="email" type="String" value="jacen51321@tsderp.com"></input>
+				<input name="email" type="String" value="xaharev833@evvgo.com"></input>
 			</activity>
 			<activity type="mutation" path="Conference.TalkProposal.create" id="mRaQOC">
 				<input name="difficultyLevel" type="String" value="novice"></input>
@@ -1014,7 +1014,7 @@ if snapshot.isDeleted != '':
 				<input name="year" type="String" value="2010"></input>
 				<input name="firstName" type="String" value="John"></input>
 				<input name="lastName" type="String" value="Doe"></input>
-				<input name="email" type="String" value="jacen51321@tsderp.com"></input>
+				<input name="email" type="String" value="xaharev833@evvgo.com"></input>
 				<input name="breakouts" type="String" value="2010-2"></input>
 			</activity>
 			<activity type="mutation" description="Initialiseer een editie" path="Conference.initializeEdition" id="BfMuF0">
