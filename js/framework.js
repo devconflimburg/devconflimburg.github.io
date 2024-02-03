@@ -10,16 +10,10 @@ document.addEventListener("beforeunload", (event) => {
     }
 });
 var mutation_queries = {};
-var request_cache = []
 var inflight = "";
 function send_mutation(command,data){
     inflight = command;
     empty_track_and_trace_log();
-    var cache_key = JSON.stringify({command: command,data: data});
-    if (request_cache.includes(cache_key)){
-        return;
-    }
-    request_cache.push(cache_key);
     let query = mutation_queries[command];
     let anonymous = mutation_queries[command+"_anonymous"];
     appsync_call(query,(data,errors) => {
