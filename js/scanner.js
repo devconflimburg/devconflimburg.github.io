@@ -24,7 +24,6 @@ function on(message,color) {
 }
 
 function delayedOff(delay=3000) {
-  request_cache = [];
   setTimeout(function(){
     qrScanner.start();
     document.getElementById("overlay").style.display = "none";
