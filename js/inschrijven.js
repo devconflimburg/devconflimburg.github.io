@@ -127,6 +127,11 @@ function enter_command(element){
     }
     if (current_state == "email"){
         element.innerText = element.innerText.trim().toLowerCase();
+        if (!/^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$/.test(element.innerText)){
+            element.innerText = "";
+            write_log("<i style='color:red;'>The provided email address does not match the required pattern: <a style='color:#00d2ff;' href='https://regexr.com/3e48o' target='_blank'>^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$</a></i>")
+            throw "invalid input";
+        }
     }
     if (current_state == "submit"){
         console.log(element.innerText.trim().toLowerCase(),submitted);
