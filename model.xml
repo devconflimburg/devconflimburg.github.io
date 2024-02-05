@@ -3,7 +3,7 @@
 	<global>
 		<pattern name="Year" regex="^(?:20)\d{2}$"></pattern>
 		<pattern name="ProgramItemId" regex="^(?:20)\d{2}-\d{1,2}$"></pattern>
-		<pattern name="Email" regex="^(.+)@(.+)$"></pattern>
+		<pattern name="Email" regex="^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$"></pattern>
 		<pattern name="TimeNotation" regex="^\d{2}:\d{2}$"></pattern>
 		<pattern name="Date" regex="^\d{2}-\d{2}-(?:20)\d{2}$"></pattern>
 	</global>
