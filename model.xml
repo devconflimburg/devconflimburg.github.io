@@ -890,6 +890,17 @@ if snapshot.isDeleted != '':
 	<projections>
 	</projections>
 	<notifiers>
+		<notifier name="SendVerificationReminders">
+			<trigger source="@cron(0 4 ? * WED *)">
+				<mapping target="dummy" value="#''"></mapping>
+			</trigger>
+			<activity type="call-internal-api" id="WMGGQY" name="visitors" query="query MyQuery {|LB|  Visitor {|LB|    filter {|LB|      resultset {|LB|        email|LB|        ticket {|LB|          verified|LB|        }|LB|      }|LB|    }|LB|  }|LB|}"></activity>
+			<activity type="code" id="Rc2JG3" code='flow.emails = [|LB|        visitor["email"]|LB|        for visitor in flow.visitors.data.filter.resultset|LB|        if visitor["ticket"]["verified"]|LB|    ]'></activity>
+			<activity type="loop" id="0Vxqk1" array="#flow.emails">
+				<activity type="set-variable" id="r8NpQq" name="email" expression="#item"></activity>
+				<activity type="call-internal-api" id="biwV3E" name="result" query='mutation MyMutation {|LB|  Ticket {|LB|    handleLost(input: {email: "{{flow.email}}"}) {|LB|      correlationId|LB|    }|LB|  }|LB|}|LB|'></activity>
+			</activity>
+		</notifier>
 		<notifier name="SendTicketVerification">
 			<trigger source="ConferenceRegistrationManagerVisitorRegistered">
 				<mapping target="year" value="year"></mapping>
