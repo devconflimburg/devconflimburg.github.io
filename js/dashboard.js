@@ -12,6 +12,11 @@ var ticketStates = null;
 var breakoutData = null;
 
 function draw_dashboard(){
+    let tickets = Alpine.store("tickets").filter.resultset;
+    let manager = Alpine.store("manager").RegistrationManager.get;
+    document.getElementById("year").innerText = manager.year;
+    document.getElementById("counter").innerText = tickets.length;
+
     prepare_registration();
     prepare_ticket_state();
     prepare_breakouts();

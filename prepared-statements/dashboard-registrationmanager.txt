@@ -6,6 +6,7 @@ query MyQuery($year: ID = "2024") {
         maxVisitors
         openDate
         registeredVisitors
+        year
       }
     }
   }
