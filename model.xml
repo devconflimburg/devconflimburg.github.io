@@ -1096,7 +1096,7 @@ if snapshot.isDeleted != '':
 	<functional-scenarios clean-db="true" clean-iam="false" minimum-event-coverage="80" minimum-view-coverage="80">
 		<scenario name="TalkProposal">
 			<activity type="set-variables" id="orhaBC">
-				<input name="email" type="String" value="xaharev833@evvgo.com"></input>
+				<input name="email" type="String" value="cifepoh506@tupanda.com"></input>
 			</activity>
 			<activity type="mutation" path="Conference.TalkProposal.create" id="mRaQOC">
 				<input name="difficultyLevel" type="String" value="novice"></input>
@@ -1142,7 +1142,7 @@ if snapshot.isDeleted != '':
 				<input name="year" type="String" value="2010"></input>
 				<input name="firstName" type="String" value="John"></input>
 				<input name="lastName" type="String" value="Doe"></input>
-				<input name="email" type="String" value="xaharev833@evvgo.com"></input>
+				<input name="email" type="String" value="cifepoh506@tupanda.com"></input>
 				<input name="breakouts" type="String" value="2010-2"></input>
 			</activity>
 			<activity type="mutation" description="Initialiseer een editie" path="Conference.initializeEdition" id="BfMuF0">
@@ -1222,6 +1222,7 @@ if snapshot.isDeleted != '':
 				<input name="breakouts" type="Nested" value="[{'id':'2010-2'}]"></input>
 				<input name="email" type="String" value="#email#"></input>
 				<expected-trace command="RegistrationManager.RegisterVisitor" status="Success"></expected-trace>
+				<expected-trace command="SendTicketVerification-Notifier" status="success"></expected-trace>
 			</activity>
 			<activity type="query" id="6ZBYus" description="Haal bezoeker op" path="Visitor.get" view="Visitor">
 				<input name="key" type="String" value="#email#"></input>
@@ -1239,15 +1240,26 @@ if snapshot.isDeleted != '':
 				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
 				<extract-value name="control" put-key="control"></extract-value>
 			</activity>
+			<activity type="mutation" id="i3BK0P" description="Trigger resend verification" path="Ticket.handleLost">
+				<input name="email" type="String" value="#email#"></input>
+				<expected-trace command="HandleResendRequest-Notifier" status="success"></expected-trace>
+				<expected-trace command="SendTicketVerification-Notifier" status="success"></expected-trace>
+			</activity>
 			<activity type="mutation" id="Hk19rJ" path="Ticket.verify" description="Verify ticket">
 				<input name="ticketId" type="String" value="#ticketId#"></input>
 				<input name="control" type="String" value="#control#"></input>
 				<expected-trace command="Conference.Ticket.Verify" status="success"></expected-trace>
+				<expected-trace command="SendTicket-Notifier" status="success"></expected-trace>
 			</activity>
 			<activity type="query" id="1aE4iU" description="Check if ticket is verified" path="Ticket.get" view="Ticket">
 				<input name="key" type="String" value="#ticketId#"></input>
 				<expect-value name="verified" type="Boolean" value="true"></expect-value>
 				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
+			</activity>
+			<activity type="mutation" id="i3BK0A" description="Trigger resend ticket" path="Ticket.handleLost">
+				<input name="email" type="String" value="#email#"></input>
+				<expected-trace command="HandleResendRequest-Notifier" status="success"></expected-trace>
+				<expected-trace command="SendTicket-Notifier" status="success"></expected-trace>
 			</activity>
 			<activity type="mutation" id="wQ2Lwa" description="Redeem Invalid Ticket" path="Ticket.redeem">
 				<input name="ticketId" type="String" value="#email#"></input>
@@ -1265,6 +1277,16 @@ if snapshot.isDeleted != '':
 			<activity type="mutation" id="CiX5ai" description="Try to redeem the ticket for a second time" path="Ticket.redeem">
 				<input name="ticketId" type="String" value="#ticketId#"></input>
 				<expected-trace command="Conference.Ticket.Redeem" status="error"></expected-trace>
+			</activity>
+			<activity type="mutation" id="s9BNMN" description="Deregister" path="Conference.RegistrationManager.deregisterVisitor">
+				<input name="email" type="String" value="#email#"></input>
+				<input name="ticketId" type="String" value="#ticketId#"></input>
+				<input name="reason" type="String" value="Regressie test"></input>
+				<input name="year" type="String" value="#year#"></input>
+				<expected-trace command="Conference.RegistrationManager.DeregsiterVisitor" status="success"></expected-trace>
+				<expected-trace command="Conference.Ticket.Delete" status="success"></expected-trace>
+				<expected-trace command="Conference.Visitor.Delete" status="success"></expected-trace>
+				<expected-trace command="SendDeregisterConfirmation-Notifier" status="success"></expected-trace>
 			</activity>
 		</scenario>
 		<scenario name="CreateProgram">
