@@ -21,7 +21,7 @@
     </script>
 </head>
 <body class="d-flex flex-column h-100" x-data="{search: $persist('').using(sessionStorage),
-        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Ticket/resendVerification;commands/Ticket/verify;commands/Ticket/handleLost;commands/Ticket/redeem;commands/Ticket/resend;commands/WebSite/Element/update;commands/WebSite/Element/create;commands/Conference/TalkProposal/create;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/Conference/addProgramItem;commands/Conference/initializeEdition;views/TalkProposal/filter;views/Ticket/get;views/Ticket/filter;views/Program/Item/filter;views/Program/Item/get;views/Program/filter;views/Program/get;views/Conference/RegistrationManager/get;views/WebSite/Element/filter;views/WebSite/Element/get;views/Visitor/get;views/Visitor/filter;views/Edition/filter;views/Edition/get">
+        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Ticket/resendVerification;commands/Ticket/verify;commands/Ticket/handleLost;commands/Ticket/redeem;commands/Ticket/resend;commands/Conference/RegistrationManager/deregisterVisitor;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/WebSite/Element/update;commands/WebSite/Element/create;commands/Conference/TalkProposal/create;commands/Conference/addProgramItem;commands/Conference/initializeEdition;views/TalkProposal/filter;views/Ticket/get;views/Ticket/filter;views/Program/Item/filter;views/Program/Item/get;views/Program/filter;views/Program/get;views/Conference/RegistrationManager/get;views/WebSite/Element/filter;views/WebSite/Element/get;views/Visitor/get;views/Visitor/filter;views/Edition/filter;views/Edition/get">
 <main class="flex-shrink-0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" x-transition>
         <div class="container px-5">
@@ -118,6 +118,45 @@
                     </div>
                     <hr>
                 
+                    <h6>Conference.RegistrationManager</h6>
+                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                        
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'deregistervisitorconferenceregistrationmanager'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_deregistervisitorconferenceregistrationmanager">
+                                DeregisterVisitorConferenceRegistrationManager
+                            </button>
+                            <ui-deregister-visitor-conference-registration-manager command="deregistervisitorconferenceregistrationmanager"></ui-deregister-visitor-conference-registration-manager>
+                            <ui-basic-modal
+                                        title="Command: DeregisterVisitorConferenceRegistrationManager"
+                                        alias="deregistervisitorconferenceregistrationmanager"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_deregistervisitorconferenceregistrationmanager"></ui-trace-table>
+                            <ui-basic-form alias="deregistervisitorconferenceregistrationmanager" target="#modal_body_deregistervisitorconferenceregistrationmanager"></ui-basic-form>
+                        
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'configureconferenceregistrationmanager'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_configureconferenceregistrationmanager">
+                                ConfigureConferenceRegistrationManager
+                            </button>
+                            <ui-configure-conference-registration-manager command="configureconferenceregistrationmanager"></ui-configure-conference-registration-manager>
+                            <ui-basic-modal
+                                        title="Command: ConfigureConferenceRegistrationManager"
+                                        alias="configureconferenceregistrationmanager"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_configureconferenceregistrationmanager"></ui-trace-table>
+                            <ui-basic-form alias="configureconferenceregistrationmanager" target="#modal_body_configureconferenceregistrationmanager"></ui-basic-form>
+                        
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'registervisitorconferenceregistrationmanager'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_registervisitorconferenceregistrationmanager">
+                                RegisterVisitorConferenceRegistrationManager
+                            </button>
+                            <ui-register-visitor-conference-registration-manager command="registervisitorconferenceregistrationmanager"></ui-register-visitor-conference-registration-manager>
+                            <ui-basic-modal
+                                        title="Command: RegisterVisitorConferenceRegistrationManager"
+                                        alias="registervisitorconferenceregistrationmanager"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_registervisitorconferenceregistrationmanager"></ui-trace-table>
+                            <ui-basic-form alias="registervisitorconferenceregistrationmanager" target="#modal_body_registervisitorconferenceregistrationmanager"></ui-basic-form>
+                        
+                    </div>
+                    <hr>
+                
                     <h6>WebSite.Element</h6>
                     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                         
@@ -159,34 +198,6 @@
                                         alias="createconferencetalkproposal"></ui-basic-modal>
                             <ui-trace-table target="#modal_body_createconferencetalkproposal"></ui-trace-table>
                             <ui-basic-form alias="createconferencetalkproposal" target="#modal_body_createconferencetalkproposal"></ui-basic-form>
-                        
-                    </div>
-                    <hr>
-                
-                    <h6>Conference.RegistrationManager</h6>
-                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                        
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'configureconferenceregistrationmanager'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_configureconferenceregistrationmanager">
-                                ConfigureConferenceRegistrationManager
-                            </button>
-                            <ui-configure-conference-registration-manager command="configureconferenceregistrationmanager"></ui-configure-conference-registration-manager>
-                            <ui-basic-modal
-                                        title="Command: ConfigureConferenceRegistrationManager"
-                                        alias="configureconferenceregistrationmanager"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_configureconferenceregistrationmanager"></ui-trace-table>
-                            <ui-basic-form alias="configureconferenceregistrationmanager" target="#modal_body_configureconferenceregistrationmanager"></ui-basic-form>
-                        
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'registervisitorconferenceregistrationmanager'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_registervisitorconferenceregistrationmanager">
-                                RegisterVisitorConferenceRegistrationManager
-                            </button>
-                            <ui-register-visitor-conference-registration-manager command="registervisitorconferenceregistrationmanager"></ui-register-visitor-conference-registration-manager>
-                            <ui-basic-modal
-                                        title="Command: RegisterVisitorConferenceRegistrationManager"
-                                        alias="registervisitorconferenceregistrationmanager"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_registervisitorconferenceregistrationmanager"></ui-trace-table>
-                            <ui-basic-form alias="registervisitorconferenceregistrationmanager" target="#modal_body_registervisitorconferenceregistrationmanager"></ui-basic-form>
                         
                     </div>
                     <hr>
