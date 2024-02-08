@@ -257,7 +257,7 @@
 					<mapping value="room" target="room" operand="set"></mapping>
 				</event-handler>
 			</aggregate>
-			<aggregate name="Visitor" event-ttl="7776000" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
+			<aggregate name="Visitor" event-ttl="7776000" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0" business-key="ticketId">
 				<field name="firstName" type="String"></field>
 				<field name="lastName" type="String"></field>
 				<field name="year" type="String"></field>
@@ -291,7 +291,7 @@
 					</test-case>
 				</command>
 				<command name="Delete">
-					<trigger source="VisitorDeregistered" key-field="email">
+					<trigger source="VisitorDeregistered" key-field="ticketId">
 						<mapping target="email" value="email"></mapping>
 						<mapping target="ticketId" value="ticketId"></mapping>
 						<mapping target="reason" value="reason"></mapping>
@@ -306,7 +306,7 @@
 						<expected domain-event="VisitorDeleted">
 							<field value="john.doe@example.com" name="email" type="String"></field>
 						</expected>
-						<expected-state pk="john.doe@example.com">{
+						<expected-state pk="123">{
   "isDeleted" : "hard"
 }</expected-state>
 					</test-case>
@@ -1215,6 +1215,12 @@ if snapshot.isDeleted != '':
 				<input name="maxVisitors" type="Numeric" value="10"></input>
 				<expected-trace command="RegistrationManager.Configure" status="Success"></expected-trace>
 			</activity>
+			<activity type="query" description="controleer of de registratie manager geconfigureerd is" path="Conference.RegistrationManager.get" view="RegistrationManager" id="vOBACA">
+				<input name="key" type="ID" value="#year#"></input>
+				<expect-value name="registeredVisitors" type="Numeric" value="0"></expect-value>
+				<expect-value name="maxVisitors" type="Numeric" value="10"></expect-value>
+				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
+			</activity>
 			<activity type="mutation" description="Schrijf bezoeker in" path="Conference.RegistrationManager.registerVisitor" id="PMBOoR">
 				<input name="firstName" type="String" value="#firstName#"></input>
 				<input name="lastName" type="String" value="#lastName#"></input>
@@ -1230,6 +1236,12 @@ if snapshot.isDeleted != '':
 				<expect-value name="lastName" type="String" value="#lastName#"></expect-value>
 				<extract-value name="ticketId" put-key="ticketId"></extract-value>
 				<data-remediation domain="Conference" aggregate="Visitor" identifier="#email#"></data-remediation>
+			</activity>
+			<activity type="query" description="controleer of het aantal inschrijvingen gelijk is aan 1" path="Conference.RegistrationManager.get" view="RegistrationManager" id="vOBACB">
+				<input name="key" type="ID" value="#year#"></input>
+				<expect-value name="registeredVisitors" type="Numeric" value="1"></expect-value>
+				<expect-value name="maxVisitors" type="Numeric" value="10"></expect-value>
+				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
 			</activity>
 			<activity type="query" id="ymkyL4" path="Ticket.get" view="Ticket" description="Controleer of ticket is aangemaakt">
 				<input name="key" type="String" value="#ticketId#"></input>
@@ -1287,6 +1299,27 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Conference.Ticket.Delete" status="success"></expected-trace>
 				<expected-trace command="Conference.Visitor.Delete" status="success"></expected-trace>
 				<expected-trace command="SendDeregisterConfirmation-Notifier" status="success"></expected-trace>
+			</activity>
+			<activity type="query" description="controleer of het aantal inschrijvingen gelijk aan 0 is" path="Conference.RegistrationManager.get" view="RegistrationManager" id="vOBACC">
+				<input name="key" type="ID" value="#year#"></input>
+				<expect-value name="registeredVisitors" type="Numeric" value="0"></expect-value>
+				<expect-value name="maxVisitors" type="Numeric" value="10"></expect-value>
+				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
+			</activity>
+			<activity type="mutation" description="Schrijf bezoeker opnieuw in" path="Conference.RegistrationManager.registerVisitor" id="PMBOoX">
+				<input name="firstName" type="String" value="#firstName#"></input>
+				<input name="lastName" type="String" value="#lastName#"></input>
+				<input name="year" type="String" value="#year#"></input>
+				<input name="breakouts" type="Nested" value="[{'id':'2010-2'}]"></input>
+				<input name="email" type="String" value="#email#"></input>
+				<expected-trace command="RegistrationManager.RegisterVisitor" status="Success"></expected-trace>
+				<expected-trace command="SendTicketVerification-Notifier" status="success"></expected-trace>
+			</activity>
+			<activity type="query" description="controleer of het aantal inschrijvingen gelijk aan 1 is" path="Conference.RegistrationManager.get" view="RegistrationManager" id="vOBACD">
+				<input name="key" type="ID" value="#year#"></input>
+				<expect-value name="registeredVisitors" type="Numeric" value="1"></expect-value>
+				<expect-value name="maxVisitors" type="Numeric" value="10"></expect-value>
+				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
 			</activity>
 		</scenario>
 		<scenario name="CreateProgram">
