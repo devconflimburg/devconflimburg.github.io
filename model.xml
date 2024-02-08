@@ -1239,7 +1239,7 @@ if snapshot.isDeleted != '':
 			</activity>
 			<activity type="query" description="controleer of het aantal inschrijvingen gelijk is aan 1" path="Conference.RegistrationManager.get" view="RegistrationManager" id="vOBACB">
 				<input name="key" type="ID" value="#year#"></input>
-				<expect-value name="registeredVisitors" type="Numeric" value="0"></expect-value>
+				<expect-value name="registeredVisitors" type="Numeric" value="1"></expect-value>
 				<expect-value name="maxVisitors" type="Numeric" value="10"></expect-value>
 				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
 			</activity>
