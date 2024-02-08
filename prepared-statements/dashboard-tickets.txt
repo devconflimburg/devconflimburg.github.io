@@ -1,6 +1,6 @@
 query MyQuery($year: String = "2024") {
   Ticket {
-    filter(year_equals: $year) {
+    filter(year_equals: $year, limit: 1000) {
       resultset {
         breakouts
         createdAt
