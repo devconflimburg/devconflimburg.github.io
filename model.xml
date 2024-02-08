@@ -20,6 +20,12 @@
 			<field name="ticketId" type="String"></field>
 			<field name="control" type="String"></field>
 		</event>
+		<event graphql-namespace="Conference.RegistrationManager" graphql-name="deregisterVisitor" name="DeregisterVisitorConferenceRegistrationManagerRequested" authorization="anonymous" type="ActorEvent">
+			<field name="email" type="String" pattern="{{Email}}"></field>
+			<field name="ticketId" type="String"></field>
+			<field name="reason" type="String"></field>
+			<field name="year" type="String" pattern="{{Year}}"></field>
+		</event>
 		<event name="UpdateWebSiteElementRequested" authorization="authenticated" type="ActorEvent" graphql-name="update" graphql-namespace="WebSite.Element">
 			<field name="name" type="String"></field>
 			<field name="content" type="String"></field>
@@ -95,6 +101,12 @@
 			<field name="ticketId" type="String"></field>
 			<field name="email" type="String"></field>
 		</event>
+		<event name="VisitorDeleted" source="Conference.Visitor" type="DomainEvent">
+			<field name="email" type="String"></field>
+		</event>
+		<event name="TicketDeleted" source="Conference.Ticket" type="DomainEvent">
+			<field name="ticketId" type="String"></field>
+		</event>
 		<event name="ConferenceTicketCreated" source="Conference.Ticket" type="DomainEvent">
 			<field name="year" type="String"></field>
 			<field name="ticketId" type="String"></field>
@@ -136,6 +148,11 @@
 			<field name="date" type="String"></field>
 			<field name="year" type="String"></field>
 			<field name="tagline" type="String"></field>
+		</event>
+		<event name="VisitorDeregistered" source="Conference.RegistrationManager" type="DomainEvent">
+			<field name="email" type="String"></field>
+			<field name="ticketId" type="String"></field>
+			<field name="reason" type="String"></field>
 		</event>
 		<event name="ConferenceRegistrationManagerVisitorRegistered" source="Conference.RegistrationManager" type="DomainEvent">
 			<field name="year" type="String"></field>
@@ -273,6 +290,27 @@
 						<expected-state pk="devconf-ticket:189673085831463618233454140431942137832">{"ticketId": "devconf-ticket:189673085831463618233454140431942137832", "year": "2024", "firstName": "John", "lastName": "Doe", "email": "john.doe@example.com"}</expected-state>
 					</test-case>
 				</command>
+				<command name="Delete">
+					<trigger source="VisitorDeregistered" key-field="email">
+						<mapping target="email" value="email"></mapping>
+						<mapping target="ticketId" value="ticketId"></mapping>
+						<mapping target="reason" value="reason"></mapping>
+					</trigger>
+					<processor type="emit-event" id="sx1qsU" ref="VisitorDeleted">
+						<mapping target="email" value="#flow.email"></mapping>
+					</processor>
+					<test-case name="HappyFlow" trigger-event="VisitorDeregistered">
+						<input name="email" value="john.doe@example.com" type="String"></input>
+						<input name="ticketId" value="123" type="String"></input>
+						<input name="reason" value="For testing" type="String"></input>
+						<expected domain-event="VisitorDeleted">
+							<field value="john.doe@example.com" name="email" type="String"></field>
+						</expected>
+						<expected-state pk="john.doe@example.com">{
+  "isDeleted" : "hard"
+}</expected-state>
+					</test-case>
+				</command>
 				<event-handler on="ConferenceVisitorCreated">
 					<mapping value="firstName" target="firstName" operand="set"></mapping>
 					<mapping value="lastName" target="lastName" operand="set"></mapping>
@@ -280,6 +318,7 @@
 					<mapping value="ticketId" target="ticketId" operand="set"></mapping>
 					<mapping value="email" target="email" operand="set"></mapping>
 				</event-handler>
+				<event-handler on="VisitorDeleted" code='self.isDeleted = "hard"'></event-handler>
 			</aggregate>
 			<aggregate name="Ticket" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
 				<field name="year" type="String"></field>
@@ -389,6 +428,28 @@
 						<input name="ticketId" value="123" type="String"></input>
 					</test-case>
 				</command>
+				<command name="Delete">
+					<trigger source="VisitorDeregistered" key-field="ticketId">
+						<mapping target="email" value="email"></mapping>
+						<mapping target="ticketId" value="ticketId"></mapping>
+						<mapping target="reason" value="reason"></mapping>
+					</trigger>
+					<processor type="emit-event" id="WpfrjX" ref="TicketDeleted">
+						<mapping target="ticketId" value="#flow.ticketId"></mapping>
+					</processor>
+					<test-case name="HappyFlow" trigger-event="VisitorDeregistered">
+						<input name="email" value="john.doe@example.com" type="String"></input>
+						<input name="ticketId" value="123" type="String"></input>
+						<input name="reason" value="For testing" type="String"></input>
+						<expected domain-event="TicketDeleted">
+							<field value="123" name="ticketId" type="String"></field>
+						</expected>
+						<expected-state pk="123">{
+  "isDeleted" : "hard"
+}</expected-state>
+					</test-case>
+				</command>
+				<event-handler on="TicketDeleted" code='self.isDeleted = "hard"'></event-handler>
 				<event-handler on="ConferenceTicketCreated">
 					<mapping value="year" target="year" operand="set"></mapping>
 					<mapping value="ticketId" target="ticketId" operand="set"></mapping>
@@ -542,6 +603,49 @@
 				<field name="registeredVisitors" type="Int"></field>
 				<field name="openDate" type="String"></field>
 				<field name="maxVisitors" type="Int"></field>
+				<command name="DeregsiterVisitor">
+					<trigger source="DeregisterVisitorConferenceRegistrationManagerRequested" key-field="year">
+						<mapping target="email" value="email"></mapping>
+						<mapping target="ticketId" value="ticketId"></mapping>
+						<mapping target="reason" value="reason"></mapping>
+						<mapping target="year" value="year"></mapping>
+					</trigger>
+					<processor type="validator" id="Kzppq0" condition="flow.ticketId in flow.entity.visitors" exception="Ticket {flow.email}/{flow.ticketId} not found in registration manager"></processor>
+					<processor type="emit-event" id="WX7jUh" ref="VisitorDeregistered">
+						<mapping target="email" value="#flow.email"></mapping>
+						<mapping target="ticketId" value="#flow.ticketId"></mapping>
+						<mapping target="reason" value="#flow.reason"></mapping>
+					</processor>
+					<test-case name="Happyflow" trigger-event="DeregisterVisitorConferenceRegistrationManagerRequested">
+						<input name="email" value="john.doe@example.com" type="String"></input>
+						<input name="ticketId" value="123" type="String"></input>
+						<input name="reason" value="For testing" type="String"></input>
+						<input name="year" value="2010" type="String"></input>
+						<expected domain-event="VisitorDeregistered">
+							<field value="john.doe@example.com" name="email" type="String"></field>
+							<field value="123" name="ticketId" type="String"></field>
+							<field value="For testing" name="reason" type="String"></field>
+						</expected>
+						<state>{
+  "closeDate": "",
+  "visitors": ["123"],
+  "year": "2010",
+  "registeredVisitors": 1,
+  "openDate": "",
+  "maxVisitors": 10
+}</state>
+						<expected-state pk="2010">{
+  "visitors": [],
+  "registeredVisitors": 0
+}</expected-state>
+					</test-case>
+					<test-case name="UnknownRegistration" trigger-event="DeregisterVisitorConferenceRegistrationManagerRequested" expected-processing-status="error">
+						<input name="email" value="john.doe@example.com" type="String"></input>
+						<input name="ticketId" value="123" type="String"></input>
+						<input name="reason" value="For testing" type="String"></input>
+						<input name="year" value="2010" type="String"></input>
+					</test-case>
+				</command>
 				<command name="RegisterVisitor" create-command="false">
 					<trigger key-field="year" source="RegisterVisitorConferenceRegistrationManagerRequested">
 						<mapping value="firstName" target="firstName"></mapping>
@@ -652,6 +756,7 @@
 						<expected-state pk="2024">{"openDate": "01-01-2023", "closeDate": "01-01-2123", "maxVisitors": 10}</expected-state>
 					</test-case>
 				</command>
+				<event-handler on="VisitorDeregistered" code="self.registeredVisitors += -1|LB|self.visitors.remove(event.ticketId)"></event-handler>
 				<event-handler on="ConferenceRegistrationManagerVisitorRegistered" code="self.registeredVisitors += 1|LB|self.visitors.append(event.ticketId)"></event-handler>
 				<event-handler on="ConferenceRegistrationManagerUpdated">
 					<mapping value="closeDate" target="closeDate" operand="set"></mapping>
@@ -948,6 +1053,18 @@ if snapshot.isDeleted != '':
 			</trigger>
 			<activity type="iam-create-systemuser" fail-silent="true" id="vMB9LZ"></activity>
 		</notifier>
+		<notifier name="SendDeregisterConfirmation">
+			<trigger source="VisitorDeregistered">
+				<mapping target="email" value="email"></mapping>
+				<mapping target="ticketId" value="ticketId"></mapping>
+				<mapping target="reason" value="reason"></mapping>
+			</trigger>
+			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="c4NcAA"></activity>
+			<activity type="set-variable" expression='#"Je registratie is geanuleerd"' name="subject" id="p5oUyA"></activity>
+			<activity type="render-template" template-file="templates/DeregisterConfirmationMail.html" name="html" id="KLiO9A"></activity>
+			<activity type="render-template" id="DHXCaA" template-file="templates/DeregisterConfirmationMail.txt" name="text"></activity>
+			<activity type="code" handler="send" python-file="lib/MailGun.py" id="2LjgLA"></activity>
+		</notifier>
 		<notifier name="HandleResendRequest">
 			<trigger source="HandleLostTicketRequested">
 				<mapping target="email" value="email"></mapping>
@@ -979,7 +1096,7 @@ if snapshot.isDeleted != '':
 	<functional-scenarios clean-db="true" clean-iam="false" minimum-event-coverage="80" minimum-view-coverage="80">
 		<scenario name="TalkProposal">
 			<activity type="set-variables" id="orhaBC">
-				<input name="email" type="String" value="xaharev833@evvgo.com"></input>
+				<input name="email" type="String" value="cifepoh506@tupanda.com"></input>
 			</activity>
 			<activity type="mutation" path="Conference.TalkProposal.create" id="mRaQOC">
 				<input name="difficultyLevel" type="String" value="novice"></input>
@@ -1025,7 +1142,7 @@ if snapshot.isDeleted != '':
 				<input name="year" type="String" value="2010"></input>
 				<input name="firstName" type="String" value="John"></input>
 				<input name="lastName" type="String" value="Doe"></input>
-				<input name="email" type="String" value="xaharev833@evvgo.com"></input>
+				<input name="email" type="String" value="cifepoh506@tupanda.com"></input>
 				<input name="breakouts" type="String" value="2010-2"></input>
 			</activity>
 			<activity type="mutation" description="Initialiseer een editie" path="Conference.initializeEdition" id="BfMuF0">
@@ -1105,6 +1222,7 @@ if snapshot.isDeleted != '':
 				<input name="breakouts" type="Nested" value="[{'id':'2010-2'}]"></input>
 				<input name="email" type="String" value="#email#"></input>
 				<expected-trace command="RegistrationManager.RegisterVisitor" status="Success"></expected-trace>
+				<expected-trace command="SendTicketVerification-Notifier" status="success"></expected-trace>
 			</activity>
 			<activity type="query" id="6ZBYus" description="Haal bezoeker op" path="Visitor.get" view="Visitor">
 				<input name="key" type="String" value="#email#"></input>
@@ -1122,15 +1240,26 @@ if snapshot.isDeleted != '':
 				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
 				<extract-value name="control" put-key="control"></extract-value>
 			</activity>
+			<activity type="mutation" id="i3BK0P" description="Trigger resend verification" path="Ticket.handleLost">
+				<input name="email" type="String" value="#email#"></input>
+				<expected-trace command="HandleResendRequest-Notifier" status="success"></expected-trace>
+				<expected-trace command="SendTicketVerification-Notifier" status="success"></expected-trace>
+			</activity>
 			<activity type="mutation" id="Hk19rJ" path="Ticket.verify" description="Verify ticket">
 				<input name="ticketId" type="String" value="#ticketId#"></input>
 				<input name="control" type="String" value="#control#"></input>
 				<expected-trace command="Conference.Ticket.Verify" status="success"></expected-trace>
+				<expected-trace command="SendTicket-Notifier" status="success"></expected-trace>
 			</activity>
 			<activity type="query" id="1aE4iU" description="Check if ticket is verified" path="Ticket.get" view="Ticket">
 				<input name="key" type="String" value="#ticketId#"></input>
 				<expect-value name="verified" type="Boolean" value="true"></expect-value>
 				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
+			</activity>
+			<activity type="mutation" id="i3BK0A" description="Trigger resend ticket" path="Ticket.handleLost">
+				<input name="email" type="String" value="#email#"></input>
+				<expected-trace command="HandleResendRequest-Notifier" status="success"></expected-trace>
+				<expected-trace command="SendTicket-Notifier" status="success"></expected-trace>
 			</activity>
 			<activity type="mutation" id="wQ2Lwa" description="Redeem Invalid Ticket" path="Ticket.redeem">
 				<input name="ticketId" type="String" value="#email#"></input>
@@ -1148,6 +1277,16 @@ if snapshot.isDeleted != '':
 			<activity type="mutation" id="CiX5ai" description="Try to redeem the ticket for a second time" path="Ticket.redeem">
 				<input name="ticketId" type="String" value="#ticketId#"></input>
 				<expected-trace command="Conference.Ticket.Redeem" status="error"></expected-trace>
+			</activity>
+			<activity type="mutation" id="s9BNMN" description="Deregister" path="Conference.RegistrationManager.deregisterVisitor">
+				<input name="email" type="String" value="#email#"></input>
+				<input name="ticketId" type="String" value="#ticketId#"></input>
+				<input name="reason" type="String" value="Regressie test"></input>
+				<input name="year" type="String" value="#year#"></input>
+				<expected-trace command="Conference.RegistrationManager.DeregsiterVisitor" status="success"></expected-trace>
+				<expected-trace command="Conference.Ticket.Delete" status="success"></expected-trace>
+				<expected-trace command="Conference.Visitor.Delete" status="success"></expected-trace>
+				<expected-trace command="SendDeregisterConfirmation-Notifier" status="success"></expected-trace>
 			</activity>
 		</scenario>
 		<scenario name="CreateProgram">
