@@ -1009,7 +1009,7 @@ if snapshot.isDeleted != '':
 				<activity type="set-variable" id="LNrKpw" name="email" expression="#item[0]"></activity>
 				<activity type="set-variable" id="GO7jD4" name="ticketId" expression="#item[1]"></activity>
 				<activity type="set-variable" id="cAefCE" name="year" expression="#item[2]"></activity>
-				<activity type="code" id="ivOPPb" code='print("Anuleer -&gt; ",flow)'></activity>
+				<activity type="code" id="ivOPPb" code='print("Anuleer -&gt; ",flow.__dict__)'></activity>
 			</activity>
 		</notifier>
 		<notifier name="SendTicketVerification">
