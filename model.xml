@@ -999,11 +999,16 @@ if snapshot.isDeleted != '':
 			<trigger source="@cron(0 4 ? * WED *)">
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
-			<activity type="call-internal-api" id="WMGGQY" name="visitors" query='query MyQuery {|LB|  Visitor {|LB|    filter {|LB|      resultset {|LB|        email|LB|        ticket {|LB|          verified|LB|          year|LB|        }|LB|      }|LB|    }|LB|  }|LB|  WebSite {|LB|    Element {|LB|      get(key: "next-edition") {|LB|        edition {|LB|          date|LB|          year|LB|        }|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
-			<activity type="code" id="Rc2JG3" code='from datetime import datetime|LB||LB|year = flow.visitors.data.WebSite.Element.get.edition.year|LB|event_date = datetime.strptime(flow.visitors.data.WebSite.Element.get.edition.date,"%d-%m-%Y")|LB|now = datetime.now()|LB||LB|flow.emails = [|LB|        visitor["email"]|LB|        for visitor in flow.visitors.data.Visitor.filter.resultset|LB|        if not visitor["ticket"]["verified"] and visitor["ticket"]["year"] == year and event_date &gt; now|LB|    ]'></activity>
+			<activity type="call-internal-api" id="WMGGQY" name="visitors" query='query MyQuery {|LB|  Visitor {|LB|    filter {|LB|      resultset {|LB|        email|LB|        ticketId|LB|        ticket {|LB|          verified|LB|          year|LB|          createdAt|LB|        }|LB|      }|LB|    }|LB|  }|LB|  WebSite {|LB|    Element {|LB|      get(key: "next-edition") {|LB|        edition {|LB|          date|LB|          year|LB|        }|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
+			<activity type="code" id="Rc2JG3" code='from datetime import datetime, timedelta|LB||LB|year = flow.visitors.data.WebSite.Element.get.edition.year|LB|event_date = datetime.strptime(flow.visitors.data.WebSite.Element.get.edition.date,"%d-%m-%Y")|LB|now = datetime.now()|LB||LB|flow.emails = [|LB|        visitor["email"]|LB|        for visitor in flow.visitors.data.Visitor.filter.resultset|LB|        if not visitor["ticket"]["verified"] and visitor["ticket"]["year"] == year and event_date &gt; now|LB|    ]|LB|  |LB|reference = datetime.now() - timedelta(days=14)  |LB|flow.expired = [|LB|        [visitor["email"], visitor["ticketId"]]|LB|        for visitor in flow.visitors.data.Visitor.filter.resultset|LB|        if not visitor["ticket"]["verified"] and datetime.fromtimestamp(visitor["ticket"]["createdAt"]) &lt; reference|LB|    ]'></activity>
 			<activity type="loop" id="0Vxqk1" array="#flow.emails">
 				<activity type="set-variable" id="r8NpQq" name="email" expression="#item"></activity>
 				<activity type="call-internal-api" id="biwV3E" name="result" query='mutation MyMutation {|LB|  Ticket {|LB|    handleLost(input: {email: "{{flow.email}}"}) {|LB|      correlationId|LB|    }|LB|  }|LB|}|LB|'></activity>
+			</activity>
+			<activity type="loop" id="yFQ7Pm" array="#flow.expired">
+				<activity type="set-variable" id="LNrKpw" name="email" expression="#item[0]"></activity>
+				<activity type="set-variable" id="GO7jD4" name="ticketId" expression="#item[1]"></activity>
+				<activity type="call-internal-api" id="i8C4BB" name="result" query='mutation MyMutation {|LB|  Conference {|LB|    RegistrationManager {|LB|      deregisterVisitor(input: {email: "{{flow.email}}", ticketId: "{{flow.ticketId}}", reason: "Geanuleerd omdat er geen response op de verificatie mail is gegeven.", year: "{{flow.year}}"}) {|LB|        correlationId|LB|      }|LB|    }|LB|  }|LB|}'></activity>
 			</activity>
 		</notifier>
 		<notifier name="SendTicketVerification">
