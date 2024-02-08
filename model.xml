@@ -257,7 +257,7 @@
 					<mapping value="room" target="room" operand="set"></mapping>
 				</event-handler>
 			</aggregate>
-			<aggregate name="Visitor" event-ttl="7776000" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
+			<aggregate name="Visitor" event-ttl="7776000" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0" business-key="ticketId">
 				<field name="firstName" type="String"></field>
 				<field name="lastName" type="String"></field>
 				<field name="year" type="String"></field>
@@ -291,7 +291,7 @@
 					</test-case>
 				</command>
 				<command name="Delete">
-					<trigger source="VisitorDeregistered" key-field="email">
+					<trigger source="VisitorDeregistered" key-field="ticketId">
 						<mapping target="email" value="email"></mapping>
 						<mapping target="ticketId" value="ticketId"></mapping>
 						<mapping target="reason" value="reason"></mapping>
@@ -306,7 +306,7 @@
 						<expected domain-event="VisitorDeleted">
 							<field value="john.doe@example.com" name="email" type="String"></field>
 						</expected>
-						<expected-state pk="john.doe@example.com">{
+						<expected-state pk="123">{
   "isDeleted" : "hard"
 }</expected-state>
 					</test-case>
