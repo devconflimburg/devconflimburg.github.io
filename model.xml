@@ -1009,7 +1009,6 @@ if snapshot.isDeleted != '':
 				<activity type="set-variable" id="LNrKpw" name="email" expression="#item[0]"></activity>
 				<activity type="set-variable" id="GO7jD4" name="ticketId" expression="#item[1]"></activity>
 				<activity type="set-variable" id="cAefCE" name="year" expression="#item[2]"></activity>
-				<activity type="call-internal-api" id="i8C4BB" name="result" query='mutation MyMutation {|LB|  Conference {|LB|    RegistrationManager {|LB|      deregisterVisitor(input: {email: "{{flow.email}}", ticketId: "{{flow.ticketId}}", reason: "Geanuleerd omdat er geen response op de verificatie mail is gegeven.", year: "{{flow.year}}"}) {|LB|        correlationId|LB|      }|LB|    }|LB|  }|LB|}'></activity>
 				<activity type="code" id="ivOPPb" code='print("Anuleer -&gt; ",flow)'></activity>
 			</activity>
 		</notifier>
