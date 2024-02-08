@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <title></title>
+        <script src="/js/configuration.js"></script>
+        <script src="/js/configuration-staging.js"></script>
+
+        <link rel="stylesheet" href="/css/draftsman.css" />
+        <script src="/js/framework.js"></script>
+        <script src="/js/cache.js"></script>
+        <script src="https://unpkg.com/@vimesh/ui"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+        <script src="/js/utils.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+        <script src="https://unpkg.com/alpinejs" defer></script>
+        <script async defer data-domain="devconf.nl"
+                src="https://analytics.bohanssen.com/js/plausible.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    </head>
+    <body x-data="{command: {
+            email: Draftsman.fetch_query_parameter('email'),
+            year: Draftsman.fetch_query_parameter('year'),
+            ticketId: Draftsman.fetch_query_parameter('ticketId'),
+            reason: ''
+        }}">
+
+        <div class="container">
+            <h1>Uitschrijven voor devConf <span x-text="command.year"></span></h1>
+            <hr>
+
+            <div class="table-responsive">
+                <table class="table" x-show="$store.trace.length != 0" x-cloak>
+                    <thead>
+                    <tr>
+                        <th scope="col">Timestamp</th>
+                        <th scope="col">Command/Event</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Message</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template x-for="message in $store.trace">
+                        <tr x-transition>
+                            <th scope="row" x-html="message.timestamp.replace('Z','').replace('T',' ')"></th>
+                            <td x-html="message.command != '' ? message.command : message.event"></td>
+                            <td x-html="message.status"></td>
+                            <td x-html="message.message"></td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                <i>Wat jammer dat je niet komt, wat is de reden voor je annulering?</i><br>
+                <script>
+                    function update_reason(element,command){
+                        command.reason = element.innerText + '.'
+                    }
+                </script>
+                <div class="btn-group" role="group"
+                     x-show="command.reason == ''"
+                     aria-label="reason">
+                    <button type="button"
+                            @click="update_reason($el,command)"
+                            class="btn btn-outline-primary">Ik ben verhinderd</button>
+                    <button type="button"
+                            @click="update_reason($el,command)"
+                            class="btn btn-outline-primary">Het programma spreekt me niet aan</button>
+                    <button type="button"
+                            @click="update_reason($el,command)"
+                            class="btn btn-outline-primary">Anders</button>
+                </div>
+            </p>
+            <div class="mb-3" x-show="command.reason != ''" x-cloak x-transition>
+                <textarea x-model="command.reason"
+                          class="form-control" rows="3"></textarea>
+            </div>
+            <button type="button"
+                    x-show="command.reason != ''"
+                    x-cloak x-transition
+                    @click="$store.mutation.send('deregister',command);$el.remove();"
+                    class="btn btn-primary">Verstuur</button>
+        </div>
+
+        <draftsman-mutation command="deregister"
+                            x-include="/prepared-statements/commands/deregister-visitor.txt">
+        </draftsman-mutation>
+
+        <draftsman-trace command="deregister"
+                         component="SendDeregisterConfirmation-Notifier"
+                         status="success"
+                         @trace="location.href = '/'">
+        </draftsman-trace>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
