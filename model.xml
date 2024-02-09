@@ -153,6 +153,7 @@
 			<field name="email" type="String"></field>
 			<field name="ticketId" type="String"></field>
 			<field name="reason" type="String"></field>
+			<field name="year" type="String"></field>
 		</event>
 		<event name="ConferenceRegistrationManagerVisitorRegistered" source="Conference.RegistrationManager" type="DomainEvent">
 			<field name="year" type="String"></field>
@@ -615,6 +616,7 @@
 						<mapping target="email" value="#flow.email"></mapping>
 						<mapping target="ticketId" value="#flow.ticketId"></mapping>
 						<mapping target="reason" value="#flow.reason"></mapping>
+						<mapping target="year" value="#flow.year"></mapping>
 					</processor>
 					<test-case name="Happyflow" trigger-event="DeregisterVisitorConferenceRegistrationManagerRequested">
 						<input name="email" value="john.doe@example.com" type="String"></input>
@@ -1009,7 +1011,7 @@ if snapshot.isDeleted != '':
 				<activity type="set-variable" id="LNrKpw" name="email" expression="#item[0]"></activity>
 				<activity type="set-variable" id="GO7jD4" name="ticketId" expression="#item[1]"></activity>
 				<activity type="set-variable" id="cAefCE" name="year" expression="#item[2]"></activity>
-				<activity type="code" id="ivOPPb" code='print("Anuleer -&gt; ",flow.__dict__)'></activity>
+				<activity type="call-internal-api" id="i8C4BB" name="result" query='mutation MyMutation {|LB|  Conference {|LB|    RegistrationManager {|LB|      deregisterVisitor(input: {email: "{{flow.email}}", ticketId: "{{flow.ticketId}}", reason: "Geanuleerd omdat er geen response op de verificatie mail is gegeven.", year: "{{flow.year}}"}) {|LB|        correlationId|LB|      }|LB|    }|LB|  }|LB|}'></activity>
 			</activity>
 		</notifier>
 		<notifier name="SendTicketVerification">
@@ -1064,6 +1066,7 @@ if snapshot.isDeleted != '':
 				<mapping target="email" value="email"></mapping>
 				<mapping target="ticketId" value="ticketId"></mapping>
 				<mapping target="reason" value="reason"></mapping>
+				<mapping target="year" value="year"></mapping>
 			</trigger>
 			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="c4NcAA"></activity>
 			<activity type="set-variable" expression='#"Je registratie is geanuleerd"' name="subject" id="p5oUyA"></activity>
