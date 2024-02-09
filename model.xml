@@ -1069,7 +1069,7 @@ if snapshot.isDeleted != '':
 			<activity type="set-variable" expression='#"Je registratie is geanuleerd"' name="subject" id="p5oUyA"></activity>
 			<activity type="render-template" template-file="templates/DeregisterConfirmationMail.html" name="html" id="KLiO9A"></activity>
 			<activity type="render-template" id="DHXCaA" template-file="templates/DeregisterConfirmationMail.txt" name="text"></activity>
-			<activity type="code" handler="send" python-file="lib/MailGun.py" id="2LjgLA"></activity>
+			<activity type="code" handler="send_with_copy_to_mailbox" python-file="lib/MailGun.py" id="2LjgLA"></activity>
 		</notifier>
 		<notifier name="HandleResendRequest">
 			<trigger source="HandleLostTicketRequested">
