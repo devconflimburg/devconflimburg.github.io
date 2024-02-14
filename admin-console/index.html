@@ -21,7 +21,7 @@
     </script>
 </head>
 <body class="d-flex flex-column h-100" x-data="{search: $persist('').using(sessionStorage),
-        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Ticket/resendVerification;commands/Ticket/verify;commands/Ticket/handleLost;commands/Ticket/redeem;commands/Ticket/resend;commands/Conference/RegistrationManager/deregisterVisitor;commands/Conference/RegistrationManager/configure;commands/Conference/RegistrationManager/registerVisitor;commands/WebSite/Element/update;commands/WebSite/Element/create;commands/Conference/TalkProposal/create;commands/Conference/addProgramItem;commands/Conference/initializeEdition;views/TalkProposal/filter;views/Ticket/get;views/Ticket/filter;views/Program/Item/filter;views/Program/Item/get;views/Program/filter;views/Program/get;views/Conference/RegistrationManager/get;views/WebSite/Element/filter;views/WebSite/Element/get;views/Visitor/get;views/Visitor/filter;views/Edition/filter;views/Edition/get">
+        query: $persist('').using(sessionStorage)}" x-import="utils/basic-form;utils/basic-modal;utils/view-query-form;utils/tables;commands/Conference/initializeEdition;commands/Conference/addProgramItem;commands/Ticket/redeem;commands/Ticket/resend;commands/Ticket/resendVerification;commands/Ticket/handleLost;commands/Ticket/verify;commands/Conference/RegistrationManager/deregisterVisitor;commands/Conference/RegistrationManager/registerVisitor;commands/Conference/RegistrationManager/configure;commands/Conference/TalkProposal/create;commands/WebSite/Element/update;commands/WebSite/Element/create;views/TalkProposal/filter;views/Program/filter;views/Program/get;views/Visitor/get;views/Visitor/filter;views/Edition/filter;views/Edition/get;views/Program/Item/filter;views/Program/Item/get;views/Ticket/get;views/Ticket/filter;views/Conference/RegistrationManager/get;views/WebSite/Element/filter;views/WebSite/Element/get">
 <main class="flex-shrink-0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" x-transition>
         <div class="container px-5">
@@ -57,41 +57,36 @@
                 <h1>Commands</h1>
                 <center>
                 
-                    <h6>Ticket</h6>
+                    <h6>Conference</h6>
                     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                         
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'resendverificationticket'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_resendverificationticket">
-                                ResendVerificationTicket
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'initializeeditionconference'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_initializeeditionconference">
+                                InitializeEditionConference
                             </button>
-                            <ui-resend-verification-ticket command="resendverificationticket"></ui-resend-verification-ticket>
+                            <ui-initialize-edition-conference command="initializeeditionconference"></ui-initialize-edition-conference>
                             <ui-basic-modal
-                                        title="Command: ResendVerificationTicket"
-                                        alias="resendverificationticket"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_resendverificationticket"></ui-trace-table>
-                            <ui-basic-form alias="resendverificationticket" target="#modal_body_resendverificationticket"></ui-basic-form>
+                                        title="Command: InitializeEditionConference"
+                                        alias="initializeeditionconference"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_initializeeditionconference"></ui-trace-table>
+                            <ui-basic-form alias="initializeeditionconference" target="#modal_body_initializeeditionconference"></ui-basic-form>
                         
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'verifyticket'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_verifyticket">
-                                VerifyTicket
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'addprogramitemconference'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_addprogramitemconference">
+                                AddProgramItemConference
                             </button>
-                            <ui-verify-ticket command="verifyticket"></ui-verify-ticket>
+                            <ui-add-program-item-conference command="addprogramitemconference"></ui-add-program-item-conference>
                             <ui-basic-modal
-                                        title="Command: VerifyTicket"
-                                        alias="verifyticket"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_verifyticket"></ui-trace-table>
-                            <ui-basic-form alias="verifyticket" target="#modal_body_verifyticket"></ui-basic-form>
+                                        title="Command: AddProgramItemConference"
+                                        alias="addprogramitemconference"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_addprogramitemconference"></ui-trace-table>
+                            <ui-basic-form alias="addprogramitemconference" target="#modal_body_addprogramitemconference"></ui-basic-form>
                         
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'handlelostticket'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_handlelostticket">
-                                HandleLostTicket
-                            </button>
-                            <ui-handle-lost-ticket command="handlelostticket"></ui-handle-lost-ticket>
-                            <ui-basic-modal
-                                        title="Command: HandleLostTicket"
-                                        alias="handlelostticket"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_handlelostticket"></ui-trace-table>
-                            <ui-basic-form alias="handlelostticket" target="#modal_body_handlelostticket"></ui-basic-form>
+                    </div>
+                    <hr>
+                
+                    <h6>Ticket</h6>
+                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                         
                             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'redeemticket'.includes(search.toLowerCase())"
                                     data-bs-target="#modal_redeemticket">
@@ -115,6 +110,39 @@
                             <ui-trace-table target="#modal_body_resendticket"></ui-trace-table>
                             <ui-basic-form alias="resendticket" target="#modal_body_resendticket"></ui-basic-form>
                         
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'resendverificationticket'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_resendverificationticket">
+                                ResendVerificationTicket
+                            </button>
+                            <ui-resend-verification-ticket command="resendverificationticket"></ui-resend-verification-ticket>
+                            <ui-basic-modal
+                                        title="Command: ResendVerificationTicket"
+                                        alias="resendverificationticket"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_resendverificationticket"></ui-trace-table>
+                            <ui-basic-form alias="resendverificationticket" target="#modal_body_resendverificationticket"></ui-basic-form>
+                        
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'handlelostticket'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_handlelostticket">
+                                HandleLostTicket
+                            </button>
+                            <ui-handle-lost-ticket command="handlelostticket"></ui-handle-lost-ticket>
+                            <ui-basic-modal
+                                        title="Command: HandleLostTicket"
+                                        alias="handlelostticket"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_handlelostticket"></ui-trace-table>
+                            <ui-basic-form alias="handlelostticket" target="#modal_body_handlelostticket"></ui-basic-form>
+                        
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'verifyticket'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_verifyticket">
+                                VerifyTicket
+                            </button>
+                            <ui-verify-ticket command="verifyticket"></ui-verify-ticket>
+                            <ui-basic-modal
+                                        title="Command: VerifyTicket"
+                                        alias="verifyticket"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_verifyticket"></ui-trace-table>
+                            <ui-basic-form alias="verifyticket" target="#modal_body_verifyticket"></ui-basic-form>
+                        
                     </div>
                     <hr>
                 
@@ -132,6 +160,17 @@
                             <ui-trace-table target="#modal_body_deregistervisitorconferenceregistrationmanager"></ui-trace-table>
                             <ui-basic-form alias="deregistervisitorconferenceregistrationmanager" target="#modal_body_deregistervisitorconferenceregistrationmanager"></ui-basic-form>
                         
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'registervisitorconferenceregistrationmanager'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_registervisitorconferenceregistrationmanager">
+                                RegisterVisitorConferenceRegistrationManager
+                            </button>
+                            <ui-register-visitor-conference-registration-manager command="registervisitorconferenceregistrationmanager"></ui-register-visitor-conference-registration-manager>
+                            <ui-basic-modal
+                                        title="Command: RegisterVisitorConferenceRegistrationManager"
+                                        alias="registervisitorconferenceregistrationmanager"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_registervisitorconferenceregistrationmanager"></ui-trace-table>
+                            <ui-basic-form alias="registervisitorconferenceregistrationmanager" target="#modal_body_registervisitorconferenceregistrationmanager"></ui-basic-form>
+                        
                             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'configureconferenceregistrationmanager'.includes(search.toLowerCase())"
                                     data-bs-target="#modal_configureconferenceregistrationmanager">
                                 ConfigureConferenceRegistrationManager
@@ -143,16 +182,22 @@
                             <ui-trace-table target="#modal_body_configureconferenceregistrationmanager"></ui-trace-table>
                             <ui-basic-form alias="configureconferenceregistrationmanager" target="#modal_body_configureconferenceregistrationmanager"></ui-basic-form>
                         
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'registervisitorconferenceregistrationmanager'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_registervisitorconferenceregistrationmanager">
-                                RegisterVisitorConferenceRegistrationManager
+                    </div>
+                    <hr>
+                
+                    <h6>Conference.TalkProposal</h6>
+                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                        
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'createconferencetalkproposal'.includes(search.toLowerCase())"
+                                    data-bs-target="#modal_createconferencetalkproposal">
+                                CreateConferenceTalkProposal
                             </button>
-                            <ui-register-visitor-conference-registration-manager command="registervisitorconferenceregistrationmanager"></ui-register-visitor-conference-registration-manager>
+                            <ui-create-conference-talk-proposal command="createconferencetalkproposal"></ui-create-conference-talk-proposal>
                             <ui-basic-modal
-                                        title="Command: RegisterVisitorConferenceRegistrationManager"
-                                        alias="registervisitorconferenceregistrationmanager"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_registervisitorconferenceregistrationmanager"></ui-trace-table>
-                            <ui-basic-form alias="registervisitorconferenceregistrationmanager" target="#modal_body_registervisitorconferenceregistrationmanager"></ui-basic-form>
+                                        title="Command: CreateConferenceTalkProposal"
+                                        alias="createconferencetalkproposal"></ui-basic-modal>
+                            <ui-trace-table target="#modal_body_createconferencetalkproposal"></ui-trace-table>
+                            <ui-basic-form alias="createconferencetalkproposal" target="#modal_body_createconferencetalkproposal"></ui-basic-form>
                         
                     </div>
                     <hr>
@@ -185,51 +230,6 @@
                     </div>
                     <hr>
                 
-                    <h6>Conference.TalkProposal</h6>
-                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                        
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'createconferencetalkproposal'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_createconferencetalkproposal">
-                                CreateConferenceTalkProposal
-                            </button>
-                            <ui-create-conference-talk-proposal command="createconferencetalkproposal"></ui-create-conference-talk-proposal>
-                            <ui-basic-modal
-                                        title="Command: CreateConferenceTalkProposal"
-                                        alias="createconferencetalkproposal"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_createconferencetalkproposal"></ui-trace-table>
-                            <ui-basic-form alias="createconferencetalkproposal" target="#modal_body_createconferencetalkproposal"></ui-basic-form>
-                        
-                    </div>
-                    <hr>
-                
-                    <h6>Conference</h6>
-                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                        
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'addprogramitemconference'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_addprogramitemconference">
-                                AddProgramItemConference
-                            </button>
-                            <ui-add-program-item-conference command="addprogramitemconference"></ui-add-program-item-conference>
-                            <ui-basic-modal
-                                        title="Command: AddProgramItemConference"
-                                        alias="addprogramitemconference"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_addprogramitemconference"></ui-trace-table>
-                            <ui-basic-form alias="addprogramitemconference" target="#modal_body_addprogramitemconference"></ui-basic-form>
-                        
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" x-show="'initializeeditionconference'.includes(search.toLowerCase())"
-                                    data-bs-target="#modal_initializeeditionconference">
-                                InitializeEditionConference
-                            </button>
-                            <ui-initialize-edition-conference command="initializeeditionconference"></ui-initialize-edition-conference>
-                            <ui-basic-modal
-                                        title="Command: InitializeEditionConference"
-                                        alias="initializeeditionconference"></ui-basic-modal>
-                            <ui-trace-table target="#modal_body_initializeeditionconference"></ui-trace-table>
-                            <ui-basic-form alias="initializeeditionconference" target="#modal_body_initializeeditionconference"></ui-basic-form>
-                        
-                    </div>
-                    <hr>
-                
                 </center>
             </div>
             <div class="col-7">
@@ -248,72 +248,6 @@
                             target="#talkproposalfilter-container"
                             alias="talkproposalfilter"
                             path="filter.resultset"></ui-raw-data-list>
-                    
-                </div>
-                
-                <div x-show="query == 'Ticket.get'" x-cloak>
-                    <center id="ticketget-header">
-                        <h1>Ticket.get</h1>
-                        <ui-view-query-form alias="ticketget" target="#ticketget-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-ticket-get alias="ticketget"></ui-ticket-get>
-
-                    <div id="ticketget-container"></div>
-                    
-                    <ui-item-table alias="ticketget"
-                                   path="get"
-                                   target="#ticketget-container"></ui-item-table>
-                    
-                </div>
-                
-                <div x-show="query == 'Ticket.filter'" x-cloak>
-                    <center id="ticketfilter-header">
-                        <h1>Ticket.filter</h1>
-                        <ui-view-query-form alias="ticketfilter" target="#ticketfilter-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-ticket-filter alias="ticketfilter"></ui-ticket-filter>
-
-                    <div id="ticketfilter-container"></div>
-                    
-                    <ui-raw-data-list
-                            target="#ticketfilter-container"
-                            alias="ticketfilter"
-                            path="filter.resultset"></ui-raw-data-list>
-                    
-                </div>
-                
-                <div x-show="query == 'ProgramItem.filter'" x-cloak>
-                    <center id="programitemfilter-header">
-                        <h1>ProgramItem.filter</h1>
-                        <ui-view-query-form alias="programitemfilter" target="#programitemfilter-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-program-item-filter alias="programitemfilter"></ui-program-item-filter>
-
-                    <div id="programitemfilter-container"></div>
-                    
-                    <ui-raw-data-list
-                            target="#programitemfilter-container"
-                            alias="programitemfilter"
-                            path="Item.filter.resultset"></ui-raw-data-list>
-                    
-                </div>
-                
-                <div x-show="query == 'ProgramItem.get'" x-cloak>
-                    <center id="programitemget-header">
-                        <h1>ProgramItem.get</h1>
-                        <ui-view-query-form alias="programitemget" target="#programitemget-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-program-item-get alias="programitemget"></ui-program-item-get>
-
-                    <div id="programitemget-container"></div>
-                    
-                    <ui-item-table alias="programitemget"
-                                   path="Item.get"
-                                   target="#programitemget-container"></ui-item-table>
                     
                 </div>
                 
@@ -347,55 +281,6 @@
                     <ui-item-table alias="programget"
                                    path="get"
                                    target="#programget-container"></ui-item-table>
-                    
-                </div>
-                
-                <div x-show="query == 'RegistrationManager.get'" x-cloak>
-                    <center id="conferenceregistrationmanagerget-header">
-                        <h1>RegistrationManager.get</h1>
-                        <ui-view-query-form alias="conferenceregistrationmanagerget" target="#conferenceregistrationmanagerget-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-conference-registrationmanager-get alias="conferenceregistrationmanagerget"></ui-conference-registrationmanager-get>
-
-                    <div id="conferenceregistrationmanagerget-container"></div>
-                    
-                    <ui-item-table alias="conferenceregistrationmanagerget"
-                                   path="RegistrationManager.get"
-                                   target="#conferenceregistrationmanagerget-container"></ui-item-table>
-                    
-                </div>
-                
-                <div x-show="query == 'WebPageElement.filter'" x-cloak>
-                    <center id="websiteelementfilter-header">
-                        <h1>WebPageElement.filter</h1>
-                        <ui-view-query-form alias="websiteelementfilter" target="#websiteelementfilter-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-website-element-filter alias="websiteelementfilter"></ui-website-element-filter>
-
-                    <div id="websiteelementfilter-container"></div>
-                    
-                    <ui-raw-data-list
-                            target="#websiteelementfilter-container"
-                            alias="websiteelementfilter"
-                            path="Element.filter.resultset"></ui-raw-data-list>
-                    
-                </div>
-                
-                <div x-show="query == 'WebPageElement.get'" x-cloak>
-                    <center id="websiteelementget-header">
-                        <h1>WebPageElement.get</h1>
-                        <ui-view-query-form alias="websiteelementget" target="#websiteelementget-header"></ui-view-query-form>
-                    </center>
-                    <hr>
-                    <ui-website-element-get alias="websiteelementget"></ui-website-element-get>
-
-                    <div id="websiteelementget-container"></div>
-                    
-                    <ui-item-table alias="websiteelementget"
-                                   path="Element.get"
-                                   target="#websiteelementget-container"></ui-item-table>
                     
                 </div>
                 
@@ -465,6 +350,121 @@
                     
                 </div>
                 
+                <div x-show="query == 'ProgramItem.filter'" x-cloak>
+                    <center id="programitemfilter-header">
+                        <h1>ProgramItem.filter</h1>
+                        <ui-view-query-form alias="programitemfilter" target="#programitemfilter-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-program-item-filter alias="programitemfilter"></ui-program-item-filter>
+
+                    <div id="programitemfilter-container"></div>
+                    
+                    <ui-raw-data-list
+                            target="#programitemfilter-container"
+                            alias="programitemfilter"
+                            path="Item.filter.resultset"></ui-raw-data-list>
+                    
+                </div>
+                
+                <div x-show="query == 'ProgramItem.get'" x-cloak>
+                    <center id="programitemget-header">
+                        <h1>ProgramItem.get</h1>
+                        <ui-view-query-form alias="programitemget" target="#programitemget-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-program-item-get alias="programitemget"></ui-program-item-get>
+
+                    <div id="programitemget-container"></div>
+                    
+                    <ui-item-table alias="programitemget"
+                                   path="Item.get"
+                                   target="#programitemget-container"></ui-item-table>
+                    
+                </div>
+                
+                <div x-show="query == 'Ticket.get'" x-cloak>
+                    <center id="ticketget-header">
+                        <h1>Ticket.get</h1>
+                        <ui-view-query-form alias="ticketget" target="#ticketget-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-ticket-get alias="ticketget"></ui-ticket-get>
+
+                    <div id="ticketget-container"></div>
+                    
+                    <ui-item-table alias="ticketget"
+                                   path="get"
+                                   target="#ticketget-container"></ui-item-table>
+                    
+                </div>
+                
+                <div x-show="query == 'Ticket.filter'" x-cloak>
+                    <center id="ticketfilter-header">
+                        <h1>Ticket.filter</h1>
+                        <ui-view-query-form alias="ticketfilter" target="#ticketfilter-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-ticket-filter alias="ticketfilter"></ui-ticket-filter>
+
+                    <div id="ticketfilter-container"></div>
+                    
+                    <ui-raw-data-list
+                            target="#ticketfilter-container"
+                            alias="ticketfilter"
+                            path="filter.resultset"></ui-raw-data-list>
+                    
+                </div>
+                
+                <div x-show="query == 'RegistrationManager.get'" x-cloak>
+                    <center id="conferenceregistrationmanagerget-header">
+                        <h1>RegistrationManager.get</h1>
+                        <ui-view-query-form alias="conferenceregistrationmanagerget" target="#conferenceregistrationmanagerget-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-conference-registrationmanager-get alias="conferenceregistrationmanagerget"></ui-conference-registrationmanager-get>
+
+                    <div id="conferenceregistrationmanagerget-container"></div>
+                    
+                    <ui-item-table alias="conferenceregistrationmanagerget"
+                                   path="RegistrationManager.get"
+                                   target="#conferenceregistrationmanagerget-container"></ui-item-table>
+                    
+                </div>
+                
+                <div x-show="query == 'WebPageElement.filter'" x-cloak>
+                    <center id="websiteelementfilter-header">
+                        <h1>WebPageElement.filter</h1>
+                        <ui-view-query-form alias="websiteelementfilter" target="#websiteelementfilter-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-website-element-filter alias="websiteelementfilter"></ui-website-element-filter>
+
+                    <div id="websiteelementfilter-container"></div>
+                    
+                    <ui-raw-data-list
+                            target="#websiteelementfilter-container"
+                            alias="websiteelementfilter"
+                            path="Element.filter.resultset"></ui-raw-data-list>
+                    
+                </div>
+                
+                <div x-show="query == 'WebPageElement.get'" x-cloak>
+                    <center id="websiteelementget-header">
+                        <h1>WebPageElement.get</h1>
+                        <ui-view-query-form alias="websiteelementget" target="#websiteelementget-header"></ui-view-query-form>
+                    </center>
+                    <hr>
+                    <ui-website-element-get alias="websiteelementget"></ui-website-element-get>
+
+                    <div id="websiteelementget-container"></div>
+                    
+                    <ui-item-table alias="websiteelementget"
+                                   path="Element.get"
+                                   target="#websiteelementget-container"></ui-item-table>
+                    
+                </div>
+                
             </div>
             <div class="col-2">
                 <h1>Queries</h1>
@@ -475,40 +475,12 @@
                             @click="query = 'TalkProposal.filter'">TalkProposal.filter</button>
                     
                     <button type="button" class="btn btn-outline-primary"
-                            x-show="'ticket.get'.includes(search.toLowerCase())"
-                            @click="query = 'Ticket.get'">Ticket.get</button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'ticket.filter'.includes(search.toLowerCase())"
-                            @click="query = 'Ticket.filter'">Ticket.filter</button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'programitem.filter'.includes(search.toLowerCase())"
-                            @click="query = 'ProgramItem.filter'">ProgramItem.filter</button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'programitem.get'.includes(search.toLowerCase())"
-                            @click="query = 'ProgramItem.get'">ProgramItem.get</button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
                             x-show="'program.filter'.includes(search.toLowerCase())"
                             @click="query = 'Program.filter'">Program.filter</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'program.get'.includes(search.toLowerCase())"
                             @click="query = 'Program.get'">Program.get</button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'registrationmanager.get'.includes(search.toLowerCase())"
-                            @click="query = 'RegistrationManager.get'">RegistrationManager.get</button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'webpageelement.filter'.includes(search.toLowerCase())"
-                            @click="query = 'WebPageElement.filter'">WebPageElement.filter</button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'webpageelement.get'.includes(search.toLowerCase())"
-                            @click="query = 'WebPageElement.get'">WebPageElement.get</button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'visitor.get'.includes(search.toLowerCase())"
@@ -525,6 +497,34 @@
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'edition.get'.includes(search.toLowerCase())"
                             @click="query = 'Edition.get'">Edition.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'programitem.filter'.includes(search.toLowerCase())"
+                            @click="query = 'ProgramItem.filter'">ProgramItem.filter</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'programitem.get'.includes(search.toLowerCase())"
+                            @click="query = 'ProgramItem.get'">ProgramItem.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'ticket.get'.includes(search.toLowerCase())"
+                            @click="query = 'Ticket.get'">Ticket.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'ticket.filter'.includes(search.toLowerCase())"
+                            @click="query = 'Ticket.filter'">Ticket.filter</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'registrationmanager.get'.includes(search.toLowerCase())"
+                            @click="query = 'RegistrationManager.get'">RegistrationManager.get</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'webpageelement.filter'.includes(search.toLowerCase())"
+                            @click="query = 'WebPageElement.filter'">WebPageElement.filter</button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'webpageelement.get'.includes(search.toLowerCase())"
+                            @click="query = 'WebPageElement.get'">WebPageElement.get</button>
                     
                 </div>
             </div>
