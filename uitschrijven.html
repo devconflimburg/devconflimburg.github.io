@@ -25,7 +25,7 @@
             year: Draftsman.fetch_query_parameter('year'),
             ticketId: Draftsman.fetch_query_parameter('ticketId'),
             reason: ''
-        }}">
+        }, showText: false}">
 
         <div class="container">
             <h1>Uitschrijven voor devConf <span x-text="command.year"></span></h1>
@@ -58,24 +58,24 @@
                 <i>Wat jammer dat je niet komt, wat is de reden voor je annulering?</i><br>
                 <script>
                     function update_reason(element,command){
-                        command.reason = element.innerText + '.'
+                        command.reason = element.innerText + '.';
                     }
                 </script>
                 <div class="btn-group" role="group"
-                     x-show="command.reason == ''"
+                     x-show="!showText"
                      aria-label="reason">
                     <button type="button"
-                            @click="update_reason($el,command)"
+                            @click="showText = true;update_reason($el,command)"
                             class="btn btn-outline-primary">Ik ben verhinderd</button>
                     <button type="button"
-                            @click="update_reason($el,command)"
+                            @click="showText = true;update_reason($el,command)"
                             class="btn btn-outline-primary">Het programma spreekt me niet aan</button>
                     <button type="button"
-                            @click="update_reason($el,command)"
+                            @click="showText = true;update_reason($el,command)"
                             class="btn btn-outline-primary">Anders</button>
                 </div>
             </p>
-            <div class="mb-3" x-show="command.reason != ''" x-cloak x-transition>
+            <div class="mb-3" x-show="showText" x-cloak x-transition>
                 <textarea x-model="command.reason"
                           class="form-control" rows="3"></textarea>
             </div>
