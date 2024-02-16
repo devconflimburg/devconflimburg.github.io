@@ -32,11 +32,11 @@
 
     <div class="data-element" @refresh="draw_dashboard"></div>
 
-    <draftsman-query alias="tickets" x-include="/prepared-statements/dashboard-tickets.txt" authenticated>
+    <draftsman-query alias="tickets" x-include="/admin-console/prepared-statements/dashboard-tickets.txt" authenticated>
     </draftsman-query>
-    <draftsman-query alias="manager" x-include="/prepared-statements/dashboard-registrationmanager.txt" authenticated>
+    <draftsman-query alias="manager" x-include="/admin-console/prepared-statements/dashboard-registrationmanager.txt" authenticated>
     </draftsman-query>
-    <draftsman-query alias="breakouts" x-include="/prepared-statements/dashboard-breakouts.txt" authenticated>
+    <draftsman-query alias="breakouts" x-include="/admin-console/prepared-statements/dashboard-breakouts.txt" authenticated>
     </draftsman-query>
 
     <draftsman-notification message="updated" type="Ticket"
