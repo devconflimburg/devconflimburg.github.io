@@ -20,7 +20,7 @@ function closedReason(registrationManager){
         } else if (check > closeDate){
             return "Inschrijving gesloten"
         } else if (registrationManager.registeredVisitors >= registrationManager.maxVisitors){
-            return "Geen seats beschikbaar";
+            return "Geen seats beschikbaar, indien er annuleringen zijn worden deze opnieuw beschikbaar gesteld. Houd de website in de gaten.";
         }
     } catch {
         return "";
