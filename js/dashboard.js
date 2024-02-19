@@ -10,16 +10,56 @@ const room_colors = {
 var registrationData = null;
 var ticketStates = null;
 var breakoutData = null;
+var distributionData = null;
+var cumulativeData = null;
+var cumulativePrecursor = [];
 
 function draw_dashboard(){
     let tickets = Alpine.store("tickets").filter.resultset;
     let manager = Alpine.store("manager").RegistrationManager.get;
     document.getElementById("year").innerText = manager.year;
     document.getElementById("counter").innerText = tickets.length;
+    document.getElementById("maxVisitors").innerText = manager.maxVisitors;
 
     prepare_registration();
     prepare_ticket_state();
     prepare_breakouts();
+    prepare_distribution();
+    prepare_cumulative();
+}
+
+function prepare_cumulative(){
+    let counter = 0;
+    prepared_data = [cumulativePrecursor.shift()];
+    cumulativePrecursor.forEach(record => {
+        if (record[1] > 0){
+            counter += record[1];
+            prepared_data.push([record[0],counter]);
+        }
+    });
+    cumulativeData = google.visualization.arrayToDataTable(prepared_data);
+    google.charts.setOnLoadCallback(draw_cumulative);
+}
+
+function prepare_distribution(){
+    let visitors = Alpine.store("visitors").filter.resultset;
+    let data_set = {};
+    visitors.forEach(visitor => {
+        let domain = visitor.email.split("@").at(-1);
+        if (domain in data_set){
+            data_set[domain] += 1;
+        } else {
+            data_set[domain] = 1;
+        }
+    });
+    let prepared_data = [];
+    Object.entries(data_set).forEach(item => {
+        prepared_data.push([item[0],item[1]]);
+    });
+    prepared_data = prepared_data.sort((a,b) => b[1] - a[1]);
+    prepared_data.unshift(['Domain','Tickets']);
+    distributionData = google.visualization.arrayToDataTable(prepared_data);
+    google.charts.setOnLoadCallback(draw_visitor_distribution);
 }
 
 function prepare_breakouts(){
@@ -123,8 +163,20 @@ function prepare_registration(){
         }
         date_object.add(1, 'days');
     }
+    cumulativePrecursor = prepared_data;
     registrationData = google.visualization.arrayToDataTable(prepared_data);
     google.charts.setOnLoadCallback(draw_registrations);
+}
+
+function draw_cumulative(){
+    var options = {
+      title: 'Visitors',
+      curveType: 'function',
+      legend: { position: 'bottom' }
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('cumulative'));
+    chart.draw(cumulativeData, options);
 }
 
 function draw_breakouts(){
@@ -143,6 +195,16 @@ function draw_breakouts(){
       chart.draw(breakoutData, options);
 }
 
+function draw_visitor_distribution(){
+    var options = {
+      title: 'Domain',
+      pieHole: 0.4,
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('distribution'));
+    chart.draw(distributionData, options);
+}
+
 function draw_ticket_states(){
     var options = {
       title: 'Tickets',
@@ -158,6 +220,7 @@ function draw_registrations() {
     title: 'Registrations',
     hAxis: {
       title: 'Date',
+      textPosition: 'none',
       viewWindow: {
         min: [7, 30, 0],
         max: [17, 30, 0]
