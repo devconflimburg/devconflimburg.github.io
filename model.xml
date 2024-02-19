@@ -1022,7 +1022,7 @@ if snapshot.isDeleted != '':
 				<activity type="set-variable" id="LNrKpw" name="email" expression="#item[0]"></activity>
 				<activity type="set-variable" id="GO7jD4" name="ticketId" expression="#item[1]"></activity>
 				<activity type="set-variable" id="cAefCE" name="year" expression="#item[2]"></activity>
-				<activity type="call-internal-api" id="i8C4BB" name="result" query='mutation MyMutation {|LB|  Conference {|LB|    RegistrationManager {|LB|      deregisterVisitor(input: {email: "{{flow.email}}", ticketId: "{{flow.ticketId}}", reason: "Geanuleerd omdat er geen response op de verificatie mail is gegeven.", year: "{{flow.year}}"}) {|LB|        correlationId|LB|      }|LB|    }|LB|  }|LB|}'></activity>
+				<activity type="call-internal-api" id="i8C4BB" name="result" query='mutation MyMutation {|LB|  Conference {|LB|    RegistrationManager {|LB|      deregisterVisitor(input: {email: "{{flow.email}}", ticketId: "{{flow.ticketId}}", reason: "geannuleerd omdat er geen response op de verificatie mail is gegeven.", year: "{{flow.year}}"}) {|LB|        correlationId|LB|      }|LB|    }|LB|  }|LB|}'></activity>
 			</activity>
 		</notifier>
 		<notifier name="SendTicketVerification">
@@ -1096,7 +1096,7 @@ if snapshot.isDeleted != '':
 				<mapping target="year" value="year"></mapping>
 			</trigger>
 			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="c4NcAA"></activity>
-			<activity type="set-variable" expression='#"Je registratie is geanuleerd"' name="subject" id="p5oUyA"></activity>
+			<activity type="set-variable" expression='#"Je registratie is geannuleerd"' name="subject" id="p5oUyA"></activity>
 			<activity type="render-template" template-file="templates/DeregisterConfirmationMail.html" name="html" id="KLiO9A"></activity>
 			<activity type="render-template" id="DHXCaA" template-file="templates/DeregisterConfirmationMail.txt" name="text"></activity>
 			<activity type="code" handler="send_with_copy_to_mailbox" python-file="lib/MailGun.py" id="2LjgLA"></activity>
