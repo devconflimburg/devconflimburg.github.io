@@ -1,0 +1,10 @@
+query MyQuery {
+  WebSite {
+    Element {
+      get(key: "next-edition") {
+        name
+        year
+      }
+    }
+  }
+}
