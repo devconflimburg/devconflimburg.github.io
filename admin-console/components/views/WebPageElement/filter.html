@@ -1,0 +1,19 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="WebPageElement-filter">
+    <div x-import="tables;query-form">
+
+        <!-- The query object -->
+        <draftsman-query alias="WebPageElementfilter" x-include="/prepared-statements/views/WebPageElement/filter.txt" >
+        </draftsman-query>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="WebPageElementfilter"
+              x-include="/form-definitions/WebPageElement/filter.json"></div>
+
+        <!-- The query form -->
+        <ui-query-form alias="WebPageElementfilter"></ui-query-form>
+
+        <!-- The data view --><ui-collection-table alias="WebPageElementfilter" path="Element.filter.resultset"></ui-collection-table>
+
+    </div>
+</template>

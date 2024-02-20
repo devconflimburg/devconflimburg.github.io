@@ -1,0 +1,21 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="ProgramItem-get">
+    <div x-import="tables;query-form">
+
+        <!-- The query object -->
+        <draftsman-query alias="ProgramItemget" x-include="/prepared-statements/views/ProgramItem/get.txt" >
+        </draftsman-query>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="ProgramItemget"
+              x-include="/form-definitions/ProgramItem/get.json"></div>
+
+        <!-- The query form -->
+        <ui-query-form alias="ProgramItemget"></ui-query-form>
+
+        <!-- The data view -->
+        <ui-item-table alias="ProgramItemget" path="Item.get"></ui-item-table>
+        
+
+    </div>
+</template>

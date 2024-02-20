@@ -1,0 +1,10 @@
+# This file is managed by Tracepaper
+mutation Configure($closeDate: String = "", $year: String = "", $openDate: String = "", $maxVisitors: Int = 0) {
+  Conference{
+    RegistrationManager{
+      configure(input: {closeDate: $closeDate,year: $year,openDate: $openDate,maxVisitors: $maxVisitors}) {
+         correlationId
+      }
+    }
+  }
+}

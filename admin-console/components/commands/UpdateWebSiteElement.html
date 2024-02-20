@@ -1,0 +1,26 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="UpdateWebSiteElement">
+    <div x-import="basic-form;tables">
+
+        <!-- The command object -->
+        <draftsman-mutation command="UpdateWebSiteElement" x-include="/prepared-statements/commands/UpdateWebSiteElement.txt">
+        </draftsman-mutation>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="UpdateWebSiteElement"
+              x-include="/form-definitions/UpdateWebSiteElement.json"></div>
+
+        <!-- The trace table -->
+        <ui-trace-table></ui-trace-table>
+
+        <!-- The form -->
+        <ui-basic-form alias="UpdateWebSiteElement"></ui-basic-form>
+
+        <draftsman-trace command="UpdateWebSiteElement"
+              status="success"
+              @trace="
+                setTimeout(Draftsman.empty_track_and_trace_log,5000);
+                $dispatch('setdata', { command: 'UpdateWebSiteElement', data: {} });">
+        </draftsman-trace>
+    </div>
+</template>

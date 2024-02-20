@@ -1,0 +1,70 @@
+[
+  {
+    "type": "meta",
+    "message": "This file is managed by Tracepaper"
+  },
+  {
+    "name": "summary",
+    "title": "Summary",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "duration",
+    "title": "Duration",
+    "type": "Int",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "year",
+    "title": "Year",
+    "type": "String",
+    "pattern": "^(?:20)\\d{2}$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "speaker",
+    "title": "Speaker",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "startTime",
+    "title": "Starttime",
+    "type": "String",
+    "pattern": "^\\d{2}:\\d{2}$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "title",
+    "title": "Title",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "room",
+    "title": "Room",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "id",
+    "title": "Id",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  }
+]

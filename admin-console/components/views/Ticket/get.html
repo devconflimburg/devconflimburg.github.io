@@ -1,0 +1,21 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="Ticket-get">
+    <div x-import="tables;query-form">
+
+        <!-- The query object -->
+        <draftsman-query alias="Ticketget" x-include="/prepared-statements/views/Ticket/get.txt" authenticated>
+        </draftsman-query>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="Ticketget"
+              x-include="/form-definitions/Ticket/get.json"></div>
+
+        <!-- The query form -->
+        <ui-query-form alias="Ticketget"></ui-query-form>
+
+        <!-- The data view -->
+        <ui-item-table alias="Ticketget" path="get"></ui-item-table>
+        
+
+    </div>
+</template>

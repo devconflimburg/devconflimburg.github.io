@@ -1,0 +1,21 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="RegistrationManager-get">
+    <div x-import="tables;query-form">
+
+        <!-- The query object -->
+        <draftsman-query alias="RegistrationManagerget" x-include="/prepared-statements/views/RegistrationManager/get.txt" >
+        </draftsman-query>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="RegistrationManagerget"
+              x-include="/form-definitions/RegistrationManager/get.json"></div>
+
+        <!-- The query form -->
+        <ui-query-form alias="RegistrationManagerget"></ui-query-form>
+
+        <!-- The data view -->
+        <ui-item-table alias="RegistrationManagerget" path="RegistrationManager.get"></ui-item-table>
+        
+
+    </div>
+</template>

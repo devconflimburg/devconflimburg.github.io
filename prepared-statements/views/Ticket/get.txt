@@ -1,0 +1,17 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query GetTicket($key: ID = "") {
+  Ticket {
+    get(key: $key) {
+      key
+      year
+      verified
+      ticketId
+      breakouts
+      redeemed
+      control
+      createdAt
+      verifiedAt
+      redeemedAt
+    }
+  }
+}

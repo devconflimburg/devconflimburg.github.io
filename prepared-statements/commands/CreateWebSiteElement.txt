@@ -1,0 +1,10 @@
+# This file is managed by Tracepaper
+mutation Create($name: String = "", $content: String = "") {
+  WebSite{
+    Element{
+      create(input: {name: $name,content: $content}) {
+         correlationId
+      }
+    }
+  }
+}

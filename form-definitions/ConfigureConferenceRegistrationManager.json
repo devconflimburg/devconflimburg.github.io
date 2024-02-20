@@ -1,0 +1,38 @@
+[
+  {
+    "type": "meta",
+    "message": "This file is managed by Tracepaper"
+  },
+  {
+    "name": "closeDate",
+    "title": "Closedate",
+    "type": "String",
+    "pattern": "^\\d{2}-\\d{2}-(?:20)\\d{2}$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "year",
+    "title": "Year",
+    "type": "String",
+    "pattern": "^(?:20)\\d{2}$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "openDate",
+    "title": "Opendate",
+    "type": "String",
+    "pattern": "^\\d{2}-\\d{2}-(?:20)\\d{2}$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "maxVisitors",
+    "title": "Maxvisitors",
+    "type": "Int",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  }
+]

@@ -41,7 +41,7 @@
             }
         </style>
     </head>
-    <body x-data x-import="commands/Ticket/redeem">
+    <body x-data>
 
         <video id="scanner-preview" width="100%"></video>
         <div class="overlay" id="overlay">
@@ -54,7 +54,8 @@
             </div>
         </div>
 
-        <ui-redeem-ticket command="redeem-ticket"></ui-redeem-ticket>
+        <draftsman-mutation command="redeem-ticket" x-include="/prepared-statements/commands/RedeemTicket.txt" authenticated>
+    </draftsman-mutation>
         <div x-dummy="
             $store.mutation.send('redeem-ticket',{ticketId: Draftsman.fetch_query_parameter('id')});"></div>
         <draftsman-trace command="redeem-ticket"

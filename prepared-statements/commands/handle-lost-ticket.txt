@@ -1,7 +1,0 @@
-mutation HandleLost($email: String = "") {
-   Ticket{
-     handleLost(input: {email: $email}) {
-        correlationId
-     }
-   }
- }

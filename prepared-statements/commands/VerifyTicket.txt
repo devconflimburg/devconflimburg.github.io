@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation Verify($ticketId: String = "", $control: String = "") {
+  Ticket{
+    verify(input: {ticketId: $ticketId,control: $control}) {
+       correlationId
+    }
+  }
+}

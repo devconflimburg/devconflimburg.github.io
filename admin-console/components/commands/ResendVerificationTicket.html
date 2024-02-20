@@ -1,0 +1,26 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="ResendVerificationTicket">
+    <div x-import="basic-form;tables">
+
+        <!-- The command object -->
+        <draftsman-mutation command="ResendVerificationTicket" x-include="/prepared-statements/commands/ResendVerificationTicket.txt">
+        </draftsman-mutation>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="ResendVerificationTicket"
+              x-include="/form-definitions/ResendVerificationTicket.json"></div>
+
+        <!-- The trace table -->
+        <ui-trace-table></ui-trace-table>
+
+        <!-- The form -->
+        <ui-basic-form alias="ResendVerificationTicket"></ui-basic-form>
+
+        <draftsman-trace command="ResendVerificationTicket"
+              status="success"
+              @trace="
+                setTimeout(Draftsman.empty_track_and_trace_log,5000);
+                $dispatch('setdata', { command: 'ResendVerificationTicket', data: {} });">
+        </draftsman-trace>
+    </div>
+</template>

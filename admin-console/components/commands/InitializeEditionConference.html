@@ -1,0 +1,26 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="InitializeEditionConference">
+    <div x-import="basic-form;tables">
+
+        <!-- The command object -->
+        <draftsman-mutation command="InitializeEditionConference" x-include="/prepared-statements/commands/InitializeEditionConference.txt">
+        </draftsman-mutation>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="InitializeEditionConference"
+              x-include="/form-definitions/InitializeEditionConference.json"></div>
+
+        <!-- The trace table -->
+        <ui-trace-table></ui-trace-table>
+
+        <!-- The form -->
+        <ui-basic-form alias="InitializeEditionConference"></ui-basic-form>
+
+        <draftsman-trace command="InitializeEditionConference"
+              status="success"
+              @trace="
+                setTimeout(Draftsman.empty_track_and_trace_log,5000);
+                $dispatch('setdata', { command: 'InitializeEditionConference', data: {} });">
+        </draftsman-trace>
+    </div>
+</template>

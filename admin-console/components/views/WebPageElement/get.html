@@ -1,0 +1,21 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="WebPageElement-get">
+    <div x-import="tables;query-form">
+
+        <!-- The query object -->
+        <draftsman-query alias="WebPageElementget" x-include="/prepared-statements/views/WebPageElement/get.txt" >
+        </draftsman-query>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="WebPageElementget"
+              x-include="/form-definitions/WebPageElement/get.json"></div>
+
+        <!-- The query form -->
+        <ui-query-form alias="WebPageElementget"></ui-query-form>
+
+        <!-- The data view -->
+        <ui-item-table alias="WebPageElementget" path="Element.get"></ui-item-table>
+        
+
+    </div>
+</template>

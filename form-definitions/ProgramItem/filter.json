@@ -1,0 +1,31 @@
+[
+  {
+    "type": "meta",
+    "message": "This file is NOT managed by Tracepaper, and can be customized."
+  },
+  {
+    "name": "year_equals",
+    "type": "String",
+    "title": "Year Equals"
+  },
+  {
+    "name": "room_equals",
+    "type": "String",
+    "title": "Room Equals"
+  },
+  {
+    "name": "speaker_equals",
+    "type": "String",
+    "title": "Speaker Equals"
+  },
+  {
+    "name": "session_equals",
+    "type": "Int",
+    "title": "Session Equals"
+  },
+  {
+    "name": "breakout_equals",
+    "type": "Boolean",
+    "title": "Breakout Equals"
+  }
+]

@@ -1,0 +1,21 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query GetProgramItem($key: ID = "") {
+  Program {
+    Item {
+      get(key: $key) {
+        key
+        summary
+        year
+        session
+        title
+        room
+        duration
+        breakout
+        speaker
+        startTime
+        id
+        endTime
+      }
+    }
+  }
+}

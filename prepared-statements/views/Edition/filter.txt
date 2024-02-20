@@ -1,0 +1,13 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query FilterEdition {
+  Edition {
+    filter {
+       resultset { 
+        key
+        date
+        year
+        tagline
+      }
+    }
+  }
+}

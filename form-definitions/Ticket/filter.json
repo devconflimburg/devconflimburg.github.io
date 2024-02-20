@@ -1,0 +1,21 @@
+[
+  {
+    "type": "meta",
+    "message": "This file is NOT managed by Tracepaper, and can be customized."
+  },
+  {
+    "name": "year_equals",
+    "type": "String",
+    "title": "Year Equals"
+  },
+  {
+    "name": "verified_equals",
+    "type": "Boolean",
+    "title": "Verified Equals"
+  },
+  {
+    "name": "redeemed_equals",
+    "type": "Boolean",
+    "title": "Redeemed Equals"
+  }
+]

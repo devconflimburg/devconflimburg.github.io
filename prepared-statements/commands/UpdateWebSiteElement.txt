@@ -1,0 +1,10 @@
+# This file is managed by Tracepaper
+mutation Update($name: String = "", $content: String = "") {
+  WebSite{
+    Element{
+      update(input: {name: $name,content: $content}) {
+         correlationId
+      }
+    }
+  }
+}

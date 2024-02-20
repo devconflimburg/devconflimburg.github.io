@@ -34,11 +34,13 @@
 <main class="flex-shrink-0">
   <ui-navbar></ui-navbar>
 
-  <div class="container" x-import="commands/Conference/TalkProposal/create;utils/tables">
+  <div class="container" x-import="utils/tables">
 
     <div class="row m-3" x-data="{show_error:false,message:'',command: $persist({}),submitted:false}">
 
-      <ui-create-conference-talk-proposal command="create"></ui-create-conference-talk-proposal>
+      <draftsman-mutation command="create"
+                            x-include="/prepared-statements/commands/CreateConferenceTalkProposal.txt">
+        </draftsman-mutation>
 
       <div id="trace"></div>
       <ui-trace-table target="#trace"></ui-trace-table>

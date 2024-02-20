@@ -1,9 +1,0 @@
-mutation DeregisterVisitor($email: String = "", $ticketId: String = "", $reason: String = "", $year: String = "") {
-   Conference{
-     RegistrationManager{
-       deregisterVisitor(input: {email: $email,ticketId: $ticketId,reason: $reason,year: $year}) {
-          correlationId
-       }
-     }
-   }
- }

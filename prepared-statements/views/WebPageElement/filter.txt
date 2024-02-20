@@ -1,0 +1,15 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query FilterWebPageElement {
+  WebSite {
+    Element {
+      filter {
+         resultset { 
+          key
+          year
+          name
+          content
+        }
+      }
+    }
+  }
+}

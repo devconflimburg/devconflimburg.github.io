@@ -1,0 +1,26 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="HandleLostTicket">
+    <div x-import="basic-form;tables">
+
+        <!-- The command object -->
+        <draftsman-mutation command="HandleLostTicket" x-include="/prepared-statements/commands/HandleLostTicket.txt">
+        </draftsman-mutation>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="HandleLostTicket"
+              x-include="/form-definitions/HandleLostTicket.json"></div>
+
+        <!-- The trace table -->
+        <ui-trace-table></ui-trace-table>
+
+        <!-- The form -->
+        <ui-basic-form alias="HandleLostTicket"></ui-basic-form>
+
+        <draftsman-trace command="HandleLostTicket"
+              status="success"
+              @trace="
+                setTimeout(Draftsman.empty_track_and_trace_log,5000);
+                $dispatch('setdata', { command: 'HandleLostTicket', data: {} });">
+        </draftsman-trace>
+    </div>
+</template>

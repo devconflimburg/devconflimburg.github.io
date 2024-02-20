@@ -1,0 +1,11 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query GetProgram($key: ID = "") {
+  Program {
+    get(key: $key) {
+      key
+      year
+      start
+      end
+    }
+  }
+}

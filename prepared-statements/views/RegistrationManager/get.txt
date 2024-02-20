@@ -1,0 +1,15 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query GetRegistrationManager($key: ID = "") {
+  Conference {
+    RegistrationManager {
+      get(key: $key) {
+        key
+        closeDate
+        year
+        registeredVisitors
+        openDate
+        maxVisitors
+      }
+    }
+  }
+}

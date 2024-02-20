@@ -64,7 +64,7 @@
 
     <!-- A mutation that is sent to the API.
          The actual API call is triggered from javascript: send_mutation("register",{firstName: 'John', ...}) -->
-    <draftsman-mutation command="register" x-include="/prepared-statements/commands/register-visitor.txt">
+    <draftsman-mutation command="register" x-include="/prepared-statements/commands/RegisterVisitorConferenceRegistrationManager.txt">
     </draftsman-mutation>
 
     <!-- Commands are handled asynchronously, the draftsman-trace tag makes sure we subscribe to
@@ -74,7 +74,7 @@
     </draftsman-trace>
 
     <!-- The command when the user request to resend an e-mail -->
-    <draftsman-mutation command="lost-email-command" x-include="/prepared-statements/commands/handle-lost-ticket.txt">
+    <draftsman-mutation command="lost-email-command" x-include="/prepared-statements/commands/HandleLostTicket.txt">
     </draftsman-mutation>
 
     <!-- And the trace subscriber for the above command -->

@@ -1,0 +1,13 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query GetWebPageElement($key: ID = "") {
+  WebSite {
+    Element {
+      get(key: $key) {
+        key
+        year
+        name
+        content
+      }
+    }
+  }
+}

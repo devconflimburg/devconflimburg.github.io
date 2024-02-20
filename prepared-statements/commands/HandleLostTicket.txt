@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation HandleLost($email: String = "") {
+  Ticket{
+    handleLost(input: {email: $email}) {
+       correlationId
+    }
+  }
+}

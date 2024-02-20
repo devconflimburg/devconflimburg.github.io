@@ -19,7 +19,7 @@
         <script async defer data-domain="devconf.nl"
                 src="https://analytics.bohanssen.com/js/plausible.js"></script>
     </head>
-    <body x-data x-import="commands/Ticket/verify">
+    <body x-data>
         one moment...
         <div class="table-responsive">
         <table class="table" x-show="$store.trace.length != 0" x-cloak>
@@ -43,7 +43,10 @@
             </tbody>
         </table>
     </div>
-        <ui-verify-ticket command="verify-ticket"></ui-verify-ticket>
+
+        <draftsman-mutation command="verify-ticket" x-include="/prepared-statements/commands/VerifyTicket.txt">
+        </draftsman-mutation>
+
         <div x-init="setTimeout(function(){
             $store.mutation.send('verify-ticket',{
                 ticketId: Draftsman.fetch_query_parameter('id'),

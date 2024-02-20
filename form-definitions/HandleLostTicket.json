@@ -1,0 +1,14 @@
+[
+  {
+    "type": "meta",
+    "message": "This file is managed by Tracepaper"
+  },
+  {
+    "name": "email",
+    "title": "Email",
+    "type": "String",
+    "pattern": "^[\\w\\-\\.]+@([\\w\\-]+\\.)+[\\w\\-]{2,4}$",
+    "placeholder": "",
+    "default": ""
+  }
+]

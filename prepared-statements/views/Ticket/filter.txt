@@ -1,0 +1,19 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query FilterTicket($year_equals: String = "", $verified_equals: Boolean = false, $redeemed_equals: Boolean = false) {
+  Ticket {
+    filter(year_equals: $year_equals, verified_equals: $verified_equals, redeemed_equals: $redeemed_equals) {
+       resultset { 
+        key
+        year
+        verified
+        ticketId
+        breakouts
+        redeemed
+        control
+        createdAt
+        verifiedAt
+        redeemedAt
+      }
+    }
+  }
+}

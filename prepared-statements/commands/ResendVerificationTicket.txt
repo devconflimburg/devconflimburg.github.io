@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation ResendVerification($firstName: String = "", $lastName: String = "", $year: String = "", $email: String = "", $control: String = "", $ticketId: String = "") {
+  Ticket{
+    resendVerification(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,control: $control,ticketId: $ticketId}) {
+       correlationId
+    }
+  }
+}

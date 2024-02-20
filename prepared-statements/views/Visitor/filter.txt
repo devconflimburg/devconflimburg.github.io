@@ -1,0 +1,15 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query FilterVisitor($ticketId_equals: String = "", $year_equals: String = "") {
+  Visitor {
+    filter(ticketId_equals: $ticketId_equals, year_equals: $year_equals) {
+       resultset { 
+        key
+        firstName
+        lastName
+        year
+        ticketId
+        email
+      }
+    }
+  }
+}

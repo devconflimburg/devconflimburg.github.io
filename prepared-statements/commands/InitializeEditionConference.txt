@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation InitializeEdition($date: String = "", $year: String = "", $tagline: String = "") {
+  Conference{
+    initializeEdition(input: {date: $date,year: $year,tagline: $tagline}) {
+       correlationId
+    }
+  }
+}

@@ -1,0 +1,21 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="Edition-get">
+    <div x-import="tables;query-form">
+
+        <!-- The query object -->
+        <draftsman-query alias="Editionget" x-include="/prepared-statements/views/Edition/get.txt" >
+        </draftsman-query>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="Editionget"
+              x-include="/form-definitions/Edition/get.json"></div>
+
+        <!-- The query form -->
+        <ui-query-form alias="Editionget"></ui-query-form>
+
+        <!-- The data view -->
+        <ui-item-table alias="Editionget" path="get"></ui-item-table>
+        
+
+    </div>
+</template>

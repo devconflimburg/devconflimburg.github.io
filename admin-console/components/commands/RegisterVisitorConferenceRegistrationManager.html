@@ -1,0 +1,26 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="RegisterVisitorConferenceRegistrationManager">
+    <div x-import="basic-form;tables">
+
+        <!-- The command object -->
+        <draftsman-mutation command="RegisterVisitorConferenceRegistrationManager" x-include="/prepared-statements/commands/RegisterVisitorConferenceRegistrationManager.txt">
+        </draftsman-mutation>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="RegisterVisitorConferenceRegistrationManager"
+              x-include="/form-definitions/RegisterVisitorConferenceRegistrationManager.json"></div>
+
+        <!-- The trace table -->
+        <ui-trace-table></ui-trace-table>
+
+        <!-- The form -->
+        <ui-basic-form alias="RegisterVisitorConferenceRegistrationManager"></ui-basic-form>
+
+        <draftsman-trace command="RegisterVisitorConferenceRegistrationManager"
+              status="success"
+              @trace="
+                setTimeout(Draftsman.empty_track_and_trace_log,5000);
+                $dispatch('setdata', { command: 'RegisterVisitorConferenceRegistrationManager', data: {} });">
+        </draftsman-trace>
+    </div>
+</template>

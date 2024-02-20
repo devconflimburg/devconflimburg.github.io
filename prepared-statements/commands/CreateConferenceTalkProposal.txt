@@ -1,0 +1,10 @@
+# This file is managed by Tracepaper
+mutation Create($difficultyLevel: String = "", $name: String = "", $abstract: String = "", $biography: String = "", $id: String = "", $title: String = "", $email: String = "") {
+  Conference{
+    TalkProposal{
+      create(input: {difficultyLevel: $difficultyLevel,name: $name,abstract: $abstract,biography: $biography,id: $id,title: $title,email: $email}) {
+         correlationId
+      }
+    }
+  }
+}

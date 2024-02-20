@@ -1,0 +1,11 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query GetEdition($key: ID = "") {
+  Edition {
+    get(key: $key) {
+      key
+      date
+      year
+      tagline
+    }
+  }
+}

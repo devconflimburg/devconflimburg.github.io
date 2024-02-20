@@ -1,0 +1,23 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query FilterProgramItem($year_equals: String = "", $room_equals: String = "", $speaker_equals: String = "", $session_equals: Int = 0, $breakout_equals: Boolean = false) {
+  Program {
+    Item {
+      filter(year_equals: $year_equals, room_equals: $room_equals, speaker_equals: $speaker_equals, session_equals: $session_equals, breakout_equals: $breakout_equals) {
+         resultset { 
+          key
+          summary
+          year
+          session
+          title
+          room
+          duration
+          breakout
+          speaker
+          startTime
+          id
+          endTime
+        }
+      }
+    }
+  }
+}

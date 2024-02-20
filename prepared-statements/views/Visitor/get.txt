@@ -1,0 +1,13 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query GetVisitor($key: ID = "") {
+  Visitor {
+    get(key: $key) {
+      key
+      firstName
+      lastName
+      year
+      ticketId
+      email
+    }
+  }
+}

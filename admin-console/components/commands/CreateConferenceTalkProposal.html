@@ -1,0 +1,26 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="CreateConferenceTalkProposal">
+    <div x-import="basic-form;tables">
+
+        <!-- The command object -->
+        <draftsman-mutation command="CreateConferenceTalkProposal" x-include="/prepared-statements/commands/CreateConferenceTalkProposal.txt">
+        </draftsman-mutation>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="CreateConferenceTalkProposal"
+              x-include="/form-definitions/CreateConferenceTalkProposal.json"></div>
+
+        <!-- The trace table -->
+        <ui-trace-table></ui-trace-table>
+
+        <!-- The form -->
+        <ui-basic-form alias="CreateConferenceTalkProposal"></ui-basic-form>
+
+        <draftsman-trace command="CreateConferenceTalkProposal"
+              status="success"
+              @trace="
+                setTimeout(Draftsman.empty_track_and_trace_log,5000);
+                $dispatch('setdata', { command: 'CreateConferenceTalkProposal', data: {} });">
+        </draftsman-trace>
+    </div>
+</template>

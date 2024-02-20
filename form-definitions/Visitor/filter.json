@@ -1,0 +1,16 @@
+[
+  {
+    "type": "meta",
+    "message": "This file is NOT managed by Tracepaper, and can be customized."
+  },
+  {
+    "name": "ticketId_equals",
+    "type": "String",
+    "title": "Ticketid Equals"
+  },
+  {
+    "name": "year_equals",
+    "type": "String",
+    "title": "Year Equals"
+  }
+]

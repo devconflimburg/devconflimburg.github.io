@@ -1,0 +1,17 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query FilterTalkProposal {
+  TalkProposal {
+    filter {
+       resultset { 
+        key
+        difficultyLevel
+        name
+        abstract
+        biography
+        id
+        title
+        email
+      }
+    }
+  }
+}

@@ -24,7 +24,7 @@
   function finalize_signin(err,data){
     if (err){
       console.log(err);
-      alert(err["message"]);
+      document.getElementById("error").innerText = err;
     }
     localStorage["token"] = data["idToken"]["jwtToken"];
     cacheJS.set("token",localStorage["token"], 60);
@@ -81,7 +81,7 @@
     <form x-data="{username:'',password:'', enabled: true}">
         <img class="mb-4" src="/assets/email-header.png" alt=""  height="57">
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-
+        <pre id="error"></pre>
         <div class="form-floating">
             <input x-model="username" type="text" class="form-control" id="floatingInput" placeholder="username">
             <label for="floatingInput">Username</label>
