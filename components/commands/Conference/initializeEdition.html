@@ -1,0 +1,45 @@
+<!--
+This file is managed by the tracepaper modeler, if you want to customize this command
+please make sure you rename the file first.
+-->
+<template x-component="initialize-edition-conference">
+  <div>
+    <draftsman-mutation :command="$prop('command')"  authenticated>
+     mutation InitializeEdition($date: String = "", $year: String = "", $tagline: String = "") {
+       Conference{
+         initializeEdition(input: {date: $date,year: $year,tagline: $tagline}) {
+            correlationId
+         }
+       }
+     }
+    </draftsman-mutation>
+    <div x-init="$store.forms[$prop('command')] = $el.innerHTML" style="display:none;">
+[
+  {
+    "name": "date",
+    "title": "Date",
+    "type": "String",
+    "pattern": "^\\d{2}-\\d{2}-(?:20)\\d{2}$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "year",
+    "title": "Year",
+    "type": "String",
+    "pattern": "^(?:20)\\d{2}$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "tagline",
+    "title": "Tagline",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  }
+]
+    </div>
+  </div>
+</template>

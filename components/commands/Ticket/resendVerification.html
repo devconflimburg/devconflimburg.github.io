@@ -1,0 +1,69 @@
+<!--
+This file is managed by the tracepaper modeler, if you want to customize this command
+please make sure you rename the file first.
+-->
+<template x-component="resend-verification-ticket">
+  <div>
+    <draftsman-mutation :command="$prop('command')"  authenticated>
+     mutation ResendVerification($firstName: String = "", $lastName: String = "", $year: String = "", $email: String = "", $control: String = "", $ticketId: String = "") {
+       Ticket{
+         resendVerification(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,control: $control,ticketId: $ticketId}) {
+            correlationId
+         }
+       }
+     }
+    </draftsman-mutation>
+    <div x-init="$store.forms[$prop('command')] = $el.innerHTML" style="display:none;">
+[
+  {
+    "name": "firstName",
+    "title": "Firstname",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "lastName",
+    "title": "Lastname",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "year",
+    "title": "Year",
+    "type": "String",
+    "pattern": "^(?:20)\\d{2}$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "email",
+    "title": "Email",
+    "type": "String",
+    "pattern": "^[\\w\\-\\.]+@([\\w\\-]+\\.)+[\\w\\-]{2,4}$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "control",
+    "title": "Control",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "ticketId",
+    "title": "Ticketid",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  }
+]
+    </div>
+  </div>
+</template>

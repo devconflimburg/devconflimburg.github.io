@@ -1,0 +1,85 @@
+<!--
+This file is managed by the tracepaper modeler, if you want to customize this command
+please make sure you rename the file first.
+-->
+<template x-component="add-program-item-conference">
+  <div>
+    <draftsman-mutation :command="$prop('command')"  authenticated>
+     mutation AddProgramItem($summary: String = "", $duration: Int = 0, $year: String = "", $speaker: String = "", $startTime: String = "", $title: String = "", $room: String = "", $id: String = "") {
+       Conference{
+         addProgramItem(input: {summary: $summary,duration: $duration,year: $year,speaker: $speaker,startTime: $startTime,title: $title,room: $room,id: $id}) {
+            correlationId
+         }
+       }
+     }
+    </draftsman-mutation>
+    <div x-init="$store.forms[$prop('command')] = $el.innerHTML" style="display:none;">
+[
+  {
+    "name": "summary",
+    "title": "Summary",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "duration",
+    "title": "Duration",
+    "type": "Int",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "year",
+    "title": "Year",
+    "type": "String",
+    "pattern": "^(?:20)\\d{2}$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "speaker",
+    "title": "Speaker",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "startTime",
+    "title": "Starttime",
+    "type": "String",
+    "pattern": "^\\d{2}:\\d{2}$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "title",
+    "title": "Title",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "room",
+    "title": "Room",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "id",
+    "title": "Id",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  }
+]
+    </div>
+  </div>
+</template>

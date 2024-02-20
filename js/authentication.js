@@ -1,10 +1,11 @@
-var referer = "/";
 function navigate_to_referer(){
     if (sessionStorage["prevLoc"]){
-        referer = sessionStorage["prevLoc"];
+        let prevLoc = sessionStorage["prevLoc"];
         sessionStorage.removeItem("prevLoc");
+        location = prevLoc;
+    } else {
+        location = "/";
     }
-    location = referer;
 }
 function getPoolData(){
 	return {
