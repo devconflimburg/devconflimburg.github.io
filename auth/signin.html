@@ -24,7 +24,7 @@
   function finalize_signin(err,data){
     if (err){
       console.log(err);
-      document.getElementById("error").innerText = err;
+      document.getElementById("error").innerText = JSON.stringify(err,null,2);
     }
     localStorage["token"] = data["idToken"]["jwtToken"];
     cacheJS.set("token",localStorage["token"], 60);

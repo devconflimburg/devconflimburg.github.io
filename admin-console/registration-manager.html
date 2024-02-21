@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <title>Visitors</title>
+  <script>var must_be_signed_in = true;</script>
+  <script src="/js/configuration.js"></script>
+  <script src="/js/configuration-staging.js"></script>
+
+  <link rel="stylesheet" href="/css/draftsman.css" />
+  <script src="/js/framework.js"></script>
+  <script src="/js/cache.js"></script>
+  <script src="https://unpkg.com/@vimesh/ui"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+        integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+
+  <script>
+        $vui.config.importMap = {
+            "*": '/admin-console/components/${path}${component}.html'
+        }
+  </script>
+
+</head>
+<body x-data="{config: $store.manager.RegistrationManager.get}">
+
+  <script>
+    function convert_date_format(date){
+      let comp = date.split("-");
+      comp.reverse();
+      return comp.join("-");
+    }
+    function update_config(config){
+      let modal = new bootstrap.Modal(document.getElementById("traceModal"), {});
+      modal.show();
+      send_mutation("update-config",config);
+    }
+  </script>
+  <div class="container">
+    <div class="progress">
+      <div class="progress-bar" role="progressbar"
+           :style="'width: ' + (config.registeredVisitors/config.maxVisitors*100) + '%'"
+           :aria-valuenow="config.registeredVisitors"
+           aria-valuemin="0"
+           x-text="config.registeredVisitors"
+           :aria-valuemax="config.maxVisitors"></div>
+    </div>
+    <form>
+      <div class="mb-3">
+        <label for="year" class="form-label">Editie</label>
+        <input type="text" class="form-control" id="year" x-model="config.year" disabled>
+      </div>
+      <div class="mb-3">
+        <label for="maxVisitors" class="form-label">Bezoeker limiet</label>
+        <input type="number" min="0" class="form-control" id="maxVisitors" x-model="config.maxVisitors">
+      </div>
+      <div class="mb-3">
+        <label for="openDate" class="form-label">Inschrijving opent op</label>
+        <input type="date" class="form-control" id="openDate" :value="convert_date_format(config.openDate)"
+               @change.debounce="config.openDate = convert_date_format($el.value)">
+      </div>
+      <div class="mb-3">
+        <label for="closeDate" class="form-label">En sluit op</label>
+        <input type="date" class="form-control" id="closeDate" :value="convert_date_format(config.closeDate)"
+               @change.debounce="config.closeDate = convert_date_format($el.value)">
+      </div>
+      <button type="button" class="btn btn-primary" @click="update_config(config)">Submit</button>
+    </form>
+  </div>
+
+  <div x-import="trace-modal">
+    <ui-trace-modal></ui-trace-modal>
+  </div>
+
+  <div class="data-element" @refresh="config = $store.manager.RegistrationManager.get"></div>
+  <draftsman-query alias="manager" authenticated
+                   x-include="/prepared-statements/views/RegistrationManager/get.txt"></draftsman-query>
+
+  <draftsman-mutation command="update-config" authenticated
+                      x-include="/prepared-statements/commands/ConfigureConferenceRegistrationManager.txt">
+  </draftsman-mutation>
+
+  <draftsman-notification message="updated" type="RegistrationManager"
+                          @notification="console.log('Received message:',$event.detail);Draftsman.reload_data();">
+  </draftsman-notification>
+</body>
+</html>
