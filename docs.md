@@ -32,15 +32,15 @@ The Draftsman portion of the framework contains **4 custom tags**, **1 class**, 
 
 ### The query tag
 The query tag is a method for binding a View query to frontend components. Here is an example: 
-<code class="html" x-include="/admin-console/components/views/Edition/get.html"></code>
-The source of the above example is located at: /admin-console/components/views/Edition/get.html 
+<code class="html" x-include="/admin-console/components/views/Program/get.html"></code>
+The source of the above example is located at: /admin-console/components/views/Program/get.html 
 
 #### Basic concept
 ```html
-<draftsman-query alias="Editionget" x-include="/prepared-statements/views/Edition/get.txt">
+<draftsman-query alias="Programget" x-include="/prepared-statements/views/Program/get.txt">
 </draftsman-query>
 ```
-Binds a prepared statement (/prepared-statements/views/Edition/get.txt) to an Alpine data object (Editionget).
+Binds a prepared statement (/prepared-statements/views/Program/get.txt) to an Alpine data object (Programget).
 The body of the tag is imported by *vimesh-ui*.
 
 The prepared statement may be parameterized, the variables can be set by 3 methods:
@@ -52,12 +52,12 @@ The prepared statement may be parameterized, the variables can be set by 3 metho
 
 The body of the query lists the attributes we are interested in, this may travel one-to-one, one-to-many, many-to-one, and many-to-many relationships.
 
-*Limitation: a draftsman-query tag may only include 1 toplevel query (in the example 'Edition'). However, 
+*Limitation: a draftsman-query tag may only include 1 toplevel query (in the example 'Program'). However, 
 queries spread over multiple draftsman-query tags are merged into a single request by the draftsman framework. 
 Unless the query-mode is set to 'on-demand'.*
 
 The **alias** *attribute*, this attribute defines a key where under the retrieved data is stored. Data is retrievable by using 
-the [Alpine Store method](https://alpinejs.dev/magics/store) '$store.{alias}.{path}.{name}' e.g. '$store.Editionget.get.key'. The alias attribute is mandatory to prevent collisions
+the [Alpine Store method](https://alpinejs.dev/magics/store) '$store.{alias}.{path}.{name}' e.g. '$store.Programget.get.key'. The alias attribute is mandatory to prevent collisions
 in the data store.
 
 The **authenticated** *attribute* is optional and directs the framework to use an identity token instead of the default *anonymous API key*.
@@ -70,7 +70,7 @@ showcased on the [Admin Console](/admin-console). We use [vimesh-ui's](https://g
 functionality to load it into the page, the element is hidden and accessible via the id. Note that this ID must be equal to
 the alias.
 ```html
-<div style="display:none;" id="Editionget" x-include="/form-definitions/Edition/get.json"></div>
+<div style="display:none;" id="Programget" x-include="/form-definitions/Program/get.json"></div>
 ```
 
 #### The query-form component
@@ -93,13 +93,13 @@ A notification contains three fields:
 
 The subscription below filters on two of these fields. If both fields match, the @notification function is executed. 
 In this case, setting the 'key' variable and reloading the page data. The notification below is the automatic notification 
-from the view updater indicating that view 'Edition' has been updated. It does not filter on identity, so this may be 
+from the view updater indicating that view 'Program' has been updated. It does not filter on identity, so this may be 
 triggered frequently depending on the number of instances of the view and the accumulated updates (create/update/delete). 
 When we are interested in one specific instance of the view, we can add an additional attribute to the 
-tag *:identifier=$store.edition.get.key*. The ':' tells AlpineJS that the value should be set using a JavaScript statement, 
-the statement '$store.edition.get.key' refers to previously retrieved data using a query tag.
+tag *:identifier=$store.program.get.key*. The ':' tells AlpineJS that the value should be set using a JavaScript statement, 
+the statement '$store.program.get.key' refers to previously retrieved data using a query tag.
 ```html
-<draftsman-notification message="updated" type="Edition"
+<draftsman-notification message="updated" type="Program"
     @notification=" 
         console.log('Received message:',$event.detail);
         Draftsman.set_variable('key',$event.detail.identifier);
@@ -119,14 +119,14 @@ The notifications are also stored in an array accessible from the AlpineJS conte
 ### The mutation tag
 
 The mutation tag is intended to make GraphQL mutations available within the AlpineJS context.
-<code class="html" x-include="/admin-console/components/commands/AddProgramItemConference.html"></code>
+<code class="html" x-include="/admin-console/components/commands/InitializeEditionConference.html"></code>
 
 #### The basic concept
 ```html
-<draftsman-mutation command="AddProgramItemConference" x-include="/prepared-statements/commands/AddProgramItemConference.txt">
+<draftsman-mutation command="InitializeEditionConference" x-include="/prepared-statements/commands/InitializeEditionConference.txt">
 </draftsman-mutation>
 ```
-Registers a prepared statement (/prepared-statements/commands/AddProgramItemConference.txt) as a command (AddProgramItemConference) in the Draftsman framework. 
+Registers a prepared statement (/prepared-statements/commands/InitializeEditionConference.txt) as a command (InitializeEditionConference) in the Draftsman framework. 
 The body of the tag is imported by vimesh-ui.
 
 #### The form definition
@@ -136,7 +136,7 @@ showcased on the [Admin Console](/admin-console). We use [vimesh-ui's](https://g
 functionality to load it into the page, the element is hidden and accessible via the id. Note that this ID must be equal to
 the command.
 ```html
-<div style="display:none;" id="AddProgramItemConference" x-include="/form-definitions/AddProgramItemConference.json"></div>
+<div style="display:none;" id="InitializeEditionConference" x-include="/form-definitions/InitializeEditionConference.json"></div>
 ```
 
 #### The trace table
@@ -151,7 +151,7 @@ and id of the previous component identical, both should point to the command nam
 
 The submit button will execute the following statement:
 ```javascript
-$store.mutation.send('AddProgramItemConference',{all-form-data});
+$store.mutation.send('InitializeEditionConference',{all-form-data});
 ```
 The will execute the registered command against the GraphQL API.
 We use bootstrap 5 for styling, but feel free to customize to your liking.
@@ -172,11 +172,11 @@ The trace tag is used to react to specific trace events after a mutation, for th
     2. Clear the form by dispatching a setdata event specific for our command and with an empty data object.
 
 ```html
-<draftsman-trace command="AddProgramItemConference" 
+<draftsman-trace command="InitializeEditionConference" 
                  status="success" 
                  @trace="
                     Draftsman.empty_track_and_trace_log();
-                    $dispatch('setdata', { command: 'AddProgramItemConference', data: {} });">
+                    $dispatch('setdata', { command: 'InitializeEditionConference', data: {} });">
 </draftsman-trace>
 ```
 

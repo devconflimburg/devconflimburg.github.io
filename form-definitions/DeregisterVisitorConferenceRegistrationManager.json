@@ -7,7 +7,7 @@
     "name": "email",
     "title": "Email",
     "type": "String",
-    "pattern": "^[\\w\\-\\.]+@([\\w\\-]+\\.)+[\\w\\-]{2,4}$",
+    "pattern": "",
     "placeholder": "",
     "default": ""
   },
