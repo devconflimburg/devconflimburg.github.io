@@ -384,6 +384,7 @@
 						<mapping target="verified" value="#True"></mapping>
 					</trigger>
 					<processor type="validator" id="M1vejN" condition="flow.control == flow.entity.control" exception="Control value [{flow.control}] does not match the ticket [{flow.entity.control}]"></processor>
+					<processor type="validator" id="GhDcyQ" condition="flow.entity.verified == False" exception="Already verified"></processor>
 					<processor type="code" id="Ki2o7X" file="lib/TicketUtils.py" handler="get_timestamp"></processor>
 					<processor type="emit-event" id="9iWObF" ref="ConferenceTicketVerified">
 						<mapping target="ticketId" value="#flow.ticketId"></mapping>
@@ -997,6 +998,19 @@ if snapshot.isDeleted != '':
 	<projections>
 	</projections>
 	<notifiers>
+		<notifier name="SendTicketsDayBefore">
+			<trigger source="@cron(0 10 ? * TUE *)">
+				<mapping target="dummy" value="#''"></mapping>
+			</trigger>
+			<activity type="code" id="UrW5aB" code='if os.environ["Stage"] != "staging":|LB|    print("This feature is not yet enabled in production")|LB|    return'></activity>
+			<activity type="call-internal-api" id="irgzRc" name="edition" query='query MyQuery {|LB|  WebSite {|LB|    Element {|LB|      get(key: "next-edition") {|LB|        edition {|LB|          date|LB|          year|LB|        }|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
+			<activity type="code" id="7l8ddK" code='from datetime import datetime, timedelta|LB||LB|flow.year = flow.visitors.data.WebSite.Element.get.edition.year|LB|event_date = datetime.strptime(flow.visitors.data.WebSite.Element.get.edition.date,"%d-%m-%Y")|LB|now = datetime.now()|LB||LB|if (event-now).days != -1:|LB|    print("Event is on: ", flow.visitors.data.WebSite.Element.get.edition.date)|LB|    print("Tickets will be send 1 day before")|LB|    return'></activity>
+			<activity type="call-internal-api" id="7Aozj4" name="tickets" query='query MyQuery {|LB|  Visitor {|LB|    filter(limit: 1000, year_equals: "{{flow.year}}") {|LB|      resultset {|LB|        ticketId|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
+			<activity type="set-variable" id="C0f2hT" name="tickets" expression="#flow.tickets.data.Visitor.filter.resultset"></activity>
+			<activity type="loop" id="knKnz4" array="#flow.tickets">
+				<activity type="call-internal-api" id="mASuDk" name="result" query='mutation MyMutation {|LB|  Ticket {|LB|      resend(input: {ticketId: "{{item.ticketId}}"}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
+			</activity>
+		</notifier>
 		<notifier name="HandleResendRequest">
 			<trigger source="HandleLostTicketRequested">
 				<mapping target="email" value="email"></mapping>
