@@ -197,8 +197,7 @@ function draw_breakouts(){
 
 function draw_visitor_distribution(){
     var options = {
-      title: 'Domain',
-      pieHole: 0.4,
+      title: 'Domain'
     };
 
     var chart = new google.visualization.PieChart(document.getElementById('distribution'));
