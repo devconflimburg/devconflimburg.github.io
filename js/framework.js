@@ -148,11 +148,15 @@ const Draftsman = {
     contains_teleports: false,
     sign_in: function(target_location){
         if (target_location){
-            sessionStorage["prevLoc"] = target_location;
+                sessionStorage["prevLoc"] = target_location;
         } else {
             sessionStorage["prevLoc"] = location;
         }
-        location = "/auth/signin"
+        if (sessionStorage["hosted-signin"]){
+            location = `${localStorage["aws-congnito-ui"]}/oauth2/authorize?client_id=${localStorage["aws-congnito-app-id"]}&response_type=token&scope=openid&redirect_uri=${window.location.origin}/auth`;
+        } else {
+            location = "/auth/signin";
+        }
     },
     sign_out: function(){
         for(var i in localStorage){
@@ -221,11 +225,11 @@ function trigger_refresh_form_on_components(){
     }
 }
 
-
-if (must_be_signed_in && !localStorage["token"]){
-    sessionStorage["prevLoc"] = location;
-    location = "/auth/signin";
-}
+setTimeout(function(){
+    if (must_be_signed_in && !localStorage["token"]){
+        Draftsman.sign_in();
+    }
+},100);
 var subscription_reconnect_backoff = 100;
 
 async function query(query,variables,anonymous){
@@ -262,8 +266,7 @@ function appsync_call_promise(query,variables,anonymous) {
         }
         xhr.onreadystatechange = function () {
             if(xhr.readyState == 4 && xhr.status == 401){
-                sessionStorage["prevLoc"] = location;
-                location = "/auth/signin";
+                Draftsman.sign_in();
             }
         }
         xhr.onload = function () {
@@ -354,8 +357,7 @@ function appsync_call(query,callback,variables={},anonymous=false){
     }
     xhr.onreadystatechange = function () {
         if(xhr.readyState == 4 && xhr.status == 401){
-            sessionStorage["prevLoc"] = location;
-            location = "/auth/signin";
+            Draftsman.sign_in();
         }
     }
     xhr.onload = function () {
