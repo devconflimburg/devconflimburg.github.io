@@ -51,7 +51,7 @@
   </div>
   <div class="custom-button" x-data="{}">
     <button
-            @click="sessionStorage['prevLoc'] = location;location = '/auth/signin'">
+            @click="sessionStorage['prevLoc'] = location;location = '/auth'">
       <span x-text="TOKEN ? 'Refresh' : 'Fetch'"></span> User token
     </button>
     <button

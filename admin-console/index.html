@@ -163,7 +163,7 @@
 
                     <ul class="nav flex-column mb-auto">
                         <li class="nav-item" x-data="{env: ''}" x-effect="env = localStorage['staging-environment'] == 'false' ? 'production' : 'staging'"
-                            x-init="if(!('staging-environment' in localStorage)){localStorage['staging-environment'] = 'false' }"><
+                            x-init="if(!('staging-environment' in localStorage)){localStorage['staging-environment'] = 'false' }">
                             <div x-init="document.getElementById('env').innerText = env" x-effect="document.getElementById('env').innerText = env"></div>
                             <a class="nav-link d-flex align-items-center gap-2" href="/configuration">
                                 <i class="fa-solid fa-gear"></i>
