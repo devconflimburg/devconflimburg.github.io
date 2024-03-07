@@ -18,6 +18,7 @@
 		</event>
 		<event graphql-namespace="Ticket" graphql-name="resend" name="ResendTicketRequested" authorization="role" type="ActorEvent" role="administrator">
 			<field name="ticketId" type="String"></field>
+			<field name="reminder" type="String" default="false"></field>
 		</event>
 		<event graphql-namespace="Conference.RegistrationManager" graphql-name="deregisterVisitor" name="DeregisterVisitorConferenceRegistrationManagerRequested" authorization="anonymous" type="ActorEvent">
 			<field name="email" type="String" pattern=""></field>
@@ -998,8 +999,8 @@ if snapshot.isDeleted != '':
 	<projections>
 	</projections>
 	<notifiers>
-		<notifier name="SendTicketsDayBefore">
-			<trigger source="@cron(0 10 ? * TUE *)">
+		<notifier name="SendTicketsWeekBefore">
+			<trigger source="@cron(0 10 ? * THU *)">
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
 			<activity type="code" id="UrW5aB" code='if os.environ["Stage"] != "staging":|LB|    print("This feature is not yet enabled in production")|LB|    return'></activity>
@@ -1008,7 +1009,7 @@ if snapshot.isDeleted != '':
 			<activity type="call-internal-api" id="7Aozj4" name="tickets" query='query MyQuery {|LB|  Visitor {|LB|    filter(limit: 1000, year_equals: "{{flow.year}}") {|LB|      resultset {|LB|        ticketId|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
 			<activity type="set-variable" id="C0f2hT" name="tickets" expression="#flow.tickets.data.Visitor.filter.resultset"></activity>
 			<activity type="loop" id="knKnz4" array="#flow.tickets">
-				<activity type="call-internal-api" id="mASuDk" name="result" query='mutation MyMutation {|LB|  Ticket {|LB|      resend(input: {ticketId: "{{item.ticketId}}"}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
+				<activity type="call-internal-api" id="mASuDk" name="result" query='mutation MyMutation {|LB|  Ticket {|LB|      resend(input: {ticketId: "{{item.ticketId}}", reminder: true}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
 			</activity>
 		</notifier>
 		<notifier name="HandleResendRequest">
@@ -1089,16 +1090,19 @@ if snapshot.isDeleted != '':
 			<trigger source="ConferenceTicketVerified">
 				<mapping target="ticketId" value="ticketId"></mapping>
 				<mapping target="verified" value="verified"></mapping>
+				<mapping target="reminder" value="#False"></mapping>
 			</trigger>
 			<trigger source="ResendTicketRequested">
 				<mapping target="ticketId" value="ticketId"></mapping>
 				<mapping target="verified" value="#True"></mapping>
+				<mapping target="reminder" value="reminder"></mapping>
 			</trigger>
 			<activity type="fetch-property" id="LanEWy" name="apiKey" key="mailgunKey"></activity>
 			<activity type="call-internal-api" id="gkHtJy" name="ticketResult" query='query MyQuery {|LB|  Visitor {|LB|    filter(ticketId_equals: "{{flow.ticketId}}", limit: 1000) {|LB|      resultset {|LB|        email|LB|        firstName|LB|      }|LB|    }|LB|  }|LB|  Ticket {|LB|    get(key: "{{flow.ticketId}}") {|LB|      breakouts|LB|      year|LB|    }|LB|  }|LB|}|LB|'></activity>
 			<activity type="call-internal-api" id="eveMiC" name="programResult" query='query MyQuery {|LB|  Program {|LB|    get(key: "{{flow.ticketResult.data.Ticket.get.year}}") {|LB|      edition {|LB|            date|LB|      }|LB|      programItem {|LB|        breakout|LB|        startTime|LB|        room|LB|        id|LB|        speaker|LB|        title|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
 			<activity type="code" id="RWPf3Y" python-file="lib/TicketUtils.py" handler="prepare_ticket_mail"></activity>
-			<activity type="render-template" id="y41GHO" name="html" template-file="templates/TicketMail.html"></activity>
+			<activity type="render-template" id="y41GHO" name="html" template-file="templates/TicketMail.html" condition="!flow.reminder"></activity>
+			<activity type="render-template" id="Z4DfRl" template-file="templates/TicketReminderMail.html" name="html" condition="flow.reminder"></activity>
 			<activity type="render-template" id="KOeswM" name="text" template-file="templates/TicketMail.txt"></activity>
 			<activity type="code" id="RWPf3X" python-file="lib/MailGun.py" handler="send"></activity>
 		</notifier>

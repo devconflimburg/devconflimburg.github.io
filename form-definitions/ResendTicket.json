@@ -10,5 +10,13 @@
     "pattern": "",
     "placeholder": "",
     "default": ""
+  },
+  {
+    "name": "reminder",
+    "title": "Reminder",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "false",
+    "default": "false"
   }
 ]
