@@ -1101,8 +1101,8 @@ if snapshot.isDeleted != '':
 			<activity type="call-internal-api" id="gkHtJy" name="ticketResult" query='query MyQuery {|LB|  Visitor {|LB|    filter(ticketId_equals: "{{flow.ticketId}}", limit: 1000) {|LB|      resultset {|LB|        email|LB|        firstName|LB|      }|LB|    }|LB|  }|LB|  Ticket {|LB|    get(key: "{{flow.ticketId}}") {|LB|      breakouts|LB|      year|LB|    }|LB|  }|LB|}|LB|'></activity>
 			<activity type="call-internal-api" id="eveMiC" name="programResult" query='query MyQuery {|LB|  Program {|LB|    get(key: "{{flow.ticketResult.data.Ticket.get.year}}") {|LB|      edition {|LB|            date|LB|      }|LB|      programItem {|LB|        breakout|LB|        startTime|LB|        room|LB|        id|LB|        speaker|LB|        title|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
 			<activity type="code" id="RWPf3Y" python-file="lib/TicketUtils.py" handler="prepare_ticket_mail"></activity>
-			<activity type="render-template" id="y41GHO" name="html" template-file="templates/TicketMail.html" condition="not flow.reminder"></activity>
-			<activity type="render-template" id="Z4DfRl" template-file="templates/TicketReminderMail.html" name="html" condition="flow.reminder"></activity>
+			<activity type="render-template" id="y41GHO" name="html" template-file="templates/TicketMail.html" condition="flow.reminder == False"></activity>
+			<activity type="render-template" id="Z4DfRl" template-file="templates/TicketReminderMail.html" name="html" condition="flow.reminder == True"></activity>
 			<activity type="render-template" id="KOeswM" name="text" template-file="templates/TicketMail.txt"></activity>
 			<activity type="code" id="RWPf3X" python-file="lib/MailGun.py" handler="send"></activity>
 		</notifier>
