@@ -27,7 +27,7 @@
               <div class="d-grid gap-2 col-6 mx-auto" 
                 x-effect="
                   let seats = registrationManager.maxVisitors - registrationManager.registeredVisitors;
-                  if (seats > 10){detail=seats}else{detail='nog maar enkele'}
+                  if (seats > 10){detail=seats}else{detail='Nog maar enkele'}
                 "
                 x-data="{detail: ''}">
                 <h6 class="text-white"><span x-text="detail"></span> seats beschikbaar, inschrijving sluit <span x-text="closeText"></span></h6>
