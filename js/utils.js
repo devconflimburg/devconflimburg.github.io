@@ -1,3 +1,4 @@
+sessionStorage["hosted-signin"] = "true";
 
 convertMarkdownToHtml = function(markdown){
     try{
