@@ -1000,12 +1000,12 @@ if snapshot.isDeleted != '':
 	</projections>
 	<notifiers>
 		<notifier name="SendTicketsWeekBefore">
-			<trigger source="@cron(0 10 ? * THU *)">
+			<trigger source="@cron(0 10 ? * MON *)">
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
 			<activity type="code" id="UrW5aB" code='if os.environ["Stage"] != "staging":|LB|    print("This feature is not yet enabled in production")|LB|    return'></activity>
 			<activity type="call-internal-api" id="irgzRc" name="edition" query='query MyQuery {|LB|  WebSite {|LB|    Element {|LB|      get(key: "next-edition") {|LB|        edition {|LB|          date|LB|          year|LB|        }|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
-			<activity type="code" id="7l8ddK" code='from datetime import datetime, timedelta|LB||LB|flow.year = flow.edition.data.WebSite.Element.get.edition.year|LB|event_date = datetime.strptime(flow.edition.data.WebSite.Element.get.edition.date,"%d-%m-%Y")|LB|now = datetime.now()|LB||LB|if (event_date-now).days != -1:|LB|    print("Event is on: ", flow.edition.data.WebSite.Element.get.edition.date)|LB|    print("Tickets will be send 1 day before")|LB|    return'></activity>
+			<activity type="code" id="7l8ddK" code="from datetime import datetime, timedelta|LB||LB|flow.year = flow.edition.data.WebSite.Element.get.edition.year|LB|event_date = datetime.strptime(flow.edition.data.WebSite.Element.get.edition.date,&quot;%d-%m-%Y&quot;)|LB|now = datetime.now()|LB||LB|if 2 &lt; (event_date-now).days &lt; 10:|LB|    print(&quot;Event is on: &quot;, flow.edition.data.WebSite.Element.get.edition.date)|LB|    print(&quot;Tickets will be send 9 day's before (On monday 1 week for the event)&quot;)|LB|    return"></activity>
 			<activity type="call-internal-api" id="7Aozj4" name="tickets" query='query MyQuery {|LB|  Visitor {|LB|    filter(limit: 1000, year_equals: "{{flow.year}}") {|LB|      resultset {|LB|        ticketId|LB|      }|LB|    }|LB|  }|LB|}|LB|'></activity>
 			<activity type="set-variable" id="C0f2hT" name="tickets" expression="#flow.tickets.data.Visitor.filter.resultset"></activity>
 			<activity type="loop" id="knKnz4" array="#flow.tickets">
