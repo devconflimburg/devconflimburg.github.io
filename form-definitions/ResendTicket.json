@@ -14,7 +14,7 @@
   {
     "name": "reminder",
     "title": "Reminder",
-    "type": "String",
+    "type": "Boolean",
     "pattern": "",
     "placeholder": "false",
     "default": "false"

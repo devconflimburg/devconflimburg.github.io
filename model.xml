@@ -18,7 +18,7 @@
 		</event>
 		<event graphql-namespace="Ticket" graphql-name="resend" name="ResendTicketRequested" authorization="role" type="ActorEvent" role="administrator">
 			<field name="ticketId" type="String"></field>
-			<field name="reminder" type="String" default="false"></field>
+			<field name="reminder" type="Boolean" default="false"></field>
 		</event>
 		<event graphql-namespace="Conference.RegistrationManager" graphql-name="deregisterVisitor" name="DeregisterVisitorConferenceRegistrationManagerRequested" authorization="anonymous" type="ActorEvent">
 			<field name="email" type="String" pattern=""></field>
@@ -1483,6 +1483,11 @@ if snapshot.isDeleted != '':
 			<activity type="mutation" id="i3BK0A" description="Trigger resend ticket" path="Ticket.handleLost">
 				<input name="email" type="String" value="#email#"></input>
 				<expected-trace command="HandleResendRequest-Notifier" status="success"></expected-trace>
+				<expected-trace command="SendTicket-Notifier" status="success"></expected-trace>
+			</activity>
+			<activity type="mutation" id="LOH86z" description="Send reminder ticket" path="Ticket.resend">
+				<input name="ticketId" type="String" value="#ticketId#"></input>
+				<input name="reminder" type="Boolean" value="true"></input>
 				<expected-trace command="SendTicket-Notifier" status="success"></expected-trace>
 			</activity>
 			<activity type="mutation" id="wQ2Lwa" description="Redeem Invalid Ticket" path="Ticket.redeem">

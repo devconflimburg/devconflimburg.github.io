@@ -1,5 +1,5 @@
 # This file is managed by Tracepaper
-mutation Resend($ticketId: String = "", $reminder: String = "false") {
+mutation Resend($ticketId: String = "", $reminder: Boolean = false) {
   Ticket{
     resend(input: {ticketId: $ticketId,reminder: $reminder}) {
        correlationId
