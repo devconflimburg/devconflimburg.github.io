@@ -10,5 +10,13 @@
     "pattern": "",
     "placeholder": "",
     "default": ""
+  },
+  {
+    "name": "reminder",
+    "title": "Reminder",
+    "type": "Boolean",
+    "pattern": "",
+    "placeholder": "false",
+    "default": "false"
   }
 ]
