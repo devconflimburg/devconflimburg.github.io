@@ -121,16 +121,21 @@
             <h2 class="accordion-header" :id="item.id + 'heading'">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#talk' + item.id"
                       aria-expanded="false" aria-controls="flush-collapseOne">
-                <b x-text="item.title"></b>&nbsp;
+
                 <small>
-                  <span x-text="item.speaker"></span>&nbsp;
-                  <span x-text="item.startTime"></span>-<span x-text="item.endTime"></span>
+                  <span x-text="item.startTime"></span>-<span x-text="item.endTime"></span> |
+                  <span x-text="item.room"></span> |
+                  <span x-text="item.speaker"></span><br>
+                  <b x-text="item.title"></b>
                 </small>
+
               </button>
             </h2>
             <div :id="'talk' + item.id" class="accordion-collapse collapse"
                  :aria-labelledby="item.id + 'heading'" data-bs-parent="#programAccordion">
-              <div class="accordion-body" x-html="convertMarkdownToHtml(item.summary)"></div>
+              <div class="accordion-body">
+                <div x-html="convertMarkdownToHtml(item.summary)"></div>
+              </div>
             </div>
           </div>
         </template>
