@@ -388,6 +388,7 @@ function initialize_notification_subscribers(){
             message: sub.getAttribute("message"),
             type: sub.getAttribute("type")
         },function(notification){
+            console.log('hello');
             sub.dispatchEvent(new CustomEvent('notification',{detail:notification}));
         });
     });

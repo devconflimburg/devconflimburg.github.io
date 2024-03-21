@@ -45,6 +45,15 @@
         send_mutation("trigger-email-command",{email:email});
       }
 
+      function redeem(visitor){
+        let ticketId = visitor.ticketId;
+        if (!confirm(`Are you sure you want to redeem ${visitor.email}`)){return}
+        let modal = new bootstrap.Modal(document.getElementById("traceModal"), {});
+        modal.show();
+        console.log({ticketId:ticketId});
+        send_mutation("redeem-ticket-command",{ticketId:ticketId});
+      }
+
       function cancel(visitor){
         let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=${screen.width * 0.5},height=${screen.height * 0.5},left=10,top=10`;
         open(`/uitschrijven?email=${visitor.email}&year=${visitor.year}&ticketId=${visitor.ticket.ticketId}`, 'uitschrijven', params);
@@ -79,6 +88,11 @@
           <td x-text="visitor.lastName"></td>
           <td x-text="visitor.ticket.verified"></td>
           <td>
+            <span x-text="visitor.ticket.redeemed ? 'redeemed' : 'active'"
+                  @click="redeem(visitor)"
+                  :class="visitor.ticket.redeemed ? 'badge text-bg-success' : 'badge text-bg-secondary'"></span>
+          </td>
+          <td>
             <button @click="resendEmail(visitor)" class="btn btn-sm btn-info">
               Resend Email
             </button>
@@ -105,8 +119,11 @@
   <draftsman-mutation command="trigger-email-command" x-include="/prepared-statements/commands/HandleLostTicket.txt">
   </draftsman-mutation>
 
+  <draftsman-mutation command="redeem-ticket-command" x-include="/prepared-statements/commands/RedeemTicket.txt" authenticated>
+  </draftsman-mutation>
+
   <draftsman-notification message="updated" type="Visitor"
-                          @notification="console.log('Received message:',$event.detail);Draftsman.reload_data();">
+                          @notification="console.log('Received message:',$event.detail);Draftsman.force_reload_data();">
   </draftsman-notification>
 </body>
 </html>

@@ -6,9 +6,11 @@ query MyQuery($year: String = "2024") {
         firstName
         lastName
         year
+        ticketId
         ticket {
           ticketId
           verified
+          redeemed
         }
       }
     }

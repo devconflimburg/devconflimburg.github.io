@@ -1,0 +1,36 @@
+<template x-component="trace-modal">
+    <div class="modal fade" id="traceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Command Track & Trace</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table" x-show="$store.trace.length != 0" x-cloak>
+                            <thead>
+                            <tr>
+                                <th scope="col">Timestamp</th>
+                                <th scope="col">Command/Event</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Message</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <template x-for="message in $store.trace">
+                                <tr x-transition>
+                                    <th scope="row" x-html="message.timestamp.replace('Z','').replace('T',' ')"></th>
+                                    <td x-html="message.command != '' ? message.command : message.event"></td>
+                                    <td x-html="message.status"></td>
+                                    <td x-html="message.message"></td>
+                                </tr>
+                            </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
