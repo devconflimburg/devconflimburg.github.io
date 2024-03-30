@@ -88,6 +88,7 @@
 			<field name="year" type="String"></field>
 			<nested-object name="images" business-key="newField">
 				<field name="path" type="String"></field>
+				<field name="uploadedBy" type="String"></field>
 			</nested-object>
 		</event>
 		<event name="WebSiteElementUpdated" source="WebSite.Element" type="DomainEvent">
@@ -204,18 +205,22 @@
 				<command name="AddPhoto">
 					<trigger source="FileUploaded" key-field="#event.uri.split('/')[1]">
 						<mapping target="path" value="uri"></mapping>
+						<mapping target="bucket" value="bucket"></mapping>
+						<mapping target="username" value="username"></mapping>
 					</trigger>
 					<processor type="set-variable" id="ARb13v" name="year" expression="flow.identity"></processor>
-					<processor type="code" id="bKXtcT" file="" handler="" code='flow.images = [{|LB|    "path": flow.path|LB|}]'></processor>
+					<processor type="code" id="bKXtcT" file="" handler="" code='flow.images = [{|LB|    "path": flow.path,|LB|    "uploadedBy": flow.username|LB|}]|LB||LB|flow.validEdition = False|LB||LB|try:|LB|    flow.validEdition = int(flow.year) &gt; 2018|LB|except:|LB|    pass'></processor>
+					<processor type="validator" id="NjcSCR" condition="flow.validEdition" exception="Album must be coupled to a valid year, but was [{flow.year}]"></processor>
+					<processor type="validator" id="FQABQS" condition='"-web-" in flow.bucket' exception="This function only reacts to public uploads 'web-bucket', but the selected bucket was [{flow.bucket}]"></processor>
 					<processor type="emit-event" id="Zb9cXI" ref="PhotoAddedToAlbum">
 						<mapping target="year" value="#flow.year"></mapping>
 						<mapping target="images" value="#flow.images"></mapping>
 					</processor>
 					<test-case name="AddPhotoToAlbum" trigger-event="FileUploaded">
-						<input name="bucket" value="-" type="String"></input>
+						<input name="bucket" value="dms-web-tst" type="String"></input>
 						<input name="uri" value="userhash/2019/test" type="String"></input>
 						<input name="location" value="-" type="String"></input>
-						<input name="username" value="" type="String"></input>
+						<input name="username" value="j.doe" type="String"></input>
 						<expected domain-event="PhotoAddedToAlbum">
 							<field value="2019" name="year" type="String"></field>
 						</expected>
@@ -223,7 +228,8 @@
   "year": "2019",
   "images": {
     "userhash/2019/test": {
-      "path": "userhash/2019/test"
+      "path": "userhash/2019/test",
+      "uploadedBy": "j.doe"
     }
   }
 }</expected-state>
@@ -232,11 +238,13 @@
 				<event-handler on="PhotoAddedToAlbum">
 					<nested-mapping source="images" target="images" business-key="path">
 						<mapping target="path" operand="set" value="path"></mapping>
+						<mapping target="uploadedBy" operand="set" value="uploadedBy"></mapping>
 					</nested-mapping>
 					<mapping target="year" operand="set" value="year"></mapping>
 				</event-handler>
 				<nested-object name="images" business-key="newField">
 					<field name="path" type="String"></field>
+					<field name="uploadedBy" type="String"></field>
 				</nested-object>
 			</aggregate>
 			<aggregate name="Element" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0" business-key="name">
@@ -1033,6 +1041,7 @@
 		</view>
 		<view name="Photo" data-retention-days="-1" exclude-notification="false">
 			<field name="path" type="String"></field>
+			<field name="uploadedBy" type="String"></field>
 		</view>
 		<view name="Program" data-retention-days="-1" exclude-notification="false">
 			<field name="programItem" type="OneToMany" authorization="authenticated" foreign-key="year" ref="ProgramItem"></field>
@@ -1055,7 +1064,7 @@ if snapshot.isDeleted != '':
 			<field name="photos" type="ObjectList" ref="Photo" authorization="authenticated" foreign-key="year"></field>
 			<snapshot-handler id="vKBCfI" sub-domain="WebSite" aggregate="Album" key-mapping="year" processor="item">
 				<mapping target="year" operand="set" value="year"></mapping>
-				<mapping target="photos" operand="convert_items" value="images" template='{"path": value["path"]}'></mapping>
+				<mapping target="photos" operand="convert_items" value="images" template='{"path": value["path"],"uploadedBy": value["uploadedBy"]}'></mapping>
 				<delete condition="#snapshot.isDeleted != ''"></delete>
 			</snapshot-handler>
 			<query graphql-namespace="Album" field-name="get" type="get" authorization="anonymous"></query>
