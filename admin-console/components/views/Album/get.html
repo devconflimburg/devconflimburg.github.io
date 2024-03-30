@@ -1,0 +1,21 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="Album-get">
+    <div x-import="tables;query-form">
+
+        <!-- The query object -->
+        <draftsman-query alias="Albumget" x-include="/prepared-statements/views/Album/get.txt" >
+        </draftsman-query>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="Albumget"
+              x-include="/form-definitions/Album/get.json"></div>
+
+        <!-- The query form -->
+        <ui-query-form alias="Albumget"></ui-query-form>
+
+        <!-- The data view -->
+        <ui-item-table alias="Albumget" path="get"></ui-item-table>
+        
+
+    </div>
+</template>

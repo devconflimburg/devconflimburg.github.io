@@ -1,0 +1,14 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query FilterAlbum {
+  Album {
+    filter {
+       resultset { 
+        key
+        year
+        photos {
+          path
+        } 
+      }
+    }
+  }
+}

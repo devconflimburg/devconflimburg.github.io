@@ -1,0 +1,12 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query GetAlbum($key: ID = "") {
+  Album {
+    get(key: $key) {
+      key
+      year
+      photos {
+        path
+      } 
+    }
+  }
+}

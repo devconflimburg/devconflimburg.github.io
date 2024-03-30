@@ -15,6 +15,12 @@ function send_mutation(command,data){
     inflight = command;
     empty_track_and_trace_log();
     let query = mutation_queries[command];
+    if (!query){
+        console.log("on the fly mutation load");
+        let element = document.querySelectorAll(`[command="${command}"]`)[0];
+        query = element.innerText;
+        mutation_queries[command] = query;
+    }
     let anonymous = mutation_queries[command+"_anonymous"];
     appsync_call(query,(data,errors) => {
         if (errors){
@@ -65,6 +71,7 @@ function send_mutation(command,data){
             },variables={"correlationId":cid});
         }
     },data,anonymous);
+    setTimeout(function(){inflight = ""},30000);
 }
 
 function list_mutations(){
@@ -388,7 +395,6 @@ function initialize_notification_subscribers(){
             message: sub.getAttribute("message"),
             type: sub.getAttribute("type")
         },function(notification){
-            console.log('hello');
             sub.dispatchEvent(new CustomEvent('notification',{detail:notification}));
         });
     });
