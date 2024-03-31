@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <title>Albums</title>
+  <script>var must_be_signed_in = true;</script>
+  <script src="/js/configuration.js"></script>
+  <script src="/js/configuration-staging.js"></script>
+
+  <link rel="stylesheet" href="/css/draftsman.css" />
+  <script src="/js/framework.js"></script>
+  <script src="/js/cache.js"></script>
+  <script src="https://unpkg.com/@vimesh/ui"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+        integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+</head>
+<body x-data="{content: []}">
+
+  <div class="container" x-import="utils/tables">
+
+    <h1>Content management</h1>
+    <hr>
+
+    <ui-trace-table></ui-trace-table>
+
+    <table class="table table-striped">
+      <tbody>
+      <template x-for="element in content" :key="element.key">
+        <tr x-data="{edited: false}">
+          <th x-text="element.key"></th>
+          <td>
+            <textarea class="form-control"
+                      @change="edited = true"
+                      x-effect="$el.style.height = ($el.scrollHeight + 5) + 'px';"
+                      x-model="element.content" rows="3"></textarea>
+          </td>
+          <td x-show="edited" x-cloak x-transition>
+            <button type="button" class="btn btn-outline-success"
+                    @click.debounce="edited = false;$store.mutation.send('update-content',{name:element.key,content: element.content})">Save</button>
+          </td>
+        </tr>
+      </template>
+      </tbody>
+    </table>
+
+    <draftsman-mutation command="update-content" x-include="/prepared-statements/commands/UpdateWebsiteElement.txt" authenticated>
+    </draftsman-mutation>
+
+    <draftsman-trace command="update-content"
+                     status="success"
+                     @trace="Draftsman.empty_track_and_trace_log()">
+    </draftsman-trace>
+
+    <draftsman-query alias="content" authenticated
+                     x-include="/prepared-statements/views/WebPageElement/filter.txt"></draftsman-query>
+    <div class="data-element" @refresh="content = $store.content.Element.filter.resultset.filter(x => x.key != 'next-edition')"></div>
+
+  </div>
+
+</body>
+</html>

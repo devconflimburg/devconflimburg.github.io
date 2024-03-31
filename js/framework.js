@@ -11,8 +11,24 @@ document.addEventListener("beforeunload", (event) => {
 });
 var mutation_queries = {};
 var inflight = "";
+
+function encode_variables(data){
+    Object.keys(data).forEach(key => {
+        if ( (typeof data[key] === 'string' || data[key] instanceof String) && data[key].includes(" ")){
+            data[key] = "base64:" + btoa(unescape(encodeURIComponent(data[key])));
+        } else if (data[key].constructor === Array){
+            data[key] = data.key.map(x => encode_variables(x));
+        } else if (typeof data[key] === 'object' &&
+                       data[key] !== null){
+            data[key] = encode_variables(data[key]);
+        }
+    });
+    return data;
+}
+
 function send_mutation(command,data){
     inflight = command;
+    data = encode_variables(data);
     empty_track_and_trace_log();
     let query = mutation_queries[command];
     if (!query){
