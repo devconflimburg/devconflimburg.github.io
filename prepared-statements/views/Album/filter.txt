@@ -2,11 +2,11 @@
 query FilterAlbum {
   Album {
     filter {
-       resultset { 
-        key
+       resultset {
         year
         photos {
           path
+          uploadedBy
         } 
       }
     }
