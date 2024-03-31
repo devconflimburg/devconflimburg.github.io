@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <title>Albums</title>
+  <script>var must_be_signed_in = true;</script>
+  <script src="/js/configuration.js"></script>
+  <script src="/js/configuration-staging.js"></script>
+
+  <link rel="stylesheet" href="/css/draftsman.css" />
+  <script src="/js/framework.js"></script>
+  <script src="/js/cache.js"></script>
+  <script src="https://unpkg.com/@vimesh/ui"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+        integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+</head>
+<body x-data="{albums: [], upload_target: $persist(2024),files:[]}" x-init="
+  let year = 2019;
+  let current = new Date().getFullYear();
+  while(year <= current){
+    albums.push(year);
+    year++;
+  }">
+
+  <div class="container" x-import="utils/tables">
+
+    <ui-trace-table></ui-trace-table>
+
+    <div x-init="setInterval(function(){files = Experimental.get_queue()},1000);"></div>
+    <template x-if="files.length != 0">
+      <div>
+        <h6>Queued uploads:</h6>
+        <ul class="list-group list-group-flush">
+          <template x-for="file in files" :key="file">
+            <li class="list-group-item" x-text="file"></li>
+          </template>
+        </ul>
+      </div>
+    </template>
+
+    <template x-if="files.length == 0">
+      <div>
+        <select class="form-select" @change="upload_target = $el.value" aria-label="Default select example">
+          <template x-for="year in albums" :key="year">
+            <option :value="year" x-text="year" :selected="upload_target == year"></option>
+          </template>
+        </select>
+
+        <input class="form-control" type="file"
+               @change="Experimental.upload($event, upload_target + '/',true)"
+               accept="image/*" multiple>
+      </div>
+    </template>
+
+    <draftsman-mutation command="upload-file" x-include="/prepared-statements/commands/UploadFile.txt" authenticated>
+    </draftsman-mutation>
+
+    <draftsman-trace command="upload-file"
+                     status="success"
+                     @trace="Experimental.process_next_item()">
+    </draftsman-trace>
+
+  </div>
+
+</body>
+</html>

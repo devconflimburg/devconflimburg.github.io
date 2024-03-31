@@ -1,0 +1,5 @@
+mutation UploadFile($content: String = "", $name: String = "", $public: Boolean = false) {
+  upload(input: {name: $name, content: $content, public: $public}) {
+    correlationId
+  }
+}
