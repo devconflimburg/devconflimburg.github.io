@@ -1210,6 +1210,7 @@ if snapshot.isDeleted != '':
 				<input name="email" type="String" value="#email#"></input>
 				<expected-trace command="TalkProposal.Create" status="Success"></expected-trace>
 			</activity>
+			<activity type="grant-role" id="XVJfIi" role="administrator" description=""></activity>
 			<activity type="query" id="kjvj95" path="TalkProposal.filter" view="TalkProposal">
 				<expect-value name="resultset.0.email" type="String" value="#email#"></expect-value>
 			</activity>
