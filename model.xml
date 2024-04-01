@@ -217,7 +217,7 @@
 						<mapping target="images" value="#flow.images"></mapping>
 					</processor>
 					<test-case name="AddPhotoToAlbum" trigger-event="FileUploaded">
-						<input name="bucket" value="dms-web-tst" type="String"></input>
+						<input name="bucket" value="-web-" type="String"></input>
 						<input name="uri" value="userhash/2019/test" type="String"></input>
 						<input name="location" value="-" type="String"></input>
 						<input name="username" value="j.doe" type="String"></input>
@@ -1209,6 +1209,9 @@ if snapshot.isDeleted != '':
 				<input name="title" type="String" value="My Talk"></input>
 				<input name="email" type="String" value="#email#"></input>
 				<expected-trace command="TalkProposal.Create" status="Success"></expected-trace>
+			</activity>
+			<activity type="query" id="kjvj95" path="TalkProposal.filter" view="TalkProposal">
+				<expect-value name="resultset.0.email" type="String" value="#email#"></expect-value>
 			</activity>
 		</scenario>
 		<scenario name="CreateProgram">
