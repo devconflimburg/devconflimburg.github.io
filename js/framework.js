@@ -83,7 +83,6 @@ function send_mutation(command,data){
                 }
               }`;
             trace_socket = Draftsman.subscribe(query_string,(data,errors) => {
-                console.log(data);
                 add_trace(data["onTrace"]);
             },variables={"correlationId":cid});
         }
