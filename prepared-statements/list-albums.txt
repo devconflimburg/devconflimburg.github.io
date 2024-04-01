@@ -1,0 +1,9 @@
+query MyQuery {
+  Album {
+    filter {
+      resultset {
+        year
+      }
+    }
+  }
+}
