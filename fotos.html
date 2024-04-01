@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/configuration.js"></script>
+  <script src="/js/configuration-staging.js"></script>
+
+  <link rel="stylesheet" href="/css/draftsman.css" />
+  <script src="/js/framework.js"></script>
+  <script src="/js/cache.js"></script>
+  <script src="https://unpkg.com/@vimesh/ui"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js" defer></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+  <script async defer data-domain="devconf.nl"
+          src="https://analytics.bohanssen.com/js/plausible.js"></script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="devConf, een DevOps conferentie in het zuiden" />
+  <title>Foto's</title>
+
+  <!-- core -->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="/css/styles.css" rel="stylesheet" />
+  <link href="/css/devconf.css" rel="stylesheet" />
+  <script src="/js/utils.js"></script>
+  <!-- -->
+
+  <script>
+    const root = 'https://' + bucket + '/';
+    function next_image(current,reel){
+      let index = reel.indexOf(current) + 1;
+      try {
+        return reel[index];
+      }catch{
+        return current;
+      }
+    }
+    function previous_image(current,reel){
+      let index = reel.indexOf(current) - 1;
+      if (index < 0) {
+        return current;
+      }else{
+        return reel[index];
+      }
+    }
+  </script>
+</head>
+<body class="d-flex flex-column h-100" x-cloak x-data="{show_modal: false, image_src: '', reel: []}"
+      @keyup.escape="show_modal = false"
+      @keyup.right="image_src = next_image(image_src,reel)"
+      @keyup.left="image_src = previous_image(image_src,reel)"
+      x-import="navbar;footer">
+
+<template x-if="show_modal">
+  <div>
+    <div class="album-overlay">
+      <img class="album-focused" :src="image_src" @click.outside="show_modal = false" />
+    </div>
+  </div>
+</template>
+
+<main class="flex-shrink-0">
+  <ui-navbar></ui-navbar>
+
+
+  <div x-data="{albums: [], selected_album: $persist('')}"
+       @refresh="albums = $store.albums.filter.resultset;if(selected_album == ''){selected_album = albums.at(0).year}"
+       class="data-element container">
+    <h1>Foto albums</h1>
+    <div class="row">
+      <div class="col-1">
+        <select class="form-select"
+                @change="selected_album = $el.value" aria-label="Default select example">
+          <template x-for="year in albums.map(x => x.year)" :key="year">
+            <option :value="year" x-text="year" :selected="selected_album == year"></option>
+          </template>
+        </select>
+      </div>
+      <div class="col-11">
+        <div class="row" x-data="{photos: []}"
+             x-effect="photos = albums.filter(x => x.year == selected_album).at(0).photos;reel = photos.map(x => root + x.path)">
+          <template x-for="photo in photos" :key="photo.path">
+            <div class="col-4 mt-4 action" x-data="{src: ''}"
+                 @click.debounce="show_modal = true;image_src=src;"
+                 x-intersect.once="src = root + photo.path">
+              <img class="rounded album-image" style="max-height: 250px" width="100%" :src="src"/>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+
+  <draftsman-query alias="albums" x-include="/prepared-statements/views/Album/filter.txt">
+  </draftsman-query>
+</main>
+
+</body>
+</html>
