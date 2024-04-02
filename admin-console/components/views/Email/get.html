@@ -1,0 +1,21 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="Email-get">
+    <div x-import="tables;query-form">
+
+        <!-- The query object -->
+        <draftsman-query alias="Emailget" x-include="/prepared-statements/views/Email/get.txt" authenticated>
+        </draftsman-query>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="Emailget"
+              x-include="/form-definitions/Email/get.json"></div>
+
+        <!-- The query form -->
+        <ui-query-form alias="Emailget"></ui-query-form>
+
+        <!-- The data view -->
+        <ui-item-table alias="Emailget" path="get"></ui-item-table>
+        
+
+    </div>
+</template>

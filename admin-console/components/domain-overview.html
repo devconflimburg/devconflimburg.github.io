@@ -7,6 +7,12 @@
                     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                         
                         <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'ScheduleEmail'"
+                                x-show="'scheduleemail'.includes(search.toLowerCase())">
+                            ScheduleEmail
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
                                 @click="Draftsman.empty_track_and_trace_log();component = 'RedeemTicket'"
                                 x-show="'redeemticket'.includes(search.toLowerCase())">
                             RedeemTicket
@@ -43,6 +49,12 @@
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'UpdateEmail'"
+                                x-show="'updateemail'.includes(search.toLowerCase())">
+                            UpdateEmail
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
                                 @click="Draftsman.empty_track_and_trace_log();component = 'RegisterVisitorConferenceRegistrationManager'"
                                 x-show="'registervisitorconferenceregistrationmanager'.includes(search.toLowerCase())">
                             RegisterVisitorConferenceRegistrationManager
@@ -52,6 +64,12 @@
                                 @click="Draftsman.empty_track_and_trace_log();component = 'DeregisterVisitorConferenceRegistrationManager'"
                                 x-show="'deregistervisitorconferenceregistrationmanager'.includes(search.toLowerCase())">
                             DeregisterVisitorConferenceRegistrationManager
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'CreateEmail'"
+                                x-show="'createemail'.includes(search.toLowerCase())">
+                            CreateEmail
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
@@ -88,6 +106,14 @@
                 </center>
             </div>
             <div class="col-6">
+                
+                <div x-show="component == 'ScheduleEmail'" x-cloak x-transition>
+                    <div x-import="commands/ScheduleEmail">
+                        <h6>ScheduleEmail</h6>
+                        <ui-ScheduleEmail></ui-ScheduleEmail>
+                    </div>
+                </div>
+
                 
                 <div x-show="component == 'RedeemTicket'" x-cloak x-transition>
                     <div x-import="commands/RedeemTicket">
@@ -137,6 +163,14 @@
                 </div>
 
                 
+                <div x-show="component == 'UpdateEmail'" x-cloak x-transition>
+                    <div x-import="commands/UpdateEmail">
+                        <h6>UpdateEmail</h6>
+                        <ui-UpdateEmail></ui-UpdateEmail>
+                    </div>
+                </div>
+
+                
                 <div x-show="component == 'RegisterVisitorConferenceRegistrationManager'" x-cloak x-transition>
                     <div x-import="commands/RegisterVisitorConferenceRegistrationManager">
                         <h6>RegisterVisitorConferenceRegistrationManager</h6>
@@ -149,6 +183,14 @@
                     <div x-import="commands/DeregisterVisitorConferenceRegistrationManager">
                         <h6>DeregisterVisitorConferenceRegistrationManager</h6>
                         <ui-DeregisterVisitorConferenceRegistrationManager></ui-DeregisterVisitorConferenceRegistrationManager>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'CreateEmail'" x-cloak x-transition>
+                    <div x-import="commands/CreateEmail">
+                        <h6>CreateEmail</h6>
+                        <ui-CreateEmail></ui-CreateEmail>
                     </div>
                 </div>
 
@@ -291,6 +333,22 @@
                 </div>
 
                 
+                <div x-show="component == 'Email/get'" x-cloak x-transition>
+                    <div x-import="views/Email/get">
+                        <h6>Email.get</h6>
+                        <ui-Email-get></ui-Email-get>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'Email/filter'" x-cloak x-transition>
+                    <div x-import="views/Email/filter">
+                        <h6>Email.filter</h6>
+                        <ui-Email-filter></ui-Email-filter>
+                    </div>
+                </div>
+
+                
                 <div x-show="component == 'Program/filter'" x-cloak x-transition>
                     <div x-import="views/Program/filter">
                         <h6>Program.filter</h6>
@@ -387,6 +445,16 @@
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'talkproposal.filter'.includes(search.toLowerCase())"
                             @click="component = 'TalkProposal/filter'">TalkProposal.filter
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'email.get'.includes(search.toLowerCase())"
+                            @click="component = 'Email/get'">Email.get
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'email.filter'.includes(search.toLowerCase())"
+                            @click="component = 'Email/filter'">Email.filter
                     </button>
                     
                     <button type="button" class="btn btn-outline-primary"

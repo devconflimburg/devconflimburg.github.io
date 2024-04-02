@@ -1,0 +1,11 @@
+[
+  {
+    "type": "meta",
+    "message": "This file is NOT managed by Tracepaper, and can be customized."
+  },
+  {
+    "name": "isSend_equals",
+    "type": "Boolean",
+    "title": "Issend Equals"
+  }
+]

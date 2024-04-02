@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation Schedule($id: String = "", $sendAfter: String = "") {
+  Email{
+    schedule(input: {id: $id,sendAfter: $sendAfter}) {
+       correlationId
+    }
+  }
+}

@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation Update($id: String = "", $subject: String = "", $content: String = "") {
+  Email{
+    update(input: {id: $id,subject: $subject,content: $content}) {
+       correlationId
+    }
+  }
+}

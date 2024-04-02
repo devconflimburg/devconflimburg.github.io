@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation Create($subject: String = "", $content: String = "") {
+  Email{
+    create(input: {subject: $subject,content: $content}) {
+       correlationId
+    }
+  }
+}

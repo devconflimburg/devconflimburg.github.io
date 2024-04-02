@@ -1,0 +1,15 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query FilterEmail($isSend_equals: Boolean = false) {
+  Email {
+    filter(isSend_equals: $isSend_equals) {
+       resultset { 
+        key
+        id
+        subject
+        content
+        isSend
+        sendAfter
+      }
+    }
+  }
+}

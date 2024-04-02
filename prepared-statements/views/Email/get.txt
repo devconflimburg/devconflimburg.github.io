@@ -1,0 +1,13 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query GetEmail($key: ID = "") {
+  Email {
+    get(key: $key) {
+      key
+      id
+      subject
+      content
+      isSend
+      sendAfter
+    }
+  }
+}

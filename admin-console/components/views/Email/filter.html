@@ -1,0 +1,19 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="Email-filter">
+    <div x-import="tables;query-form">
+
+        <!-- The query object -->
+        <draftsman-query alias="Emailfilter" x-include="/prepared-statements/views/Email/filter.txt" authenticated>
+        </draftsman-query>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="Emailfilter"
+              x-include="/form-definitions/Email/filter.json"></div>
+
+        <!-- The query form -->
+        <ui-query-form alias="Emailfilter"></ui-query-form>
+
+        <!-- The data view --><ui-collection-table alias="Emailfilter" path="filter.resultset"></ui-collection-table>
+
+    </div>
+</template>
