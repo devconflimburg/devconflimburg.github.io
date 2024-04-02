@@ -1,5 +1,5 @@
 if (localStorage["staging-environment"] && localStorage["staging-environment"] == "true"){
-	console.log("Connected to staging")
+	console.log("Connected to staging");
 	stage = "staging";
 	bucket = "dts8vrcy012j3.cloudfront.net";
 	localStorage["aws-congnito-user-pool-id"] = "eu-central-1_DkbPGBi2e";
