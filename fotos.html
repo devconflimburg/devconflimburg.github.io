@@ -59,7 +59,7 @@
                 let loc = location.hash.replace('#','');
                 if (mobileCheck()){
                   setTimeout(function(){
-                    document.getElementById(loc).scrollIntoView(true);
+                    document.getElementById('image:' + loc).scrollIntoView(true);
                   },1000);
                 }else{
                   setTimeout(function(){
@@ -107,7 +107,7 @@
                x-effect="photos = albums.filter(x => x.year == selected_album).at(0).photos;reel = photos.map(x => root + x.path)">
           <template x-for="photo in photos" :key="photo.path">
             <div class="col-12 mt-4" x-data="{src: ''}"
-                 :id="root + photo.path"
+                 :id="'image:' + root + photo.path"
                  x-intersect="src = root + photo.path; location.hash = '#' + src">
               <img class="rounded album-image" width="100%" :src="src"/>
             </div>

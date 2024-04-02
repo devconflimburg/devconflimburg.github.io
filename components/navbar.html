@@ -32,10 +32,8 @@
         <draftsman-query alias="next" x-include="/prepared-statements/next-edition.txt">
         </draftsman-query>
 
-        <template x-if="stage == 'staging'">
-            <draftsman-query alias="albumList" x-include="/prepared-statements/list-albums.txt">
-            </draftsman-query>
-        </template>
+        <draftsman-query alias="albumList" x-include="/prepared-statements/list-albums.txt">
+        </draftsman-query>
 
     </nav>
 </template>
