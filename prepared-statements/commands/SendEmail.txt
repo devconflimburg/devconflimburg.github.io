@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation Send($id: String = "", $email: String = "", $firstName: String = "", $lastName: String = "") {
+  Email{
+    send(input: {id: $id,email: $email,firstName: $firstName,lastName: $lastName}) {
+       correlationId
+    }
+  }
+}

@@ -1,0 +1,26 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="MarkAsSendEmail">
+    <div x-import="basic-form;tables">
+
+        <!-- The command object -->
+        <draftsman-mutation command="MarkAsSendEmail" x-include="/prepared-statements/commands/MarkAsSendEmail.txt" authenticated>
+        </draftsman-mutation>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="MarkAsSendEmail"
+              x-include="/form-definitions/MarkAsSendEmail.json"></div>
+
+        <!-- The trace table -->
+        <ui-trace-table></ui-trace-table>
+
+        <!-- The form -->
+        <ui-basic-form alias="MarkAsSendEmail"></ui-basic-form>
+
+        <draftsman-trace command="MarkAsSendEmail"
+              status="success"
+              @trace="
+                setTimeout(Draftsman.empty_track_and_trace_log,5000);
+                $dispatch('setdata', { command: 'MarkAsSendEmail', data: {} });">
+        </draftsman-trace>
+    </div>
+</template>

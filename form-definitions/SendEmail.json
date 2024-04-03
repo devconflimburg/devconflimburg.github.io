@@ -1,0 +1,38 @@
+[
+  {
+    "type": "meta",
+    "message": "This file is managed by Tracepaper"
+  },
+  {
+    "name": "id",
+    "title": "Id",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "email",
+    "title": "Email",
+    "type": "String",
+    "pattern": "^[\\w\\-\\.]+@([\\w\\-]+\\.)+[\\w\\-]{2,4}$",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "firstName",
+    "title": "Firstname",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "lastName",
+    "title": "Lastname",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  }
+]

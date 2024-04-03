@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation MarkAsSend($id: String = "") {
+  Email{
+    markAsSend(input: {id: $id}) {
+       correlationId
+    }
+  }
+}

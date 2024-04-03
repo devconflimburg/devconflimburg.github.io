@@ -31,6 +31,12 @@
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'MarkAsSendEmail'"
+                                x-show="'markassendemail'.includes(search.toLowerCase())">
+                            MarkAsSendEmail
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
                                 @click="Draftsman.empty_track_and_trace_log();component = 'CreateConferenceTalkProposal'"
                                 x-show="'createconferencetalkproposal'.includes(search.toLowerCase())">
                             CreateConferenceTalkProposal
@@ -91,6 +97,12 @@
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'SendEmail'"
+                                x-show="'sendemail'.includes(search.toLowerCase())">
+                            SendEmail
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
                                 @click="Draftsman.empty_track_and_trace_log();component = 'ResendTicket'"
                                 x-show="'resendticket'.includes(search.toLowerCase())">
                             ResendTicket
@@ -135,6 +147,14 @@
                     <div x-import="commands/CreateWebSiteElement">
                         <h6>CreateWebSiteElement</h6>
                         <ui-CreateWebSiteElement></ui-CreateWebSiteElement>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'MarkAsSendEmail'" x-cloak x-transition>
+                    <div x-import="commands/MarkAsSendEmail">
+                        <h6>MarkAsSendEmail</h6>
+                        <ui-MarkAsSendEmail></ui-MarkAsSendEmail>
                     </div>
                 </div>
 
@@ -215,6 +235,14 @@
                     <div x-import="commands/VerifyTicket">
                         <h6>VerifyTicket</h6>
                         <ui-VerifyTicket></ui-VerifyTicket>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'SendEmail'" x-cloak x-transition>
+                    <div x-import="commands/SendEmail">
+                        <h6>SendEmail</h6>
+                        <ui-SendEmail></ui-SendEmail>
                     </div>
                 </div>
 

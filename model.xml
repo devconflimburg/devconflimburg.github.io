@@ -24,6 +24,9 @@
 			<field name="name" type="String"></field>
 			<field name="content" type="String"></field>
 		</event>
+		<event graphql-namespace="Email" graphql-name="markAsSend" name="MarkAsSendEmailRequested" authorization="role" type="ActorEvent" role="administrator">
+			<field name="id" type="String"></field>
+		</event>
 		<event name="CreateConferenceTalkProposalRequested" authorization="anonymous" type="ActorEvent" graphql-name="create" graphql-namespace="Conference.TalkProposal">
 			<field name="difficultyLevel" type="String"></field>
 			<field name="name" type="String"></field>
@@ -84,6 +87,12 @@
 		<event graphql-namespace="Ticket" graphql-name="verify" name="VerifyTicketRequested" authorization="anonymous" type="ActorEvent">
 			<field name="ticketId" type="String"></field>
 			<field name="control" type="String"></field>
+		</event>
+		<event graphql-namespace="Email" graphql-name="send" name="SendEmailRequested" authorization="role" type="ActorEvent" role="administrator">
+			<field name="id" type="String"></field>
+			<field name="email" type="String" pattern="{{Email}}"></field>
+			<field name="firstName" type="String"></field>
+			<field name="lastName" type="String"></field>
 		</event>
 		<event graphql-namespace="Ticket" graphql-name="resend" name="ResendTicketRequested" authorization="role" type="ActorEvent" role="administrator">
 			<field name="ticketId" type="String"></field>
@@ -205,6 +214,9 @@
 			<field name="breakouts" type="String"></field>
 			<field name="control" type="String"></field>
 			<field name="createdAt" type="Int"></field>
+		</event>
+		<event name="EmailMarkedAsSend" source="Communication.Email" type="DomainEvent">
+			<field name="isSend" type="Boolean" default="true"></field>
 		</event>
 		<event name="EmailCreated" source="Communication.Email" type="DomainEvent">
 			<field name="id" type="String"></field>
@@ -1001,6 +1013,31 @@
 						</expected>
 					</test-case>
 				</command>
+				<command name="MarkAsSend">
+					<trigger source="MarkAsSendEmailRequested" key-field="id">
+						<mapping target="id" value="id"></mapping>
+					</trigger>
+					<processor type="validator" id="ShZBZE" condition="flow.entity.version != 0" exception="My log message {flow.requestor} not be the initial request"></processor>
+					<processor type="set-variable" id="lVvgDL" name="isSend" expression="True"></processor>
+					<processor type="emit-event" id="vvNjjc" ref="EmailMarkedAsSend">
+						<mapping target="isSend" value="#flow.isSend"></mapping>
+					</processor>
+					<test-case name="MarkAsSend" trigger-event="MarkAsSendEmailRequested">
+						<input name="id" value="1c9878b4-a964-45db-b8cf-aa615ef4cb5c" type="String"></input>
+						<expected domain-event="EmailMarkedAsSend">
+							<field value="true" name="isSend" type="Boolean"></field>
+						</expected>
+						<state>{
+  "version": 1
+}</state>
+						<expected-state pk="1c9878b4-a964-45db-b8cf-aa615ef4cb5c">{
+  "isSend": true
+}</expected-state>
+					</test-case>
+				</command>
+				<event-handler on="EmailMarkedAsSend">
+					<mapping target="isSend" operand="set" value="isSend"></mapping>
+				</event-handler>
 				<event-handler on="EmailCreated">
 					<mapping target="id" operand="set" value="id"></mapping>
 					<mapping target="subject" operand="set" value="subject"></mapping>
@@ -1316,12 +1353,12 @@ if snapshot.isDeleted != '':
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
 			<activity type="call-internal-api" id="hjH32s" name="emails" query="query MyQuery {|LB|  Email {|LB|    filter(isSend_equals: false) {|LB|      resultset {|LB|        sendAfter|LB|        id|LB|      }|LB|    }|LB|  }|LB|}|LB|"></activity>
-			<activity type="code" id="3uSZgc" code="import datetime,pytz|LB|timezone = pytz.timezone(&quot;Europe/Amsterdam&quot;)|LB||LB|print(flow.emails)|LB|now  = datetime.datetime.now(timezone)|LB|flow.emails = [email for email in emails[&quot;data&quot;][&quot;Email&quot;][&quot;filter&quot;][&quot;resultsset&quot;] if |LB|    datetime.datetime.strptime(email[&quot;sendAfter&quot;], '%Y-%m-%dT%H:%M') &lt;= now]|LB|print(flow.emails)"></activity>
+			<activity type="code" id="3uSZgc" code="import datetime,pytz|LB|timezone = pytz.timezone(&quot;Europe/Amsterdam&quot;)|LB||LB|now  = datetime.datetime.now(timezone)|LB|flow.emails = [email for email in flow.emails[&quot;data&quot;][&quot;Email&quot;][&quot;filter&quot;][&quot;resultset&quot;] if |LB|    datetime.datetime.strptime(email[&quot;sendAfter&quot;], '%Y-%m-%dT%H:%M').replace(tzinfo=timezone) &lt;= now]"></activity>
 			<activity type="call-internal-api" id="Qpjhfl" condition="len(flow.emails) != 0" name="visitors" query="query MyQuery {|LB|  Visitor {|LB|    filter(limit: 1000) {|LB|      resultset {|LB|        email|LB|        firstName|LB|        lastName|LB|      }|LB|    }|LB|  }|LB|}|LB|"></activity>
 			<activity type="loop" id="oM2PZN" array="#flow.emails">
 				<activity type="set-variable" id="t61hDD" name="emailId" expression='#item["id"]'></activity>
-				<activity type="set-variable" id="Nq4Ug5" name="targets" expression='#flow.visitors["data"]["Visitor"]["filter"]["resultset"]'></activity>
-				<activity type="call-internal-api" id="kdFolS" name="emailResult" query='mutation Distribute{|LB|  Email {|LB|    mark_as_send: markAsSend(input: {id: "{{flow.emailId}}"}) {|LB|      correlationId|LB|    }|LB|    {% for index, target in enumerate(flow.targets) %}|LB|    T{{index}}: send(input: {id: "{{flow.emailId}}", email: "{{target.email}}", firstName: "{{target.firstName}}", lastName: "{{target.lastName}}"}) {|LB|      correlationId|LB|    }|LB|    {% endfor %}|LB|  }|LB|}'></activity>
+				<activity type="set-variable" id="Nq4Ug5" name="targets" expression='#enumerate(flow.visitors["data"]["Visitor"]["filter"]["resultset"])'></activity>
+				<activity type="call-internal-api" id="kdFolS" name="emailResult" query='mutation Distribute{|LB|  Email {|LB|    mark_as_send: markAsSend(input: {id: "{{flow.emailId}}"}) {|LB|      correlationId|LB|    }|LB|    {% for index, target in flow.targets %}|LB|    T{{index}}: send(input: {id: "{{flow.emailId}}", email: "{{target.email}}", firstName: "{{target.firstName}}", lastName: "{{target.lastName}}"}) {|LB|      correlationId|LB|    }|LB|    {% endfor %}|LB|  }|LB|}'></activity>
 			</activity>
 		</notifier>
 		<notifier name="SendVerificationReminders">
@@ -1340,6 +1377,18 @@ if snapshot.isDeleted != '':
 				<activity type="set-variable" id="cAefCE" name="year" expression="#item[2]"></activity>
 				<activity type="call-internal-api" id="i8C4BB" name="result" query='mutation MyMutation {|LB|  Conference {|LB|    RegistrationManager {|LB|      deregisterVisitor(input: {email: "{{flow.email}}", ticketId: "{{flow.ticketId}}", reason: "geannuleerd omdat er geen response op de verificatie mail is gegeven.", year: "{{flow.year}}"}) {|LB|        correlationId|LB|      }|LB|    }|LB|  }|LB|}'></activity>
 			</activity>
+		</notifier>
+		<notifier name="ExecuteSendEmail">
+			<trigger source="SendEmailRequested">
+				<mapping target="id" value="id"></mapping>
+				<mapping target="email" value="email"></mapping>
+				<mapping target="firstName" value="firstName"></mapping>
+				<mapping target="lastName" value="lastName"></mapping>
+			</trigger>
+			<activity type="call-internal-api" id="KXOT7D" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|'></activity>
+			<activity type="code" id="WoFy31" python-file="lib/MailGun.py" handler="prepare_email"></activity>
+			<activity type="render-template" id="sB5Z9w" template-file="templates/GeneralMail.html" name="html"></activity>
+			<activity type="code" id="vR84Sz" python-file="lib/MailGun.py" handler="send"></activity>
 		</notifier>
 		<notifier name="SendDeregisterConfirmation">
 			<trigger source="VisitorDeregistered">
