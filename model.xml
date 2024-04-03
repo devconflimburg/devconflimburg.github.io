@@ -1600,7 +1600,6 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Communication.Email.Create" status="success"></expected-trace>
 			</activity>
 			<activity type="query" id="GkELe3" description="get email id" path="Email.filter" view="Email">
-				<input name="isSend" type="Boolean" value="#isSend#"></input>
 				<expect-value name="resultset.0.subject" type="String" value="#subject#"></expect-value>
 				<extract-value name="resultset.0.id" put-key="id"></extract-value>
 			</activity>
