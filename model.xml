@@ -1585,6 +1585,45 @@ if snapshot.isDeleted != '':
 				<data-remediation domain="WebSite" aggregate="Element" identifier="#name#"></data-remediation>
 			</activity>
 		</scenario>
+		<scenario name="BulkEmail">
+			<activity type="grant-role" id="9VVUIk" role="administrator" description="De email functie is aleen beschikbaar voor administrators"></activity>
+			<activity type="set-variables" id="PHLHFk" description="Test voorbereiding">
+				<input name="isSend" type="Boolean" value="false"></input>
+				<input name="subject" type="String" value="Test"></input>
+				<input name="contentUpdate" type="String" value="Hello World!"></input>
+				<input name="contentInitial" type="String" value="Hello"></input>
+				<input name="sendAfter" type="String" value="2024-01-01T10:00"></input>
+			</activity>
+			<activity type="mutation" id="EDKQZs" description="Create Email" path="Email.create">
+				<input name="subject" type="String" value="#subject#"></input>
+				<input name="content" type="String" value="#contentInitial#"></input>
+				<expected-trace command="Communication.Email.Create" status="success"></expected-trace>
+			</activity>
+			<activity type="query" id="GkELe3" description="get email id" path="Email.filter" view="Email">
+				<input name="isSend" type="Boolean" value="#isSend#"></input>
+				<expect-value name="resultset.0.subject" type="String" value="#subject#"></expect-value>
+				<extract-value name="resultset.0.id" put-key="id"></extract-value>
+			</activity>
+			<activity type="mutation" id="1VRf0x" description="Update email content" path="Email.update">
+				<input name="id" type="String" value="#id#"></input>
+				<input name="subject" type="String" value="#subject#"></input>
+				<input name="content" type="String" value="#contentUpdate#"></input>
+				<expected-trace command="Communication.Email.Update" status="success"></expected-trace>
+			</activity>
+			<activity type="query" id="ZXG3bO" description="Verifieer dat de content gewijzigd is" path="Email.get" view="Email">
+				<input name="key" type="String" value="#id#"></input>
+				<expect-value name="content" type="String" value="#contentUpdate#"></expect-value>
+			</activity>
+			<activity type="mutation" id="1qxolu" description="Schedule email" path="Email.schedule">
+				<input name="id" type="String" value="#id#"></input>
+				<input name="sendAfter" type="String" value="#sendAfter#"></input>
+				<expected-trace command="Communication.Email.Schedule" status="success"></expected-trace>
+			</activity>
+			<activity type="query" id="qcERCV" path="Email.get" view="Email" description="Verifieer dat de email correct ingepland is">
+				<input name="key" type="String" value="#id#"></input>
+				<expect-value name="sendAfter" type="String" value="#sendAfter#"></expect-value>
+			</activity>
+		</scenario>
 		<scenario name="RegistrationManagement">
 			<activity type="grant-role" role="administrator" id="mQyPTe"></activity>
 			<activity type="set-variables" id="KDq8ZJ" description="">
