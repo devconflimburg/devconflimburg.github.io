@@ -1318,6 +1318,11 @@ if snapshot.isDeleted != '':
 			<activity type="call-internal-api" id="hjH32s" name="emails" query="query MyQuery {|LB|  Email {|LB|    filter(isSend_equals: false) {|LB|      resultset {|LB|        sendAfter|LB|        id|LB|      }|LB|    }|LB|  }|LB|}|LB|"></activity>
 			<activity type="code" id="3uSZgc" code="import datetime,pytz|LB|timezone = pytz.timezone(&quot;Europe/Amsterdam&quot;)|LB||LB|print(flow.emails)|LB|now  = datetime.datetime.now(timezone)|LB|flow.emails = [email for email in emails[&quot;data&quot;][&quot;Email&quot;][&quot;filter&quot;][&quot;resultsset&quot;] if |LB|    datetime.datetime.strptime(email[&quot;sendAfter&quot;], '%Y-%m-%dT%H:%M') &lt;= now]|LB|print(flow.emails)"></activity>
 			<activity type="call-internal-api" id="Qpjhfl" condition="len(flow.emails) != 0" name="visitors" query="query MyQuery {|LB|  Visitor {|LB|    filter(limit: 1000) {|LB|      resultset {|LB|        email|LB|        firstName|LB|        lastName|LB|      }|LB|    }|LB|  }|LB|}|LB|"></activity>
+			<activity type="loop" id="oM2PZN" array="#flow.emails">
+				<activity type="set-variable" id="t61hDD" name="emailId" expression='#item["id"]'></activity>
+				<activity type="set-variable" id="Nq4Ug5" name="targets" expression='#flow.visitors["data"]["Visitor"]["filter"]["resultset"]'></activity>
+				<activity type="call-internal-api" id="kdFolS" name="emailResult" query='mutation Distribute{|LB|  Email {|LB|    mark_as_send: markAsSend(input: {id: "{{flow.emailId}}"}) {|LB|      correlationId|LB|    }|LB|    {% for index, target in enumerate(flow.targets) %}|LB|    T{{index}}: send(input: {id: "{{flow.emailId}}", email: "{{target.email}}", firstName: "{{target.firstName}}", lastName: "{{target.lastName}}"}) {|LB|      correlationId|LB|    }|LB|    {% endfor %}|LB|  }|LB|}'></activity>
+			</activity>
 		</notifier>
 		<notifier name="SendVerificationReminders">
 			<trigger source="@cron(0 4 ? * WED *)">
