@@ -27,46 +27,53 @@
 </head>
 <body x-data="{emails: []}">
 
-  <div class="container-fluid" x-import="utils/tables">
+  <template x-if="stage == 'production'">
+    <div class="container-fluid">
+      <h2>Functie nog niet beschikbaar in productie</h2>
+    </div>
+  </template>
 
-    <h2>Messages</h1>
-    <hr>
+  <template x-if="stage == 'staging'">
+    <div class="container-fluid" x-import="utils/tables">
 
-    <ui-trace-table></ui-trace-table>
+      <h2>Messages</h2>
+      <hr>
 
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>Subject</th>
-        <th>Send After</th>
-        <th>Body</th>
-      </tr>
-      </thead>
-      <tbody>
-      <template x-for="email in emails.filter(x => !x.isSend)" :key="email.id">
-        <tr @updated.debounce="$store.mutation.send('update-email',email)">
-          <th>
-            <div contenteditable="true"
-                 @focusout="email.subject = $el.innerText;$dispatch('updated');"
-                 x-text="email.subject"></div>
-          </th>
-          <td>
-            <input
-                    type="datetime-local"
-                    x-model="email.sendAfter"
-                    @focusout="$store.mutation.send('schedule-email',email)"
-                    :min="moment().format('YYYY-MM-DDTHH:mm')"
-                    :max="moment().add(1,'years').format('YYYY-MM-DDTHH:mm')" />
-          </td>
-          <td>
+      <ui-trace-table></ui-trace-table>
+
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Send After</th>
+          <th>Body</th>
+        </tr>
+        </thead>
+        <tbody>
+        <template x-for="email in emails.filter(x => !x.isSend)" :key="email.id">
+          <tr @updated.debounce="$store.mutation.send('update-email',email)">
+            <th>
+              <div contenteditable="true"
+                   @focusout="email.subject = $el.innerText;$dispatch('updated');"
+                   x-text="email.subject"></div>
+            </th>
+            <td>
+              <input
+                      type="datetime-local"
+                      x-model="email.sendAfter"
+                      @focusout="$store.mutation.send('schedule-email',email)"
+                      :min="moment().format('YYYY-MM-DDTHH:mm')"
+                      :max="moment().add(1,'years').format('YYYY-MM-DDTHH:mm')" />
+            </td>
+            <td>
             <textarea class="form-control"
                       @change="email.content = $el.value;$dispatch('updated');"
                       x-effect="$el.style.height = ($el.scrollHeight + 5) + 'px';"
                       x-model="email.content" rows="3"></textarea>
-          </td>
-          <td>
-            <button type="button"
-                    @click="let target = prompt('Verzend naar','info@devconf.nl');if(target){
+            </td>
+            <td>
+              <button type="button"
+                      @click="let target = prompt('Verzend naar','info@devconf.nl');if(target){
                       $store.mutation.send('send-sample',{
                         id: email.id,
                         email: target,
@@ -74,14 +81,14 @@
                         lastName: 'Doe'
                       });
                     }"
-                    class="btn btn-outline-info">
-              Proef Distributie
-            </button>
-          </td>
-        </tr>
-      </template>
-      </tbody>
-    </table>
+                      class="btn btn-outline-info">
+                Proef Distributie
+              </button>
+            </td>
+          </tr>
+        </template>
+        </tbody>
+      </table>
 
 
       <!-- Button trigger modal -->
@@ -89,6 +96,7 @@
         New message
       </button>
 
+      <br><br>
       <hr>
       <h6>Archief</h6>
       <table class="table table-striped">
@@ -149,43 +157,43 @@
           </div>
         </div>
       </div>
-      
-    <draftsman-mutation command="create-email" x-include="/prepared-statements/commands/CreateEmail.txt" authenticated>
-    </draftsman-mutation>
 
-    <draftsman-trace command="create-email"
-                     status="success"
-                     @trace="Draftsman.empty_track_and_trace_log()">
-    </draftsman-trace>
+      <draftsman-mutation command="create-email" x-include="/prepared-statements/commands/CreateEmail.txt" authenticated>
+      </draftsman-mutation>
 
-    <draftsman-mutation command="update-email" x-include="/prepared-statements/commands/UpdateEmail.txt" authenticated>
-    </draftsman-mutation>
+      <draftsman-trace command="create-email"
+                       status="success"
+                       @trace="Draftsman.empty_track_and_trace_log()">
+      </draftsman-trace>
 
-    <draftsman-trace command="update-email"
-                     status="success"
-                     @trace="Draftsman.empty_track_and_trace_log()">
-    </draftsman-trace>
+      <draftsman-mutation command="update-email" x-include="/prepared-statements/commands/UpdateEmail.txt" authenticated>
+      </draftsman-mutation>
 
-    <draftsman-mutation command="schedule-email" x-include="/prepared-statements/commands/ScheduleEmail.txt" authenticated>
-    </draftsman-mutation>
+      <draftsman-trace command="update-email"
+                       status="success"
+                       @trace="Draftsman.empty_track_and_trace_log()">
+      </draftsman-trace>
 
-    <draftsman-trace command="schedule-email"
-                     status="success"
-                     @trace="Draftsman.empty_track_and_trace_log()">
-    </draftsman-trace>
+      <draftsman-mutation command="schedule-email" x-include="/prepared-statements/commands/ScheduleEmail.txt" authenticated>
+      </draftsman-mutation>
 
-    <draftsman-mutation command="send-sample" x-include="/prepared-statements/commands/SendEmail.txt" authenticated>
-    </draftsman-mutation>
+      <draftsman-trace command="schedule-email"
+                       status="success"
+                       @trace="Draftsman.empty_track_and_trace_log()">
+      </draftsman-trace>
 
-    <draftsman-trace command="send-sample"
-                     status="success"
-                     @trace="Draftsman.empty_track_and_trace_log()">
-    </draftsman-trace>
+      <draftsman-mutation command="send-sample" x-include="/prepared-statements/commands/SendEmail.txt" authenticated>
+      </draftsman-mutation>
 
-    <draftsman-query alias="emails" authenticated
-                     x-include="/prepared-statements/views/Email/filter.txt"></draftsman-query>
-    <div class="data-element"
-         @refresh="console.log($store.emails);emails = $store.emails.filter.resultset"></div>
+      <draftsman-trace command="send-sample"
+                       status="success"
+                       @trace="Draftsman.empty_track_and_trace_log()">
+      </draftsman-trace>
+
+      <draftsman-query alias="emails" authenticated
+                       x-include="/prepared-statements/views/Email/filter.txt"></draftsman-query>
+      <div class="data-element"
+           @refresh="console.log($store.emails);emails = $store.emails.filter.resultset"></div>
 
       <draftsman-notification message="updated" type="Email"
                               @notification="
@@ -193,7 +201,8 @@
         Draftsman.reload_data();">
       </draftsman-notification>
 
-  </div>
+    </div>
+  </template>
 
 </body>
 </html>
