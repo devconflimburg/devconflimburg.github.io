@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <title>Emails</title>
+  <script>var must_be_signed_in = true;</script>
+  <script src="/js/configuration.js"></script>
+  <script src="/js/configuration-staging.js"></script>
+
+  <link rel="stylesheet" href="/css/draftsman.css" />
+  <script src="/js/framework.js"></script>
+  <script>cache_enabled = false;</script>
+  <script src="/js/cache.js"></script>
+  <script src="https://unpkg.com/@vimesh/ui"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+        integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+</head>
+<body x-data="{emails: []}">
+
+  <div class="container-fluid" x-import="utils/tables">
+
+    <h2>Messages</h1>
+    <hr>
+
+    <ui-trace-table></ui-trace-table>
+
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Subject</th>
+        <th>Send After</th>
+        <th>Body</th>
+      </tr>
+      </thead>
+      <tbody>
+      <template x-for="email in emails.filter(x => !x.isSend)" :key="email.id">
+        <tr @updated.debounce="$store.mutation.send('update-email',email)">
+          <th>
+            <div contenteditable="true"
+                 @focusout="email.subject = $el.innerText;$dispatch('updated');"
+                 x-text="email.subject"></div>
+          </th>
+          <td>
+            <input
+                    type="datetime-local"
+                    x-model="email.sendAfter"
+                    @focusout="$store.mutation.send('schedule-email',email)"
+                    :min="moment().format('YYYY-MM-DDTHH:mm')"
+                    :max="moment().add(1,'years').format('YYYY-MM-DDTHH:mm')" />
+          </td>
+          <td>
+            <textarea class="form-control"
+                      @change="email.content = $el.value;$dispatch('updated');"
+                      x-effect="$el.style.height = ($el.scrollHeight + 5) + 'px';"
+                      x-model="email.content" rows="3"></textarea>
+          </td>
+          <td>
+            <button type="button"
+                    @click="let target = prompt('Verzend naar','info@devconf.nl');if(target){
+                      $store.mutation.send('send-sample',{
+                        id: email.id,
+                        email: target,
+                        firstName: 'John',
+                        lastName: 'Doe'
+                      });
+                    }"
+                    class="btn btn-outline-info">
+              Proef Distributie
+            </button>
+          </td>
+        </tr>
+      </template>
+      </tbody>
+    </table>
+
+
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+        New message
+      </button>
+
+      <hr>
+      <h6>Archief</h6>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Send After</th>
+          <th>Body</th>
+        </tr>
+        </thead>
+        <tbody>
+        <template x-for="email in emails.filter(x => x.isSend)" :key="email.id">
+          <tr>
+            <th x-text="email.subject">
+            </th>
+            <td x-text="email.sendAfter">
+            </td>
+            <td>
+              <p x-html="email.content.replaceAll('\n','<br>')"></p>
+            </td>
+            <td>
+
+            </td>
+          </tr>
+        </template>
+        </tbody>
+      </table>
+      <br>
+      <!-- Modal -->
+      <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content" x-data="{command: {}}">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="createModalLabel">New message</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Subject</span>
+                <input type="text" class="form-control" aria-label="subject"
+                       x-model="command.subject"
+                       aria-describedby="basic-addon1" />
+              </div>
+              <div class="input-group">
+                <span class="input-group-text">Message</span>
+                <textarea class="form-control"
+                          x-model="command.content"
+                          aria-label="Body"></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button"
+                      data-bs-dismiss="modal"
+                      @click="$store.mutation.send('create-email',command)"
+                      class="btn btn-primary">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    <draftsman-mutation command="create-email" x-include="/prepared-statements/commands/CreateEmail.txt" authenticated>
+    </draftsman-mutation>
+
+    <draftsman-trace command="create-email"
+                     status="success"
+                     @trace="Draftsman.empty_track_and_trace_log()">
+    </draftsman-trace>
+
+    <draftsman-mutation command="update-email" x-include="/prepared-statements/commands/UpdateEmail.txt" authenticated>
+    </draftsman-mutation>
+
+    <draftsman-trace command="update-email"
+                     status="success"
+                     @trace="Draftsman.empty_track_and_trace_log()">
+    </draftsman-trace>
+
+    <draftsman-mutation command="schedule-email" x-include="/prepared-statements/commands/ScheduleEmail.txt" authenticated>
+    </draftsman-mutation>
+
+    <draftsman-trace command="schedule-email"
+                     status="success"
+                     @trace="Draftsman.empty_track_and_trace_log()">
+    </draftsman-trace>
+
+    <draftsman-mutation command="send-sample" x-include="/prepared-statements/commands/SendEmail.txt" authenticated>
+    </draftsman-mutation>
+
+    <draftsman-trace command="send-sample"
+                     status="success"
+                     @trace="Draftsman.empty_track_and_trace_log()">
+    </draftsman-trace>
+
+    <draftsman-query alias="emails" authenticated
+                     x-include="/prepared-statements/views/Email/filter.txt"></draftsman-query>
+    <div class="data-element"
+         @refresh="console.log($store.emails);emails = $store.emails.filter.resultset"></div>
+
+      <draftsman-notification message="updated" type="Email"
+                              @notification="
+        console.log('Received message:',$event.detail);
+        Draftsman.reload_data();">
+      </draftsman-notification>
+
+  </div>
+
+</body>
+</html>
