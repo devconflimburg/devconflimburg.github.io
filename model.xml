@@ -3,6 +3,7 @@
 	<global>
 		<pattern name="ProgramItemId" regex="^(?:20)\d{2}-\d{1,2}$"></pattern>
 		<pattern name="TimeNotation" regex="^\d{2}:\d{2}$"></pattern>
+		<pattern name="EmailGroup" regex="^(visitor-all|visitor-shows|visitor-noshows|subscriptions|all)$"></pattern>
 		<pattern name="Date" regex="^\d{2}-\d{2}-(?:20)\d{2}$"></pattern>
 		<pattern name="Email" regex="^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$"></pattern>
 		<pattern name="Year" regex="^(?:20)\d{2}$"></pattern>
@@ -13,6 +14,7 @@
 		<event graphql-namespace="Email" graphql-name="schedule" name="ScheduleEmailRequested" authorization="role" type="ActorEvent" role="administrator">
 			<field name="id" type="String"></field>
 			<field name="sendAfter" type="String" pattern="{{DateTime}}"></field>
+			<field name="group" type="String" pattern="{{EmailGroup}}" default="all"></field>
 		</event>
 		<event graphql-namespace="Ticket" graphql-name="redeem" name="RedeemTicketRequested" authorization="role" type="ActorEvent" role="administrator">
 			<field name="ticketId" type="String"></field>
@@ -226,6 +228,7 @@
 		</event>
 		<event name="EmailScheduled" source="Communication.Email" type="DomainEvent">
 			<field name="sendAfter" type="String"></field>
+			<field name="group" type="String"></field>
 		</event>
 		<event name="EmailUpdated" source="Communication.Email" type="DomainEvent">
 			<field name="subject" type="String"></field>
@@ -934,6 +937,7 @@
 				<field name="content" type="String"></field>
 				<field name="isSend" type="Boolean"></field>
 				<field name="sendAfter" type="String"></field>
+				<field name="group" type="String"></field>
 				<command name="Create" create-command="true">
 					<trigger source="CreateEmailRequested" key-field="id">
 						<mapping target="id" value="id"></mapping>
@@ -964,22 +968,27 @@
 				<command name="Schedule">
 					<trigger source="ScheduleEmailRequested" key-field="id">
 						<mapping target="sendAfter" value="sendAfter"></mapping>
+						<mapping target="group" value="group"></mapping>
 					</trigger>
 					<processor type="validator" id="mMOnuu" condition="flow.entity.version != 0" exception="May not be the initial request"></processor>
 					<processor type="emit-event" id="QiEUyn" ref="EmailScheduled">
 						<mapping target="sendAfter" value="#flow.sendAfter"></mapping>
+						<mapping target="group" value="#flow.group"></mapping>
 					</processor>
 					<test-case name="ScheduleEmail" trigger-event="ScheduleEmailRequested">
 						<input name="id" value="6a058611-a7c1-45fd-9aae-cfb263e22720" type="String"></input>
 						<input name="sendAfter" value="1970-01-01T00:00" type="String"></input>
+						<input name="group" value="all" type="String"></input>
 						<expected domain-event="EmailScheduled">
 							<field value="1970-01-01T00:00" name="sendAfter" type="String"></field>
+							<field value="all" name="group" type="String"></field>
 						</expected>
 						<state>{
  "version": 1
 }</state>
 						<expected-state pk="6a058611-a7c1-45fd-9aae-cfb263e22720">{
-  "sendAfter": "1970-01-01T00:00"
+  "sendAfter": "1970-01-01T00:00",
+  "group": "all"
 }</expected-state>
 					</test-case>
 				</command>
@@ -1046,6 +1055,7 @@
 				</event-handler>
 				<event-handler on="EmailScheduled">
 					<mapping target="sendAfter" operand="set" value="sendAfter"></mapping>
+					<mapping target="group" operand="set" value="group"></mapping>
 				</event-handler>
 				<event-handler on="EmailUpdated">
 					<mapping target="subject" operand="set" value="subject"></mapping>
@@ -1071,7 +1081,7 @@
 			</snapshot-handler>
 			<query type="get" authorization="anonymous" field-name="get" graphql-namespace="Conference.RegistrationManager"></query>
 		</view>
-		<view name="Visitor" data-retention-days="90" exclude-notification="false">
+		<view name="Visitor" data-retention-days="90" exclude-notification="true">
 			<field name="firstName" type="String"></field>
 			<field name="lastName" type="String"></field>
 			<field name="year" type="String"></field>
@@ -1215,12 +1225,14 @@
 			<field name="content" type="String"></field>
 			<field name="isSend" type="Boolean"></field>
 			<field name="sendAfter" type="String"></field>
+			<field name="group" type="String"></field>
 			<snapshot-handler id="PBAOPm" sub-domain="Communication" aggregate="Email" key-mapping="id" processor="item">
 				<mapping target="id" operand="set" value="id"></mapping>
 				<mapping target="subject" operand="set" value="subject"></mapping>
 				<mapping target="content" operand="set" value="content"></mapping>
 				<mapping target="isSend" operand="set" value="isSend"></mapping>
 				<mapping target="sendAfter" operand="set" value="sendAfter"></mapping>
+				<mapping target="group" operand="set" value="group"></mapping>
 				<delete condition="#snapshot.isDeleted != ''"></delete>
 			</snapshot-handler>
 			<query graphql-namespace="Email" field-name="get" type="get" authorization="role" role="administrator"></query>
@@ -1353,12 +1365,12 @@ if snapshot.isDeleted != '':
 			<trigger source="@cron(0 * * * ? *)">
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
-			<activity type="call-internal-api" id="hjH32s" name="emails" query="query MyQuery {|LB|  Email {|LB|    filter(isSend_equals: false) {|LB|      resultset {|LB|        sendAfter|LB|        id|LB|        isSend|LB|      }|LB|    }|LB|  }|LB|}|LB|"></activity>
+			<activity type="call-internal-api" id="hjH32s" name="emails" query="query MyQuery {|LB|  Email {|LB|    filter(isSend_equals: false) {|LB|      resultset {|LB|        sendAfter|LB|        id|LB|        isSend|LB|        group|LB|      }|LB|    }|LB|  }|LB|}|LB|"></activity>
 			<activity type="code" id="3uSZgc" code="import datetime,pytz|LB|timezone = pytz.timezone(&quot;Europe/Amsterdam&quot;)|LB||LB|now  = datetime.datetime.now(timezone)|LB|flow.emails = [email for email in flow.emails[&quot;data&quot;][&quot;Email&quot;][&quot;filter&quot;][&quot;resultset&quot;] if |LB|    not email.isSend and email[&quot;sendAfter&quot;] != &quot;&quot; and|LB|    datetime.datetime.strptime(email[&quot;sendAfter&quot;], '%Y-%m-%dT%H:%M') &lt;= now.replace(tzinfo=None)]"></activity>
-			<activity type="call-internal-api" id="Qpjhfl" condition="len(flow.emails) != 0" name="visitors" query="query MyQuery {|LB|  Visitor {|LB|    filter(limit: 1000) {|LB|      resultset {|LB|        email|LB|        firstName|LB|        lastName|LB|      }|LB|    }|LB|  }|LB|}|LB|"></activity>
+			<activity type="call-internal-api" id="Qpjhfl" condition="len(flow.emails) != 0" name="visitors" query="query MyQuery {|LB|  Visitor {|LB|    filter(limit: 1000) {|LB|      resultset {|LB|        email|LB|        firstName|LB|        lastName|LB|        ticket {|LB|          redeemed|LB|        }|LB|      }|LB|    }|LB|  }|LB|}|LB|"></activity>
 			<activity type="loop" id="oM2PZN" array="#flow.emails">
 				<activity type="set-variable" id="t61hDD" name="emailId" expression='#item["id"]'></activity>
-				<activity type="set-variable" id="Nq4Ug5" name="targets" expression='#enumerate(flow.visitors["data"]["Visitor"]["filter"]["resultset"])'></activity>
+				<activity type="code" id="ptDJ8M" code='targets = []|LB||LB|if item["group"].startswith("visitor"):|LB|    targets.extend(flow.visitors["data"]["Visitor"]["filter"]["resultset"])|LB||LB|if item["group"] in ["subscriptions", "all"]:|LB|    pass #Inject subscriptions|LB||LB|if item["group"] == "visitor-shows":|LB|    targets = [target for target in targets if target["ticket"]["redeemed"]]|LB|elif item["group"] == "visitor-noshows":|LB|    targets = [target for target in targets if not target["ticket"]["redeemed"]]|LB||LB|targets = {target["email"]:target for target in targets}|LB|self.targets = enumerate(targets.values())'></activity>
 				<activity type="call-internal-api" id="kdFolS" name="emailResult" query='mutation Distribute{|LB|  Email {|LB|    mark_as_send: markAsSend(input: {id: "{{flow.emailId}}"}) {|LB|      correlationId|LB|    }|LB|    {% for index, target in flow.targets %}|LB|    T{{index}}: send(input: {id: "{{flow.emailId}}", email: "{{target.email}}", firstName: "{{target.firstName}}", lastName: "{{target.lastName}}"}) {|LB|      correlationId|LB|    }|LB|    {% endfor %}|LB|  }|LB|}'></activity>
 			</activity>
 		</notifier>

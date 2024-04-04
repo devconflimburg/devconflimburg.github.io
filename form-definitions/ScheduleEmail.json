@@ -18,5 +18,13 @@
     "pattern": "^(?:20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
     "placeholder": "",
     "default": ""
+  },
+  {
+    "name": "group",
+    "title": "Group",
+    "type": "String",
+    "pattern": "^(visitor-all|visitor-shows|visitor-noshows|subscriptions|all)$",
+    "placeholder": "all",
+    "default": "all"
   }
 ]
