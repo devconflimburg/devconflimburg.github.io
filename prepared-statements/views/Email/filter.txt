@@ -9,6 +9,7 @@ query FilterEmail($isSend_equals: Boolean = false) {
         content
         isSend
         sendAfter
+        group
       }
     }
   }

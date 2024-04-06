@@ -27,13 +27,6 @@
 </head>
 <body x-data="{emails: []}">
 
-  <template x-if="stage == 'production'">
-    <div class="container-fluid">
-      <h2>Functie nog niet beschikbaar in productie</h2>
-    </div>
-  </template>
-
-  <template x-if="stage == 'staging'">
     <div class="container-fluid" x-import="utils/tables">
 
       <h2>Messages</h2>
@@ -46,6 +39,7 @@
         <tr>
           <th>Subject</th>
           <th>Send After</th>
+          <th>Groep</th>
           <th>Body</th>
         </tr>
         </thead>
@@ -64,6 +58,18 @@
                       @focusout="$store.mutation.send('schedule-email',email)"
                       :min="moment().format('YYYY-MM-DDTHH:mm')"
                       :max="moment().add(1,'years').format('YYYY-MM-DDTHH:mm')" />
+            </td>
+            <td>
+              <input @change="$store.mutation.send('schedule-email',email)"
+                     x-model="email.group"
+                     class="form-control" list="datalistOptions" id="groupList" placeholder="Target group...">
+              <datalist id="datalistOptions">
+                <option value="visitor-all">
+                <option value="visitor-shows">
+                <option value="visitor-noshows">
+                <option value="subscriptions">
+                <option value="all">
+              </datalist>
             </td>
             <td>
             <textarea class="form-control"
@@ -202,7 +208,6 @@
       </draftsman-notification>
 
     </div>
-  </template>
 
 </body>
 </html>
