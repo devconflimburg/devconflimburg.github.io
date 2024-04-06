@@ -1402,7 +1402,7 @@ if snapshot.isDeleted != '':
 			<activity type="code" id="WoFy31" python-file="lib/MailGun.py" handler="prepare_email"></activity>
 			<activity type="render-template" id="sB5Z9w" template-file="templates/GeneralMail.html" name="html"></activity>
 			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="c4NcAA"></activity>
-			<activity type="code" id="vR84Sz" python-file="lib/MailGun.py" handler="log_only"></activity>
+			<activity type="code" id="vR84Sz" python-file="lib/MailGun.py" handler="send"></activity>
 		</notifier>
 		<notifier name="SendDeregisterConfirmation">
 			<trigger source="VisitorDeregistered">
