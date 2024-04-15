@@ -44,11 +44,35 @@
           </div>
         </div>
         <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
-          <a x-bind:href="get_variable('home_video_youtube_link')" target="_blank">
-            <video x-bind:src="get_variable('home_video');"
+          <a href="#" data-bs-toggle="modal" data-bs-target="#videoModal">
+            <video
                    muted autoplay loop
-                   class="img-fluid rounded-3 my-5"></video>
+                   class="img-fluid rounded-3 my-5">
+              <source :src="'https://' + bucket + '/aftermovie/devConf_2024_small.mp4'" type="video/mp4">
+              <source :src="'https://' + bucket + '/aftermovie/devConf_2023.mp4'" type="video/mp4">
+              <source src="/assets/devConf_2023.mp4" type="video/mp4">
+            </video>
           </a>
+
+          <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="videoModalLabel">After movie</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <video
+                          controls
+                          class="img-fluid rounded-3 my-5">
+                    <source :src="'https://' + bucket + '/aftermovie/devConf_2024_1.mp4'" type="video/mp4">
+                    <source :src="'https://' + bucket + '/aftermovie/devConf_2023.mp4'" type="video/mp4">
+                    <source src="/assets/devConf_2023.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
