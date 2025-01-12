@@ -1744,6 +1744,7 @@ if snapshot.isDeleted != '':
 				<input name="summary" type="String" value="Hello World!"></input>
 				<input name="duration" type="Int" value="45"></input>
 			</activity>
+			<activity type="wait" path="" view="" milliseconds="10"></activity>
 			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="#summary#"></input>
 				<input name="duration" type="Numeric" value="#duration#"></input>
