@@ -1686,52 +1686,52 @@ if snapshot.isDeleted != '':
 				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
 			</activity>
 		</scenario>
-		<scenario name="CreateProgram">
-			<activity type="grant-role" description="noodzakelijke rol voor content management" role="administrator" id="VtPcDk"></activity>
-			<activity type="set-variables" description='Start variabelen voor het "CreateProgram" test scenario' id="pm0lAs">
+		<scenario name="CreateProgram" extends="">
+			<activity type="grant-role" description="noodzakelijke rol voor content management" role="administrator"></activity>
+			<activity type="set-variables" description='Start variabelen voor het "CreateProgram" test scenario'>
 				<input name="year" type="String" value="2024"></input>
 				<input name="date" type="String" value="27-03-2024"></input>
 				<input name="tagline" type="String" value="5 jarig jubileum"></input>
 			</activity>
-			<activity type="mutation" description="Maak 2023 editie aan" path="Conference.initializeEdition" id="MqYYmc">
+			<activity type="mutation" description="Maak 2023 editie aan" path="Conference.initializeEdition">
 				<input name="date" type="String" value="#date#"></input>
 				<input name="year" type="String" value="2023"></input>
 				<input name="tagline" type="String" value="#tagline#"></input>
 				<expected-trace command="Edition.Initialize" status="Success"></expected-trace>
 			</activity>
-			<activity type="query" description="Check of 2023 als next edition is aangemerkt" path="WebSite.Element.get" view="WebPageElement" id="JlmyoM">
+			<activity type="query" description="Check of 2023 als next edition is aangemerkt" path="WebSite.Element.get" view="WebPageElement">
 				<input name="key" type="ID" value="next-edition"></input>
 				<expect-value name="year" type="String" value="2023"></expect-value>
 			</activity>
-			<activity type="mutation" description="Maak 2022 editie aan" path="Conference.initializeEdition" id="96Szr7">
+			<activity type="mutation" description="Maak 2022 editie aan" path="Conference.initializeEdition">
 				<input name="date" type="String" value="#date#"></input>
 				<input name="year" type="String" value="2022"></input>
 				<input name="tagline" type="String" value="#tagline#"></input>
 				<expected-trace command="Edition.Initialize" status="Success"></expected-trace>
 			</activity>
-			<activity type="query" description="Check of 2023 nog steeds  als next edition is aangemerkt" path="WebSite.Element.get" view="WebPageElement" id="N20qYZ">
+			<activity type="query" description="Check of 2023 nog steeds  als next edition is aangemerkt" path="WebSite.Element.get" view="WebPageElement">
 				<input name="key" type="ID" value="next-edition"></input>
 				<expect-value name="year" type="String" value="2023"></expect-value>
 			</activity>
-			<activity type="mutation" description="Maak 2024 editie aan" path="Conference.initializeEdition" id="uac9xo">
+			<activity type="mutation" description="Maak 2024 editie aan" path="Conference.initializeEdition">
 				<input name="date" type="String" value="#date#"></input>
 				<input name="year" type="String" value="#year#"></input>
 				<input name="tagline" type="String" value="#tagline#"></input>
 				<expected-trace command="Edition.Initialize" status="Success"></expected-trace>
 				<expected-trace command="RegistrationManager.Initialize" status="Success"></expected-trace>
 			</activity>
-			<activity type="query" description="Check of 2024  als next edition is aangemerkt" path="WebSite.Element.get" view="WebPageElement" id="SW3Xsn">
+			<activity type="query" description="Check of 2024  als next edition is aangemerkt" path="WebSite.Element.get" view="WebPageElement">
 				<input name="key" type="ID" value="next-edition"></input>
 				<expect-value name="year" type="String" value="2024"></expect-value>
 			</activity>
-			<activity type="query" description="Controleer of er een editie view gevuld is" path="Edition.get" view="Edition" id="hMnq93">
+			<activity type="query" description="Controleer of er een editie view gevuld is" path="Edition.get" view="Edition">
 				<input name="key" type="ID" value="#year#"></input>
 				<expect-value name="date" type="String" value="#date#"></expect-value>
 				<expect-value name="year" type="String" value="#year#"></expect-value>
 				<expect-value name="tagline" type="String" value="#tagline#"></expect-value>
 				<data-remediation domain="Conference" aggregate="Edition" identifier="#year#"></data-remediation>
 			</activity>
-			<activity type="query" description="controleer of de registratie manager aangemaakt is" path="Conference.RegistrationManager.get" view="RegistrationManager" id="vOBACo">
+			<activity type="query" description="controleer of de registratie manager aangemaakt is" path="Conference.RegistrationManager.get" view="RegistrationManager">
 				<input name="key" type="ID" value="#year#"></input>
 				<expect-value name="closeDate" type="String" value="20-03-2024"></expect-value>
 				<expect-value name="year" type="String" value="#year#"></expect-value>
@@ -1740,11 +1740,11 @@ if snapshot.isDeleted != '':
 				<expect-value name="maxVisitors" type="Numeric" value="200"></expect-value>
 				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
 			</activity>
-			<activity type="set-variables" description="Zet summary en duration" id="iLLrKU">
+			<activity type="set-variables" description="Zet summary en duration">
 				<input name="summary" type="String" value="Hello World!"></input>
-				<input name="duration" type="Numeric" value="45"></input>
+				<input name="duration" type="Int" value="45"></input>
 			</activity>
-			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem" id="qftSOr">
+			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="#summary#"></input>
 				<input name="duration" type="Numeric" value="#duration#"></input>
 				<input name="year" type="String" value="#year#"></input>
@@ -1756,14 +1756,14 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="query" description="Controleer of programma informatie aangemaakt is" path="Program.get" view="Program" id="3kAhWd">
+			<activity type="query" description="Controleer of programma informatie aangemaakt is" path="Program.get" view="Program">
 				<input name="key" type="ID" value="#year#"></input>
 				<expect-value name="year" type="String" value="#year#"></expect-value>
 				<expect-value name="start" type="String" value="09:00"></expect-value>
 				<expect-value name="end" type="String" value="09:45"></expect-value>
 				<data-remediation domain="Conference" aggregate="ProgramItem" identifier="2024-1"></data-remediation>
 			</activity>
-			<activity type="query" description="Controleer of het programma item correct gevuld is" path="Program.Item.get" view="ProgramItem" id="Fc5HOp">
+			<activity type="query" description="Controleer of het programma item correct gevuld is" path="Program.Item.get" view="ProgramItem">
 				<input name="key" type="ID" value="2024-1"></input>
 				<expect-value name="summary" type="String" value="#summary#"></expect-value>
 				<expect-value name="year" type="String" value="#year#"></expect-value>
@@ -1777,7 +1777,7 @@ if snapshot.isDeleted != '':
 				<expect-value name="endTime" type="String" value="09:45"></expect-value>
 				<data-remediation domain="Conference" aggregate="ProgramItem" identifier="2024-1"></data-remediation>
 			</activity>
-			<activity type="mutation" description="Maak een tweede programma item aan" path="Conference.addProgramItem" id="VQ1K7b">
+			<activity type="mutation" description="Maak een tweede programma item aan" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="#summary#"></input>
 				<input name="duration" type="Numeric" value="#duration#"></input>
 				<input name="year" type="String" value="#year#"></input>
@@ -1789,7 +1789,7 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="query" description="Controleer of het tweede programma item is toegevoegd, en niet als breakout is bestempeld" path="Program.Item.get" view="ProgramItem" id="eMEcRR">
+			<activity type="query" description="Controleer of het tweede programma item is toegevoegd, en niet als breakout is bestempeld" path="Program.Item.get" view="ProgramItem">
 				<input name="key" type="ID" value="2024-2"></input>
 				<expect-value name="summary" type="String" value="#summary#"></expect-value>
 				<expect-value name="year" type="String" value="#year#"></expect-value>
@@ -1803,7 +1803,7 @@ if snapshot.isDeleted != '':
 				<expect-value name="endTime" type="String" value="10:35"></expect-value>
 				<data-remediation domain="Conference" aggregate="ProgramItem" identifier="2024-2"></data-remediation>
 			</activity>
-			<activity type="mutation" description="Maak een derde programma item aan" path="Conference.addProgramItem" id="TsDTA1">
+			<activity type="mutation" description="Maak een derde programma item aan" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="#summary#"></input>
 				<input name="duration" type="Numeric" value="#duration#"></input>
 				<input name="year" type="String" value="#year#"></input>
@@ -1815,14 +1815,14 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="query" description="Controleer of programma item 2 nu wel als breakout is bestempeld, sessie 1" path="Program.Item.get" view="ProgramItem" id="voE0dX">
+			<activity type="query" description="Controleer of programma item 2 nu wel als breakout is bestempeld, sessie 1" path="Program.Item.get" view="ProgramItem">
 				<input name="key" type="ID" value="2024-2"></input>
 				<expect-value name="session" type="Numeric" value="1"></expect-value>
 				<expect-value name="breakout" type="Boolean" value="true"></expect-value>
 				<data-remediation domain="Conference" aggregate="Edition" identifier="year"></data-remediation>
 				<data-remediation domain="Conference" aggregate="ProgramItem" identifier="2024-2"></data-remediation>
 			</activity>
-			<activity type="query" description="Controleer of programma item 3 correct gevuld is [breakout]" path="Program.Item.get" view="ProgramItem" id="fHhnpY">
+			<activity type="query" description="Controleer of programma item 3 correct gevuld is [breakout]" path="Program.Item.get" view="ProgramItem">
 				<input name="key" type="ID" value="2024-3"></input>
 				<expect-value name="summary" type="String" value="#summary#"></expect-value>
 				<expect-value name="year" type="String" value="#year#"></expect-value>
@@ -1837,7 +1837,7 @@ if snapshot.isDeleted != '':
 				<data-remediation domain="Conference" aggregate="ProgramItem" identifier="2024-3"></data-remediation>
 				<data-remediation domain="Conference" aggregate="Edition" identifier="#year#"></data-remediation>
 			</activity>
-			<activity type="mutation" description='Maak "closing" keynote aan' path="Conference.addProgramItem" id="479rkv">
+			<activity type="mutation" description='Maak "closing" keynote aan' path="Conference.addProgramItem">
 				<input name="summary" type="String" value="#summary#"></input>
 				<input name="duration" type="Numeric" value="#duration#"></input>
 				<input name="year" type="String" value="#year#"></input>
@@ -1849,7 +1849,7 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="query" description="Controleer of laatste programma item correct gevuld is" path="Program.Item.get" view="ProgramItem" id="nKnJB5">
+			<activity type="query" description="Controleer of laatste programma item correct gevuld is" path="Program.Item.get" view="ProgramItem">
 				<input name="key" type="ID" value="2024-4"></input>
 				<expect-value name="summary" type="String" value="#summary#"></expect-value>
 				<expect-value name="year" type="String" value="#year#"></expect-value>
@@ -1863,13 +1863,13 @@ if snapshot.isDeleted != '':
 				<expect-value name="endTime" type="String" value="11:30"></expect-value>
 				<data-remediation domain="Conference" aggregate="ProgramItem" identifier="2024-4"></data-remediation>
 			</activity>
-			<activity type="query" description="Controlleer of programma lengte correct gevuld is" path="Program.get" view="Program" id="azoOvS">
+			<activity type="query" description="Controlleer of programma lengte correct gevuld is" path="Program.get" view="Program">
 				<input name="key" type="ID" value="2024"></input>
 				<expect-value name="start" type="String" value="09:00"></expect-value>
 				<expect-value name="end" type="String" value="11:30"></expect-value>
 				<data-remediation domain="Conference" aggregate="ProgramItem" identifier="2024-4"></data-remediation>
 			</activity>
-			<activity type="mutation" description="Voeg inloop item toe aan programma" path="Conference.addProgramItem" id="YnPFZR">
+			<activity type="mutation" description="Voeg inloop item toe aan programma" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="#summary#"></input>
 				<input name="duration" type="Numeric" value="30"></input>
 				<input name="year" type="String" value="#year#"></input>
