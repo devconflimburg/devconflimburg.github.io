@@ -1442,77 +1442,77 @@ if snapshot.isDeleted != '':
 		</notifier>
 	</notifiers>
 	<functional-scenarios clean-db="true" clean-iam="true" minimum-event-coverage="80" minimum-view-coverage="80">
-		<scenario name="PrepareWebPage">
-			<activity type="set-variables" id="AjZIw6">
+		<scenario name="PrepareWebPage" extends=";CreateProgram">
+			<activity type="set-variables">
 				<input name="year" type="String" value="2024"></input>
 			</activity>
-			<activity type="grant-role" description="Grant administrator role" role="administrator" id="dtBuue"></activity>
-			<activity type="mutation" description="Configureer call to action title" path="WebSite.Element.create" id="27TyrI">
+			<activity type="grant-role" description="Grant administrator role" role="administrator"></activity>
+			<activity type="mutation" description="Configureer call to action title" path="WebSite.Element.create">
 				<input name="name" type="String" value="call_to_action_title"></input>
 				<input name="content" type="String" value="Tot volgend jaar!"></input>
 				<expected-trace command="Element.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="mutation" description="Configureer call to action text" path="WebSite.Element.create" id="E0MPYL">
+			<activity type="mutation" description="Configureer call to action text" path="WebSite.Element.create">
 				<input name="name" type="String" value="call_to_action_text"></input>
 				<input name="content" type="String" value="base64:QmVkYW5rdCBkYXQgamUgYWFud2V6aWcgd2FzIG9wIGRlemUgbW9vaWUgZGFnLiBXaWwgamUgbm9nIGV2ZW4gdGVydWdibGlra2VuPyA8YSBocmVmPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVB4ZngxMTVQU0ZJIiB0YXJnZXQ9Il9ibGFuayI+QmVraWprIGRhbiBkZSBhZnRlcm1vdmllIHZhbiAyMDIzLjwvYT4KCldlIGhvcGVuIGRhdCBqZSBnZcOvbnNwaXJlZXJkIGJlbnQgZW4gdm9sZ2VuZCBqYWFyIHdlZXIgYWFud2V6aWcgYmVudC4gT20gaGV0IHZvbGdlbmRlIGV2ZW5lbWVudCBub2cgaW50ZXJlc3NhbnRlciB2b29yIGplIHRlIG1ha2VuLCB2cmFnZW4gd2UganVsbGllIHpvYWxzIGllZGVyIGphYXIgPGEgaHJlZj0ibWFpbHRvOmRldmNvbmZAYXBnLm5sIj5mZWVkYmFjazwvYT4uCgpXaWwgamUgZXIgdm9sZ2VuZCBqYWFyIHpla2VyIGJpaiB6aWpuLCByZXNlcnZlZXIgZGFuIGFsdmFzdCB3b2Vuc2RhZyAyNyBtYWFydCBpbiBqZSBhZ2VuZGEhIEFsdmFzdCBoYXJ0ZWxpamsgYmVkYW5rdCB2b29yIGplIHRpamQgZW4gdG90IHppZW5zLg=="></input>
 				<expected-trace command="Element.Create" status="Success"></expected-trace>
 			</activity>
 		</scenario>
-		<scenario name="BulkEmail">
-			<activity type="grant-role" id="9VVUIk" role="administrator" description="De email functie is aleen beschikbaar voor administrators"></activity>
-			<activity type="set-variables" id="PHLHFk" description="Test voorbereiding">
+		<scenario name="BulkEmail" extends=";CreateProgram">
+			<activity type="grant-role" role="administrator" description="De email functie is aleen beschikbaar voor administrators"></activity>
+			<activity type="set-variables" description="Test voorbereiding">
 				<input name="isSend" type="Boolean" value="false"></input>
 				<input name="subject" type="String" value="Test"></input>
 				<input name="contentUpdate" type="String" value="Hello World!"></input>
 				<input name="contentInitial" type="String" value="Hello"></input>
 				<input name="sendAfter" type="String" value="2024-01-01T10:00"></input>
 			</activity>
-			<activity type="mutation" id="EDKQZs" description="Create Email" path="Email.create">
+			<activity type="mutation" description="Create Email" path="Email.create">
 				<input name="subject" type="String" value="#subject#"></input>
 				<input name="content" type="String" value="#contentInitial#"></input>
 				<expected-trace command="Communication.Email.Create" status="success"></expected-trace>
 			</activity>
-			<activity type="query" id="GkELe3" description="get email id" path="Email.filter" view="Email">
+			<activity type="query" description="get email id" path="Email.filter" view="Email">
 				<expect-value name="resultset.0.subject" type="String" value="#subject#"></expect-value>
 				<extract-value name="resultset.0.id" put-key="id"></extract-value>
 			</activity>
-			<activity type="mutation" id="1VRf0x" description="Update email content" path="Email.update">
+			<activity type="mutation" description="Update email content" path="Email.update">
 				<input name="id" type="String" value="#id#"></input>
 				<input name="subject" type="String" value="#subject#"></input>
 				<input name="content" type="String" value="#contentUpdate#"></input>
 				<expected-trace command="Communication.Email.Update" status="success"></expected-trace>
 			</activity>
-			<activity type="query" id="ZXG3bO" description="Verifieer dat de content gewijzigd is" path="Email.get" view="Email">
+			<activity type="query" description="Verifieer dat de content gewijzigd is" path="Email.get" view="Email">
 				<input name="key" type="String" value="#id#"></input>
 				<expect-value name="content" type="String" value="#contentUpdate#"></expect-value>
 			</activity>
-			<activity type="mutation" id="1qxolu" description="Schedule email" path="Email.schedule">
+			<activity type="mutation" description="Schedule email" path="Email.schedule">
 				<input name="id" type="String" value="#id#"></input>
 				<input name="sendAfter" type="String" value="#sendAfter#"></input>
 				<expected-trace command="Communication.Email.Schedule" status="success"></expected-trace>
 			</activity>
-			<activity type="query" id="qcERCV" path="Email.get" view="Email" description="Verifieer dat de email correct ingepland is">
+			<activity type="query" path="Email.get" view="Email" description="Verifieer dat de email correct ingepland is">
 				<input name="key" type="String" value="#id#"></input>
 				<expect-value name="sendAfter" type="String" value="#sendAfter#"></expect-value>
 			</activity>
 		</scenario>
-		<scenario name="RegistrationManagement">
-			<activity type="grant-role" role="administrator" id="mQyPTe"></activity>
-			<activity type="set-variables" id="KDq8ZJ" description="">
+		<scenario name="RegistrationManagement" extends=";CreateProgram">
+			<activity type="grant-role" role="administrator"></activity>
+			<activity type="set-variables" description="">
 				<input name="year" type="String" value="2010"></input>
 				<input name="firstName" type="String" value="John"></input>
 				<input name="lastName" type="String" value="Doe"></input>
 				<input name="email" type="String" value="devconf@endtest-mail.io"></input>
 				<input name="breakouts" type="String" value="2010-2"></input>
 			</activity>
-			<activity type="mutation" description="Initialiseer een editie" path="Conference.initializeEdition" id="BfMuF0">
+			<activity type="mutation" description="Initialiseer een editie" path="Conference.initializeEdition">
 				<input name="date" type="String" value="29-03-2010"></input>
 				<input name="year" type="String" value="#year#"></input>
 				<input name="tagline" type="String" value="tagline"></input>
 				<expected-trace command="Edition.Initialize" status="Success"></expected-trace>
 				<expected-trace command="RegistrationManager.Initialize" status="Success"></expected-trace>
 			</activity>
-			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem" id="qftSOr">
+			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="test 123"></input>
 				<input name="duration" type="Numeric" value="45"></input>
 				<input name="year" type="String" value="2010"></input>
@@ -1524,7 +1524,7 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem" id="qftSOY">
+			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="test 123"></input>
 				<input name="duration" type="Numeric" value="45"></input>
 				<input name="year" type="String" value="2010"></input>
@@ -1536,7 +1536,7 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem" id="qftSOp">
+			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="test 123"></input>
 				<input name="duration" type="Numeric" value="45"></input>
 				<input name="year" type="String" value="2010"></input>
@@ -1548,7 +1548,7 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="mutation" description="Voeg inloop item toe aan programma" path="Conference.addProgramItem" id="YnPFZR">
+			<activity type="mutation" description="Voeg inloop item toe aan programma" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="Inloop"></input>
 				<input name="duration" type="Numeric" value="30"></input>
 				<input name="year" type="String" value="2010"></input>
@@ -1560,7 +1560,7 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="mutation" description="Probeer bezoeker te registreren, faalt omdat de registratie niet geopend is." path="Conference.RegistrationManager.registerVisitor" id="LR7iIJ">
+			<activity type="mutation" description="Probeer bezoeker te registreren, faalt omdat de registratie niet geopend is." path="Conference.RegistrationManager.registerVisitor">
 				<input name="firstName" type="String" value="#firstName#"></input>
 				<input name="lastName" type="String" value="#lastName#"></input>
 				<input name="year" type="String" value="#year#"></input>
@@ -1568,20 +1568,20 @@ if snapshot.isDeleted != '':
 				<input name="email" type="String" value="#email#"></input>
 				<expected-trace command="RegistrationManager.RegisterVisitor" status="error"></expected-trace>
 			</activity>
-			<activity type="mutation" description="Verleng de inschrijf periode" path="Conference.RegistrationManager.configure" id="SyO3Zh">
+			<activity type="mutation" description="Verleng de inschrijf periode" path="Conference.RegistrationManager.configure">
 				<input name="closeDate" type="String" value="01-01-2099"></input>
 				<input name="year" type="String" value="#year#"></input>
 				<input name="openDate" type="String" value="01-01-2023"></input>
 				<input name="maxVisitors" type="Numeric" value="10"></input>
 				<expected-trace command="RegistrationManager.Configure" status="Success"></expected-trace>
 			</activity>
-			<activity type="query" description="controleer of de registratie manager geconfigureerd is" path="Conference.RegistrationManager.get" view="RegistrationManager" id="vOBACA">
+			<activity type="query" description="controleer of de registratie manager geconfigureerd is" path="Conference.RegistrationManager.get" view="RegistrationManager">
 				<input name="key" type="ID" value="#year#"></input>
-				<expect-value name="registeredVisitors" type="Numeric" value="0"></expect-value>
-				<expect-value name="maxVisitors" type="Numeric" value="10"></expect-value>
+				<expect-value name="registeredVisitors" type="Int" value="0"></expect-value>
+				<expect-value name="maxVisitors" type="Int" value="10"></expect-value>
 				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
 			</activity>
-			<activity type="mutation" description="Schrijf bezoeker in" path="Conference.RegistrationManager.registerVisitor" id="PMBOoR">
+			<activity type="mutation" description="Schrijf bezoeker in" path="Conference.RegistrationManager.registerVisitor">
 				<input name="firstName" type="String" value="#firstName#"></input>
 				<input name="lastName" type="String" value="#lastName#"></input>
 				<input name="year" type="String" value="#year#"></input>
@@ -1590,20 +1590,20 @@ if snapshot.isDeleted != '':
 				<expected-trace command="RegistrationManager.RegisterVisitor" status="Success"></expected-trace>
 				<expected-trace command="SendTicketVerification-Notifier" status="success"></expected-trace>
 			</activity>
-			<activity type="query" id="6ZBYus" description="Haal bezoeker op" path="Visitor.get" view="Visitor">
+			<activity type="query" description="Haal bezoeker op" path="Visitor.get" view="Visitor">
 				<input name="key" type="String" value="#email#"></input>
 				<expect-value name="firstName" type="String" value="#firstName#"></expect-value>
 				<expect-value name="lastName" type="String" value="#lastName#"></expect-value>
 				<extract-value name="ticketId" put-key="ticketId"></extract-value>
 				<data-remediation domain="Conference" aggregate="Visitor" identifier="#email#"></data-remediation>
 			</activity>
-			<activity type="query" description="controleer of het aantal inschrijvingen gelijk is aan 1" path="Conference.RegistrationManager.get" view="RegistrationManager" id="vOBACB">
+			<activity type="query" description="controleer of het aantal inschrijvingen gelijk is aan 1" path="Conference.RegistrationManager.get" view="RegistrationManager">
 				<input name="key" type="ID" value="#year#"></input>
-				<expect-value name="registeredVisitors" type="Numeric" value="1"></expect-value>
-				<expect-value name="maxVisitors" type="Numeric" value="10"></expect-value>
+				<expect-value name="registeredVisitors" type="Int" value="1"></expect-value>
+				<expect-value name="maxVisitors" type="Int" value="10"></expect-value>
 				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
 			</activity>
-			<activity type="query" id="ymkyL4" path="Ticket.get" view="Ticket" description="Controleer of ticket is aangemaakt">
+			<activity type="query" path="Ticket.get" view="Ticket" description="Controleer of ticket is aangemaakt">
 				<input name="key" type="String" value="#ticketId#"></input>
 				<expect-value name="verified" type="Boolean" value="false"></expect-value>
 				<expect-value name="breakouts" type="String" value="#breakouts#"></expect-value>
@@ -1612,50 +1612,50 @@ if snapshot.isDeleted != '':
 				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
 				<extract-value name="control" put-key="control"></extract-value>
 			</activity>
-			<activity type="mutation" id="i3BK0P" description="Trigger resend verification" path="Ticket.handleLost">
+			<activity type="mutation" description="Trigger resend verification" path="Ticket.handleLost">
 				<input name="email" type="String" value="#email#"></input>
 				<expected-trace command="HandleResendRequest-Notifier" status="success"></expected-trace>
 				<expected-trace command="SendTicketVerification-Notifier" status="success"></expected-trace>
 			</activity>
-			<activity type="mutation" id="Hk19rJ" path="Ticket.verify" description="Verify ticket">
+			<activity type="mutation" path="Ticket.verify" description="Verify ticket">
 				<input name="ticketId" type="String" value="#ticketId#"></input>
 				<input name="control" type="String" value="#control#"></input>
 				<expected-trace command="Conference.Ticket.Verify" status="success"></expected-trace>
 				<expected-trace command="SendTicket-Notifier" status="success"></expected-trace>
 			</activity>
-			<activity type="query" id="1aE4iU" description="Check if ticket is verified" path="Ticket.get" view="Ticket">
+			<activity type="query" description="Check if ticket is verified" path="Ticket.get" view="Ticket">
 				<input name="key" type="String" value="#ticketId#"></input>
 				<expect-value name="verified" type="Boolean" value="true"></expect-value>
 				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
 			</activity>
-			<activity type="mutation" id="i3BK0A" description="Trigger resend ticket" path="Ticket.handleLost">
+			<activity type="mutation" description="Trigger resend ticket" path="Ticket.handleLost">
 				<input name="email" type="String" value="#email#"></input>
 				<expected-trace command="HandleResendRequest-Notifier" status="success"></expected-trace>
 				<expected-trace command="SendTicket-Notifier" status="success"></expected-trace>
 			</activity>
-			<activity type="mutation" id="LOH86z" description="Send reminder ticket" path="Ticket.resend">
+			<activity type="mutation" description="Send reminder ticket" path="Ticket.resend">
 				<input name="ticketId" type="String" value="#ticketId#"></input>
 				<input name="reminder" type="Boolean" value="true"></input>
 				<expected-trace command="SendTicket-Notifier" status="success"></expected-trace>
 			</activity>
-			<activity type="mutation" id="wQ2Lwa" description="Redeem Invalid Ticket" path="Ticket.redeem">
+			<activity type="mutation" description="Redeem Invalid Ticket" path="Ticket.redeem">
 				<input name="ticketId" type="String" value="#email#"></input>
 				<expected-trace command="Conference.Ticket.Redeem" status="error"></expected-trace>
 			</activity>
-			<activity type="mutation" id="cBRxbm" path="Ticket.redeem" description="Redeem ticket">
+			<activity type="mutation" path="Ticket.redeem" description="Redeem ticket">
 				<input name="ticketId" type="String" value="#ticketId#"></input>
 				<expected-trace command="Conference.Ticket.Redeem" status="success"></expected-trace>
 			</activity>
-			<activity type="query" id="1zegUU" path="Ticket.get" view="Ticket" description="Check if ticket is redeemed">
+			<activity type="query" path="Ticket.get" view="Ticket" description="Check if ticket is redeemed">
 				<input name="key" type="String" value="#ticketId#"></input>
 				<expect-value name="redeemed" type="Boolean" value="true"></expect-value>
 				<data-remediation domain="Conference" aggregate="Ticket" identifier="#ticketId#"></data-remediation>
 			</activity>
-			<activity type="mutation" id="CiX5ai" description="Try to redeem the ticket for a second time" path="Ticket.redeem">
+			<activity type="mutation" description="Try to redeem the ticket for a second time" path="Ticket.redeem">
 				<input name="ticketId" type="String" value="#ticketId#"></input>
 				<expected-trace command="Conference.Ticket.Redeem" status="error"></expected-trace>
 			</activity>
-			<activity type="mutation" id="s9BNMN" description="Deregister" path="Conference.RegistrationManager.deregisterVisitor">
+			<activity type="mutation" description="Deregister" path="Conference.RegistrationManager.deregisterVisitor">
 				<input name="email" type="String" value="#email#"></input>
 				<input name="ticketId" type="String" value="#ticketId#"></input>
 				<input name="reason" type="String" value="Regressie test"></input>
@@ -1665,13 +1665,13 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Conference.Visitor.Delete" status="success"></expected-trace>
 				<expected-trace command="SendDeregisterConfirmation-Notifier" status="success"></expected-trace>
 			</activity>
-			<activity type="query" description="controleer of het aantal inschrijvingen gelijk aan 0 is" path="Conference.RegistrationManager.get" view="RegistrationManager" id="vOBACC">
+			<activity type="query" description="controleer of het aantal inschrijvingen gelijk aan 0 is" path="Conference.RegistrationManager.get" view="RegistrationManager">
 				<input name="key" type="ID" value="#year#"></input>
-				<expect-value name="registeredVisitors" type="Numeric" value="0"></expect-value>
-				<expect-value name="maxVisitors" type="Numeric" value="10"></expect-value>
+				<expect-value name="registeredVisitors" type="Int" value="0"></expect-value>
+				<expect-value name="maxVisitors" type="Int" value="10"></expect-value>
 				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
 			</activity>
-			<activity type="mutation" description="Schrijf bezoeker opnieuw in" path="Conference.RegistrationManager.registerVisitor" id="PMBOoX">
+			<activity type="mutation" description="Schrijf bezoeker opnieuw in" path="Conference.RegistrationManager.registerVisitor">
 				<input name="firstName" type="String" value="#firstName#"></input>
 				<input name="lastName" type="String" value="#lastName#"></input>
 				<input name="year" type="String" value="#year#"></input>
@@ -1680,10 +1680,10 @@ if snapshot.isDeleted != '':
 				<expected-trace command="RegistrationManager.RegisterVisitor" status="Success"></expected-trace>
 				<expected-trace command="SendTicketVerification-Notifier" status="success"></expected-trace>
 			</activity>
-			<activity type="query" description="controleer of het aantal inschrijvingen gelijk aan 1 is" path="Conference.RegistrationManager.get" view="RegistrationManager" id="vOBACD">
+			<activity type="query" description="controleer of het aantal inschrijvingen gelijk aan 1 is" path="Conference.RegistrationManager.get" view="RegistrationManager">
 				<input name="key" type="ID" value="#year#"></input>
-				<expect-value name="registeredVisitors" type="Numeric" value="1"></expect-value>
-				<expect-value name="maxVisitors" type="Numeric" value="10"></expect-value>
+				<expect-value name="registeredVisitors" type="Int" value="1"></expect-value>
+				<expect-value name="maxVisitors" type="Int" value="10"></expect-value>
 				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
 			</activity>
 		</scenario>
@@ -1883,11 +1883,11 @@ if snapshot.isDeleted != '':
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
 		</scenario>
-		<scenario name="TalkProposal">
-			<activity type="set-variables" id="orhaBC">
+		<scenario name="TalkProposal" extends=";CreateProgram">
+			<activity type="set-variables">
 				<input name="email" type="String" value="devconf@endtest-mail.io"></input>
 			</activity>
-			<activity type="mutation" path="Conference.TalkProposal.create" id="mRaQOC">
+			<activity type="mutation" path="Conference.TalkProposal.create">
 				<input name="difficultyLevel" type="String" value="novice"></input>
 				<input name="name" type="String" value="John Doe"></input>
 				<input name="abstract" type="String" value="base64:V2hhdCBhcmUgdGhlIGV4cGVjdGF0aW9ucy4gTGV2ZWwgdGhlIHBsYXlpbmcgZmllbGQgY29weSBhbmQgcGFzdGUgZnJvbSBzdGFjayBvdmVyZmxvdywgd2UncmUgYnVpbGRpbmcgdGhlIHBsYW5lIHdoaWxlIHdlJ3JlIGZseWluZyBpdCBhIHNldCBvZiBjZXJ0aXR1ZGVzIGJhc2VkIG9uIGRlZHVjdGlvbnMgZm91bmRlZCBvbiBmYWxzZSBwcmVtaXNlLCBzbyBwdWxsIGluIHRlbiBleHRyYSBib2RpZXMgdG8gaGVscCByb2xsIHRoZSB0b3J0b2lzZSB0aGF0IGplcmsgZnJvbSBmaW5hbmNlIHJlYWxseSB0aHJldyBtZSB1bmRlciB0aGUgYnVzLiBXZSB3YW50IHRvIHNlZSBtb3JlIGNoYXJ0cy4gV2hlcmUgZG8gd2Ugc3RhbmQgb24gdGhlIGxhdGVzdCBjbGllbnQgYXNrIHByb2NlZHVyYWxpemUgd2UgbmVlZCBhIHJlY2FwIGJ5IGVvZCwgY29iIG9yIHdoYXRldmVyIGNvbWVzIGZpcnN0IGdvb2Qgb3B0aWNzLCBub3IgcHJvZHVjdCBsYXVuY2guIFVwc2VsbC4gT3JnYW5pYyBncm93dGggcmVncm91cCwgb3IgYSBzZXQgb2YgY2VydGl0dWRlcyBiYXNlZCBvbiBkZWR1Y3Rpb25zIGZvdW5kZWQgb24gZmFsc2UgcHJlbWlzZS4gV2UgZG9uJ3Qgd2FudCB0byBib2lsIHRoZSBvY2VhbiBvbndhcmQgYW5kIHVwd2FyZCwgcHJvZHVjdGl6ZSB0aGUgZGVsaXZlcmFibGVzIGFuZCBmb2N1cyBvbiB0aGUgYm90dG9tIGxpbmUsIGJ1dCB0aGUgaG9yc2UgaXMgb3V0IG9mIHRoZSBiYXJuIHByb2R1Y3QgbWFya2V0IGZpdC4="></input>
@@ -1897,33 +1897,33 @@ if snapshot.isDeleted != '':
 				<input name="email" type="String" value="#email#"></input>
 				<expected-trace command="TalkProposal.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="grant-role" id="XVJfIi" role="administrator" description=""></activity>
-			<activity type="query" id="kjvj95" path="TalkProposal.filter" view="TalkProposal">
+			<activity type="grant-role" role="administrator" description=""></activity>
+			<activity type="query" path="TalkProposal.filter" view="TalkProposal">
 				<expect-value name="resultset.0.email" type="String" value="#email#"></expect-value>
 			</activity>
 		</scenario>
-		<scenario name="WebPageElements">
-			<activity type="set-variables" id="fwEUH8">
+		<scenario name="WebPageElements" extends=";CreateProgram">
+			<activity type="set-variables">
 				<input name="name" type="String" value="call-to-action"></input>
 			</activity>
-			<activity type="grant-role" role="administrator" id="pl32M5"></activity>
-			<activity type="mutation" path="WebSite.Element.create" id="qkDcpK">
+			<activity type="grant-role" role="administrator"></activity>
+			<activity type="mutation" path="WebSite.Element.create">
 				<input name="name" type="String" value="#name#"></input>
 				<input name="content" type="String" value="Doe iets"></input>
 				<expected-trace command="Element.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="query" path="WebSite.Element.get" view="WebPageElement" id="qokKXS">
+			<activity type="query" path="WebSite.Element.get" view="WebPageElement">
 				<input name="key" type="ID" value="#name#"></input>
 				<expect-value name="name" type="String" value="#name#"></expect-value>
 				<expect-value name="content" type="String" value="Doe iets"></expect-value>
 				<data-remediation domain="WebSite" aggregate="Element" identifier="#name#"></data-remediation>
 			</activity>
-			<activity type="mutation" path="WebSite.Element.update" id="3gxTMv">
+			<activity type="mutation" path="WebSite.Element.update">
 				<input name="name" type="String" value="#name#"></input>
 				<input name="content" type="String" value="Updated!"></input>
 				<expected-trace command="Element.Update" status="Success"></expected-trace>
 			</activity>
-			<activity type="query" path="WebSite.Element.get" view="WebPageElement" id="roucyF">
+			<activity type="query" path="WebSite.Element.get" view="WebPageElement">
 				<input name="key" type="ID" value="#name#"></input>
 				<expect-value name="content" type="String" value="Updated!"></expect-value>
 				<data-remediation domain="WebSite" aggregate="Element" identifier="#name#"></data-remediation>
