@@ -8,6 +8,7 @@
 		<pattern name="Date" regex="^\d{2}-\d{2}-(?:20)\d{2}$"></pattern>
 		<pattern name="TimeNotation" regex="^\d{2}:\d{2}$"></pattern>
 		<pattern name="Email" regex="^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$"></pattern>
+		<dependency name="markdown2" version="2.5.2"></dependency>
 	</global>
 	<events>
 		<event name="AddProgramItemConferenceRequested" authorization="role" role="administrator" type="ActorEvent" graphql-name="addProgramItem" graphql-namespace="Conference">
@@ -1740,9 +1741,8 @@ if snapshot.isDeleted != '':
 				<expect-value name="maxVisitors" type="Numeric" value="200"></expect-value>
 				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
 			</activity>
-			<activity type="set-variables" description="Zet summary en duration">
+			<activity type="set-variables" description="Zet summary">
 				<input name="summary" type="String" value="Hello World!"></input>
-				<input name="duration" type="Int" value="45"></input>
 			</activity>
 			<activity type="wait" path="" view="" milliseconds="10"></activity>
 			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem">
@@ -1771,7 +1771,7 @@ if snapshot.isDeleted != '':
 				<expect-value name="session" type="Numeric" value="0"></expect-value>
 				<expect-value name="title" type="String" value="Talk 1"></expect-value>
 				<expect-value name="room" type="String" value="Forum"></expect-value>
-				<expect-value name="duration" type="Numeric" value="#duration#"></expect-value>
+				<expect-value name="duration" type="Numeric" value="45"></expect-value>
 				<expect-value name="breakout" type="Boolean" value="false"></expect-value>
 				<expect-value name="speaker" type="String" value="Speaker 1"></expect-value>
 				<expect-value name="startTime" type="String" value="09:00"></expect-value>
@@ -1780,7 +1780,7 @@ if snapshot.isDeleted != '':
 			</activity>
 			<activity type="mutation" description="Maak een tweede programma item aan" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="#summary#"></input>
-				<input name="duration" type="Numeric" value="#duration#"></input>
+				<input name="duration" type="Numeric" value="45"></input>
 				<input name="year" type="String" value="#year#"></input>
 				<input name="speaker" type="String" value="Speaker 2"></input>
 				<input name="startTime" type="String" value="09:50"></input>
@@ -1797,7 +1797,7 @@ if snapshot.isDeleted != '':
 				<expect-value name="session" type="Numeric" value="0"></expect-value>
 				<expect-value name="title" type="String" value="Talk 2"></expect-value>
 				<expect-value name="room" type="String" value="Forum"></expect-value>
-				<expect-value name="duration" type="Numeric" value="#duration#"></expect-value>
+				<expect-value name="duration" type="Numeric" value="45"></expect-value>
 				<expect-value name="breakout" type="Boolean" value="false"></expect-value>
 				<expect-value name="speaker" type="String" value="Speaker 2"></expect-value>
 				<expect-value name="startTime" type="String" value="09:50"></expect-value>
@@ -1806,7 +1806,7 @@ if snapshot.isDeleted != '':
 			</activity>
 			<activity type="mutation" description="Maak een derde programma item aan" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="#summary#"></input>
-				<input name="duration" type="Numeric" value="#duration#"></input>
+				<input name="duration" type="Numeric" value="45"></input>
 				<input name="year" type="String" value="#year#"></input>
 				<input name="speaker" type="String" value="Speaker 3"></input>
 				<input name="startTime" type="String" value="09:50"></input>
@@ -1830,7 +1830,7 @@ if snapshot.isDeleted != '':
 				<expect-value name="session" type="Numeric" value="1"></expect-value>
 				<expect-value name="title" type="String" value="Talk 3"></expect-value>
 				<expect-value name="room" type="String" value="No-code-zone"></expect-value>
-				<expect-value name="duration" type="Numeric" value="#duration#"></expect-value>
+				<expect-value name="duration" type="Numeric" value="45"></expect-value>
 				<expect-value name="breakout" type="Boolean" value="true"></expect-value>
 				<expect-value name="speaker" type="String" value="Speaker 3"></expect-value>
 				<expect-value name="startTime" type="String" value="09:50"></expect-value>
@@ -1840,7 +1840,7 @@ if snapshot.isDeleted != '':
 			</activity>
 			<activity type="mutation" description='Maak "closing" keynote aan' path="Conference.addProgramItem">
 				<input name="summary" type="String" value="#summary#"></input>
-				<input name="duration" type="Numeric" value="#duration#"></input>
+				<input name="duration" type="Numeric" value="45"></input>
 				<input name="year" type="String" value="#year#"></input>
 				<input name="speaker" type="String" value="Speaker 4"></input>
 				<input name="startTime" type="String" value="10:45"></input>
@@ -1857,7 +1857,7 @@ if snapshot.isDeleted != '':
 				<expect-value name="session" type="Numeric" value="0"></expect-value>
 				<expect-value name="title" type="String" value="Talk 4"></expect-value>
 				<expect-value name="room" type="String" value="Forum"></expect-value>
-				<expect-value name="duration" type="Numeric" value="#duration#"></expect-value>
+				<expect-value name="duration" type="Numeric" value="45"></expect-value>
 				<expect-value name="breakout" type="Boolean" value="false"></expect-value>
 				<expect-value name="speaker" type="String" value="Speaker 4"></expect-value>
 				<expect-value name="startTime" type="String" value="10:45"></expect-value>
