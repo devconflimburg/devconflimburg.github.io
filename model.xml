@@ -1747,7 +1747,7 @@ if snapshot.isDeleted != '':
 			<activity type="wait" path="" view="" milliseconds="10"></activity>
 			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="#summary#"></input>
-				<input name="duration" type="Numeric" value="#duration#"></input>
+				<input name="duration" type="Numeric" value="45"></input>
 				<input name="year" type="String" value="#year#"></input>
 				<input name="speaker" type="String" value="Speaker 1"></input>
 				<input name="startTime" type="String" value="09:00"></input>
