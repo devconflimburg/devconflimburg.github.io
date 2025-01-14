@@ -1,8 +1,8 @@
 # This file is managed by Tracepaper
-mutation RegisterVisitor($firstName: String = "", $lastName: String = "", $year: String = "", $email: String = "", $attendingLunch: Boolean = false, $attendingAfterEventDrinks: Boolean = false, $dietaryNotes: String = "", $subscribeToNewsletter: String = "", $nuUpsilonUpsilonOmicron: String = "", $breakouts: [RegisterVisitorConferenceRegistrationManager_Breakouts!] = []) {
+mutation RegisterVisitor($firstName: String = "", $lastName: String = "", $year: String = "", $email: String = "", $attendingLunch: Boolean = false, $attendingAfterEventDrinks: Boolean = false, $dietaryNotes: String = "", $subscribeToNewsletter: Boolean = false, $allowSharingWithRecruiters: Boolean = false, $breakouts: [RegisterVisitorConferenceRegistrationManager_Breakouts!] = []) {
   Conference{
     RegistrationManager{
-      registerVisitor(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,attendingLunch: $attendingLunch,attendingAfterEventDrinks: $attendingAfterEventDrinks,dietaryNotes: $dietaryNotes,subscribeToNewsletter: $subscribeToNewsletter,nuUpsilonUpsilonOmicron: $nuUpsilonUpsilonOmicron,breakouts: $breakouts}) {
+      registerVisitor(input: {firstName: $firstName,lastName: $lastName,year: $year,email: $email,attendingLunch: $attendingLunch,attendingAfterEventDrinks: $attendingAfterEventDrinks,dietaryNotes: $dietaryNotes,subscribeToNewsletter: $subscribeToNewsletter,allowSharingWithRecruiters: $allowSharingWithRecruiters,breakouts: $breakouts}) {
          correlationId
       }
     }

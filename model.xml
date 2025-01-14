@@ -41,8 +41,8 @@
 			<field name="attendingLunch" type="Boolean"></field>
 			<field name="attendingAfterEventDrinks" type="Boolean"></field>
 			<field name="dietaryNotes" type="String"></field>
-			<field name="subscribeToNewsletter" type="String"></field>
-			<field name="nuUpsilonUpsilonOmicron" type="String"></field>
+			<field name="subscribeToNewsletter" type="Boolean"></field>
+			<field name="allowSharingWithRecruiters" type="Boolean"></field>
 			<nested-object name="breakouts">
 				<field name="id" type="String"></field>
 			</nested-object>

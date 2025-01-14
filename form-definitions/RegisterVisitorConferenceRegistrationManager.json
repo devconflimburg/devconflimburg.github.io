@@ -62,15 +62,15 @@
   {
     "name": "subscribeToNewsletter",
     "title": "Subscribetonewsletter",
-    "type": "String",
+    "type": "Boolean",
     "pattern": "",
     "placeholder": "",
     "default": ""
   },
   {
-    "name": "nuUpsilonUpsilonOmicron",
-    "title": "Nuupsilonupsilonomicron",
-    "type": "String",
+    "name": "allowSharingWithRecruiters",
+    "title": "Allowsharingwithrecruiters",
+    "type": "Boolean",
     "pattern": "",
     "placeholder": "",
     "default": ""
