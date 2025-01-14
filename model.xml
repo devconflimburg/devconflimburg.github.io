@@ -157,6 +157,11 @@
 			<field name="email" type="String"></field>
 			<field name="breakouts" type="String"></field>
 			<field name="control" type="String"></field>
+			<field name="attendingLunch" type="Boolean"></field>
+			<field name="attendingAfterEventDrinks" type="Boolean"></field>
+			<field name="dietaryNotes" type="String"></field>
+			<field name="subscribeToNewsletter" type="Boolean"></field>
+			<field name="allowSharingWithRecruiters" type="Boolean"></field>
 		</event>
 		<event name="ConferenceEditionInitialized" source="Conference.Edition" type="DomainEvent">
 			<field name="date" type="String"></field>
@@ -214,6 +219,11 @@
 			<field name="year" type="String"></field>
 			<field name="ticketId" type="String"></field>
 			<field name="email" type="String"></field>
+			<field name="attendingLunch" type="Boolean"></field>
+			<field name="attendingAfterEventDrinks" type="Boolean"></field>
+			<field name="dietaryNotes" type="String"></field>
+			<field name="subscribeToNewsletter" type="Boolean"></field>
+			<field name="allowSharingWithRecruiters" type="Boolean"></field>
 		</event>
 		<event name="ConferenceTalkProposalCreated" source="Conference.TalkProposal" type="DomainEvent">
 			<field name="difficultyLevel" type="String"></field>
@@ -444,6 +454,11 @@
 						<mapping value="email" target="email"></mapping>
 						<mapping value="breakouts" target="breakouts"></mapping>
 						<mapping target="control" value="control"></mapping>
+						<mapping target="attendingLunch" value="attendingLunch"></mapping>
+						<mapping target="attendingAfterEventDrinks" value="attendingAfterEventDrinks"></mapping>
+						<mapping target="dietaryNotes" value="dietaryNotes"></mapping>
+						<mapping target="subscribeToNewsletter" value="subscribeToNewsletter"></mapping>
+						<mapping target="allowSharingWithRecruiters" value="allowSharingWithRecruiters"></mapping>
 					</trigger>
 					<processor type="code" handler="register_visitor" file="lib/VisitorManagement.py" id="O4qkj"></processor>
 					<processor type="emit-event" ref="ConferenceRegistrationManagerVisitorRegistered" id="SX5yG">
@@ -454,6 +469,11 @@
 						<mapping target="email" value="#flow.email"></mapping>
 						<mapping target="breakouts" value="#flow.breakouts"></mapping>
 						<mapping target="control" value="#flow.control"></mapping>
+						<mapping target="attendingLunch" value="#flow.attendingLunch"></mapping>
+						<mapping target="attendingAfterEventDrinks" value="#flow.attendingAfterEventDrinks"></mapping>
+						<mapping target="dietaryNotes" value="#flow.dietaryNotes"></mapping>
+						<mapping target="subscribeToNewsletter" value="#flow.subscribeToNewsletter"></mapping>
+						<mapping target="allowSharingWithRecruiters" value="#flow.allowSharingWithRecruiters"></mapping>
 					</processor>
 					<test-case name="RegistrationClosed" expected-processing-status="error" trigger-event="RegisterVisitorConferenceRegistrationManagerRequested" user="systemuser">
 						<input name="firstName" value="John" type="String"></input>
@@ -461,6 +481,11 @@
 						<input name="year" value="2024" type="String"></input>
 						<input name="email" value="john.doe@example.com" type="String"></input>
 						<input name="control" value="f94bff90-ab56-42ec-a916-d47540b832ce" type="String"></input>
+						<input name="attendingLunch" value="true" type="Boolean"></input>
+						<input name="attendingAfterEventDrinks" value="true" type="Boolean"></input>
+						<input name="dietaryNotes" value="2024" type="String"></input>
+						<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
+						<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
 						<input name="breakouts" type="NestedObject">[{"id": "2024-1"}]</input>
 						<state>{"openDate": "01-01-2010", "closeDate": "01-01-2011"}</state>
 					</test-case>
@@ -470,6 +495,11 @@
 						<input name="year" value="2024" type="String"></input>
 						<input name="email" value="john.doe@example.com" type="String"></input>
 						<input name="control" value="f94bff90-ab56-42ec-a916-d47540b832ce" type="String"></input>
+						<input name="attendingLunch" value="true" type="Boolean"></input>
+						<input name="attendingAfterEventDrinks" value="true" type="Boolean"></input>
+						<input name="dietaryNotes" value="2024" type="String"></input>
+						<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
+						<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
 						<input name="breakouts" type="NestedObject">[{"id": "2024-1"}, {"id": "2024-2"}]</input>
 						<state>{"openDate": "01-01-2023", "closeDate": "01-01-2123", "maxVisitors": 1, "visitors": ["dummy"], "registeredVisitors": 1}</state>
 					</test-case>
@@ -480,6 +510,11 @@
 						<input name="email" value="john.doe@EXAMPLE.com" type="String"></input>
 						<input name="control" value="f94bff90-ab56-42ec-a916-d47540b832ce" type="String"></input>
 						<input name="breakouts" type="NestedObject">[{"id": "2024-1"}, {"id": "2024-2"}]</input>
+						<input name="attendingLunch" value="true" type="Boolean"></input>
+						<input name="attendingAfterEventDrinks" value="true" type="Boolean"></input>
+						<input name="dietaryNotes" value="2024" type="String"></input>
+						<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
+						<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
 						<state>{"openDate": "01-01-2023", "closeDate": "01-01-2123", "maxVisitors": 10}</state>
 						<expected domain-event="ConferenceRegistrationManagerVisitorRegistered">
 							<field value="devconf-ticket:328042609457990298653290252337988412086" name="ticketId" type="String"></field>
@@ -496,6 +531,11 @@
 						<input name="email" value="john.doe@example.com" type="String"></input>
 						<input name="control" value="f94bff90-ab56-42ec-a916-d47540b832ce" type="String"></input>
 						<input name="breakouts" type="NestedObject">[{"id": "2024-1"}, {"id": "2024-2"}]</input>
+						<input name="attendingLunch" value="true" type="Boolean"></input>
+						<input name="attendingAfterEventDrinks" value="true" type="Boolean"></input>
+						<input name="dietaryNotes" value="2024" type="String"></input>
+						<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
+						<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
 						<state>{"openDate": "01-01-2023", "closeDate": "01-01-2123", "maxVisitors": 200, "visitors": ["devconf-ticket:328042609457990298653290252337988412086"], "registeredVisitors": 1}</state>
 					</test-case>
 				</command>
@@ -866,6 +906,11 @@
 				<field name="year" type="String"></field>
 				<field name="ticketId" type="String"></field>
 				<field name="email" type="String"></field>
+				<field name="attendingLunch" type="Boolean"></field>
+				<field name="attendingAfterEventDrinks" type="Boolean"></field>
+				<field name="dietaryNotes" type="String"></field>
+				<field name="subscribeToNewsletter" type="Boolean"></field>
+				<field name="allowSharingWithRecruiters" type="Boolean"></field>
 				<command name="Delete">
 					<trigger source="VisitorDeregistered" key-field="ticketId">
 						<mapping target="email" value="email"></mapping>
@@ -894,6 +939,11 @@
 						<mapping value="firstName" target="firstName"></mapping>
 						<mapping value="lastName" target="lastName"></mapping>
 						<mapping value="email" target="email"></mapping>
+						<mapping target="attendingLunch" value="attendingLunch"></mapping>
+						<mapping target="attendingAfterEventDrinks" value="attendingAfterEventDrinks"></mapping>
+						<mapping target="dietaryNotes" value="dietaryNotes"></mapping>
+						<mapping target="subscribeToNewsletter" value="subscribeToNewsletter"></mapping>
+						<mapping target="allowSharingWithRecruiters" value="allowSharingWithRecruiters"></mapping>
 					</trigger>
 					<processor type="emit-event" ref="ConferenceVisitorCreated" id="mFsax">
 						<mapping target="firstName" value="#flow.firstName"></mapping>
@@ -901,6 +951,11 @@
 						<mapping target="year" value="#flow.year"></mapping>
 						<mapping target="ticketId" value="#flow.ticketId"></mapping>
 						<mapping target="email" value="#flow.email"></mapping>
+						<mapping target="attendingLunch" value="#flow.attendingLunch"></mapping>
+						<mapping target="attendingAfterEventDrinks" value="#flow.attendingAfterEventDrinks"></mapping>
+						<mapping target="dietaryNotes" value="#flow.dietaryNotes"></mapping>
+						<mapping target="subscribeToNewsletter" value="#flow.subscribeToNewsletter"></mapping>
+						<mapping target="allowSharingWithRecruiters" value="#flow.allowSharingWithRecruiters"></mapping>
 					</processor>
 					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConferenceRegistrationManagerVisitorRegistered" user="systemuser">
 						<input name="year" type="String" value="2024"></input>
@@ -908,6 +963,11 @@
 						<input name="firstName" type="String" value="John"></input>
 						<input name="lastName" type="String" value="Doe"></input>
 						<input name="email" type="String" value="john.doe@example.com"></input>
+						<input name="attendingLunch" value="true" type="Boolean"></input>
+						<input name="attendingAfterEventDrinks" value="true" type="Boolean"></input>
+						<input name="dietaryNotes" value="2024" type="String"></input>
+						<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
+						<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
 						<expected domain-event="ConferenceVisitorCreated" id="uqL01N">
 							<field name="ticketId" type="String" value="devconf-ticket:189673085831463618233454140431942137832"></field>
 						</expected>
@@ -928,6 +988,11 @@
 					<mapping value="year" target="year" operand="set"></mapping>
 					<mapping value="ticketId" target="ticketId" operand="set"></mapping>
 					<mapping value="email" target="email" operand="set"></mapping>
+					<mapping value="attendingLunch" target="attendingLunch" operand="set"></mapping>
+					<mapping value="attendingAfterEventDrinks" target="attendingAfterEventDrinks" operand="set"></mapping>
+					<mapping value="dietaryNotes" target="dietaryNotes" operand="set"></mapping>
+					<mapping value="subscribeToNewsletter" target="subscribeToNewsletter" operand="set"></mapping>
+					<mapping value="allowSharingWithRecruiters" target="allowSharingWithRecruiters" operand="set"></mapping>
 				</event-handler>
 			</aggregate>
 			<aggregate name="TalkProposal" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
@@ -1235,6 +1300,11 @@ if snapshot.isDeleted != '':
 			<field name="lastName" type="String"></field>
 			<field name="year" type="String"></field>
 			<field name="ticketId" type="String"></field>
+			<field name="attendingLunch" type="Boolean"></field>
+			<field name="attendingAfterEventDrinks" type="Boolean"></field>
+			<field name="dietaryNotes" type="String"></field>
+			<field name="subscribeToNewsletter" type="Boolean"></field>
+			<field name="allowSharingWithRecruiters" type="Boolean"></field>
 			<field name="email" type="String" pk="true"></field>
 			<field name="ticket" type="OneToOne" ref="Ticket" authorization="authenticated" foreign-key="ticketId"></field>
 			<snapshot-handler id="XvTaSi" sub-domain="Conference" aggregate="Visitor" key-mapping="email" processor="item">
@@ -1243,6 +1313,11 @@ if snapshot.isDeleted != '':
 				<mapping target="year" operand="set" value="year"></mapping>
 				<mapping target="ticketId" operand="set" value="ticketId"></mapping>
 				<mapping target="email" operand="set" value="email"></mapping>
+				<mapping target="attendingLunch" operand="set" value="attendingLunch"></mapping>
+				<mapping target="attendingAfterEventDrinks" operand="set" value="attendingAfterEventDrinks"></mapping>
+				<mapping target="dietaryNotes" operand="set" value="dietaryNotes"></mapping>
+				<mapping target="subscribeToNewsletter" operand="set" value="subscribeToNewsletter"></mapping>
+				<mapping target="allowSharingWithRecruiters" operand="set" value="allowSharingWithRecruiters"></mapping>
 				<delete condition="#snapshot.isDeleted != ''"></delete>
 			</snapshot-handler>
 			<query graphql-namespace="Visitor" field-name="get" type="get" authorization="role" role="administrator"></query>
@@ -1533,7 +1608,7 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem">
+			<activity type="mutation" description="Maak tweede programma item aan" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="test 123"></input>
 				<input name="duration" type="Numeric" value="45"></input>
 				<input name="year" type="String" value="2010"></input>
@@ -1545,7 +1620,7 @@ if snapshot.isDeleted != '':
 				<expected-trace command="Edition.AddProgramItem" status="Success"></expected-trace>
 				<expected-trace command="ProgramItem.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="mutation" description="Maak eerste programma item aan" path="Conference.addProgramItem">
+			<activity type="mutation" description="Maak derde programma item aan" path="Conference.addProgramItem">
 				<input name="summary" type="String" value="test 123"></input>
 				<input name="duration" type="Numeric" value="45"></input>
 				<input name="year" type="String" value="2010"></input>
@@ -1575,6 +1650,11 @@ if snapshot.isDeleted != '':
 				<input name="year" type="String" value="#year#"></input>
 				<input name="breakouts" type="Nested" value="[{'id':'2010-1'}]"></input>
 				<input name="email" type="String" value="#email#"></input>
+				<input name="attendingLunch" value="true" type="Boolean"></input>
+				<input name="attendingAfterEventDrinks" value="true" type="Boolean"></input>
+				<input name="dietaryNotes" value="-no-" type="String"></input>
+				<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
+				<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
 				<expected-trace command="RegistrationManager.RegisterVisitor" status="error"></expected-trace>
 			</activity>
 			<activity type="mutation" description="Verleng de inschrijf periode" path="Conference.RegistrationManager.configure">
@@ -1596,6 +1676,11 @@ if snapshot.isDeleted != '':
 				<input name="year" type="String" value="#year#"></input>
 				<input name="breakouts" type="Nested" value="[{'id':'2010-2'}]"></input>
 				<input name="email" type="String" value="#email#"></input>
+				<input name="attendingLunch" value="true" type="Boolean"></input>
+				<input name="attendingAfterEventDrinks" value="true" type="Boolean"></input>
+				<input name="dietaryNotes" value="-no-" type="String"></input>
+				<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
+				<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
 				<expected-trace command="RegistrationManager.RegisterVisitor" status="Success"></expected-trace>
 				<expected-trace command="SendTicketVerification-Notifier" status="success"></expected-trace>
 			</activity>
@@ -1686,6 +1771,11 @@ if snapshot.isDeleted != '':
 				<input name="year" type="String" value="#year#"></input>
 				<input name="breakouts" type="Nested" value="[{'id':'2010-2'}]"></input>
 				<input name="email" type="String" value="#email#"></input>
+				<input name="attendingLunch" value="true" type="Boolean"></input>
+				<input name="attendingAfterEventDrinks" value="true" type="Boolean"></input>
+				<input name="dietaryNotes" value="-no-" type="String"></input>
+				<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
+				<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
 				<expected-trace command="RegistrationManager.RegisterVisitor" status="Success"></expected-trace>
 				<expected-trace command="SendTicketVerification-Notifier" status="success"></expected-trace>
 			</activity>
