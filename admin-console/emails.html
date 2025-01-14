@@ -72,16 +72,17 @@
                       :max="moment().add(1,'years').format('YYYY-MM-DDTHH:mm')" />
             </td>
             <td>
-              <input @change="$store.mutation.send('schedule-email',email)"
-                     x-model="email.group"
-                     class="form-control" list="datalistOptions" id="groupList" placeholder="Target group...">
-              <datalist id="datalistOptions">
-                <option value="visitor-all">
-                <option value="visitor-shows">
-                <option value="visitor-noshows">
-                <option value="subscriptions">
-                <option value="all">
-              </datalist>
+              <select
+                      class="form-select"
+                      x-model="email.group"
+                      @change="$store.mutation.send('schedule-email', email)"
+              >
+                <option value="visitor-all">Visitor All</option>
+                <option value="visitor-shows">Visitor Shows</option>
+                <option value="visitor-noshows">Visitor No-Shows</option>
+                <option value="subscriptions">Subscriptions</option>
+                <option value="all">All</option>
+              </select>
             </td>
             <td>
             <textarea class="form-control"

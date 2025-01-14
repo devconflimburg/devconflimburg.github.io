@@ -48,7 +48,7 @@ function open_registration_window(){
 }
 
 /// Terminal flow
-var flow = ["firstName","lastName","email"]
+var flow = ["firstName","lastName","email","attendingLunch","dietaryNotes","attendingAfterEventDrinks","subscribeToNewsletter","allowSharingWithRecruiters"]
 var breakouts = {};
 var current_state = "";
 var form = {};
@@ -102,6 +102,21 @@ function next_command(){
        command.instruction = "Voer je achternaam in";
     } else if (current_state == "email"){
        command.instruction = "Voer je e-mailadres in";
+    } else if (current_state == "attendingLunch"){
+        command.instruction = "Ben je aanwezig tijdens de lunch? [Y/n]";
+    } else if (current_state == "dietaryNotes"){
+        if (!form["attendingLunch"]){
+            form["dietaryNotes"] = "";
+            next_command();
+        } else {
+            command.instruction = "Kunt u aangeven of er dieetbeperkingen zijn waarmee we rekening kunnen houden?";
+        }
+    } else if (current_state == "attendingAfterEventDrinks") {
+        command.instruction = "Ben je aanwezig tijdens de netwerk borrel? [y/N]";
+    } else if (current_state == "subscribeToNewsletter") {
+        command.instruction = "Wil je op de hoogte gehouden worden door onze nieuwsbrief? [y/N]";
+    } else if (current_state == "allowSharingWithRecruiters"){
+        command.instruction = "Mogen we je email adres delen met Work@APG? [y/N]";
     } else if (current_state.startsWith("breakout")){
        let session = parseInt(current_state.replace("breakout-",""));
        write_log("Breakout sessie " + session);
@@ -160,6 +175,13 @@ function enter_command(element){
         form.breakouts.push({
             id: breakouts[session][index].id
         });
+    }
+
+    if (current_state == "attendingLunch"){
+        form[current_state] = element.innerText.trim().toLowerCase() != "n";
+    }
+    if (["attendingAfterEventDrinks","subscribeToNewsletter","allowSharingWithRecruiters"].includes(current_state)){
+        form[current_state] = element.innerText.trim().toLowerCase() == "y";
     }
     write_log(command.instruction + "> " + element.innerText);
     element.innerText = "";
