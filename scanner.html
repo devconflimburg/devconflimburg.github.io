@@ -54,15 +54,6 @@
             </div>
         </div>
 
-        <draftsman-mutation command="redeem-ticket" x-include="/prepared-statements/commands/RedeemTicket.txt" authenticated>
-    </draftsman-mutation>
-        <div x-dummy="
-            $store.mutation.send('redeem-ticket',{ticketId: Draftsman.fetch_query_parameter('id')});"></div>
-        <draftsman-trace command="redeem-ticket"
-                         component="Ticket.Redeem"
-                         @trace="on_trace">
-        </draftsman-trace>
-
         <script src="/js/scanner.js"></script>
     </body>
 </html>
