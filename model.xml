@@ -604,12 +604,12 @@
 					</test-case>
 				</command>
 				<command name="Initialize" create-command="true">
-					<trigger key-field="year" source="InitializeEditionConferenceRequested">
+					<trigger key-field="year" source="InitializeEditionConferenceRequested" idempotency-key="">
 						<mapping value="date" target="date"></mapping>
 						<mapping value="year" target="year"></mapping>
 						<mapping value="tagline" target="tagline"></mapping>
 					</trigger>
-					<processor type="emit-event" ref="ConferenceEditionInitialized" id="cdPTj">
+					<processor type="emit-event" ref="ConferenceEditionInitialized" name="">
 						<mapping target="date" value="#flow.date"></mapping>
 						<mapping target="year" value="#flow.year"></mapping>
 						<mapping target="tagline" value="#flow.tagline"></mapping>
@@ -623,6 +623,10 @@
 							<field name="year" type="String" value="2024"></field>
 							<field name="tagline" type="String" value="5 jarig jubileum"></field>
 						</expected>
+						<state>{}</state>
+						<expected-state pk="">{
+  "year": ""
+}</expected-state>
 					</test-case>
 				</command>
 				<event-handler on="ConferenceEditionInitialized">
