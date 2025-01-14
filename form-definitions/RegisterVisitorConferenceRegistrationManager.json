@@ -36,6 +36,46 @@
     "default": ""
   },
   {
+    "name": "attendingLunch",
+    "title": "Attendinglunch",
+    "type": "Boolean",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "attendingAfterEventDrinks",
+    "title": "Attendingaftereventdrinks",
+    "type": "Boolean",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "dietaryNotes",
+    "title": "Dietarynotes",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "subscribeToNewsletter",
+    "title": "Subscribetonewsletter",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
+    "name": "nuUpsilonUpsilonOmicron",
+    "title": "Nuupsilonupsilonomicron",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
     "name": "breakouts",
     "title": "Breakouts",
     "type": "nested",

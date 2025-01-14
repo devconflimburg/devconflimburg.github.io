@@ -38,6 +38,11 @@
 			<field name="year" type="String" pattern="{{Year}}"></field>
 			<field name="email" type="String" pattern="{{Email}}"></field>
 			<field name="control" type="String" auto-fill="uuid"></field>
+			<field name="attendingLunch" type="Boolean"></field>
+			<field name="attendingAfterEventDrinks" type="Boolean"></field>
+			<field name="dietaryNotes" type="String"></field>
+			<field name="subscribeToNewsletter" type="String"></field>
+			<field name="nuUpsilonUpsilonOmicron" type="String"></field>
 			<nested-object name="breakouts">
 				<field name="id" type="String"></field>
 			</nested-object>
