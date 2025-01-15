@@ -120,6 +120,12 @@
                             MarkAsSendEmail
                         </button>
                         
+                        <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'DeleteEmail'"
+                                x-show="'deleteemail'.includes(search.toLowerCase())">
+                            DeleteEmail
+                        </button>
+                        
                     </div>
                 </center>
             </div>
@@ -273,6 +279,14 @@
                     <div x-import="commands/MarkAsSendEmail">
                         <h6>MarkAsSendEmail</h6>
                         <ui-MarkAsSendEmail></ui-MarkAsSendEmail>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'DeleteEmail'" x-cloak x-transition>
+                    <div x-import="commands/DeleteEmail">
+                        <h6>DeleteEmail</h6>
+                        <ui-DeleteEmail></ui-DeleteEmail>
                     </div>
                 </div>
 

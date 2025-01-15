@@ -1,0 +1,26 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="DeleteEmail">
+    <div x-import="basic-form;tables">
+
+        <!-- The command object -->
+        <draftsman-mutation command="DeleteEmail" x-include="/prepared-statements/commands/DeleteEmail.txt" authenticated>
+        </draftsman-mutation>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="DeleteEmail"
+              x-include="/form-definitions/DeleteEmail.json"></div>
+
+        <!-- The trace table -->
+        <ui-trace-table></ui-trace-table>
+
+        <!-- The form -->
+        <ui-basic-form alias="DeleteEmail"></ui-basic-form>
+
+        <draftsman-trace command="DeleteEmail"
+              status="success"
+              @trace="
+                setTimeout(Draftsman.empty_track_and_trace_log,5000);
+                $dispatch('setdata', { command: 'DeleteEmail', data: {} });">
+        </draftsman-trace>
+    </div>
+</template>

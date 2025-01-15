@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation Delete($id: String = "") {
+  Email{
+    delete(input: {id: $id}) {
+       correlationId
+    }
+  }
+}

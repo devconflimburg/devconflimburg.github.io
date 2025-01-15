@@ -120,6 +120,9 @@
 		<event graphql-namespace="Email" graphql-name="markAsSend" name="MarkAsSendEmailRequested" authorization="role" type="ActorEvent" role="administrator">
 			<field name="id" type="String"></field>
 		</event>
+		<event graphql-namespace="Email" graphql-name="delete" name="DeleteEmailRequested" type="ActorEvent" authorization="role" role="administrator">
+			<field name="id" type="String"></field>
+		</event>
 		<event name="EmailUpdated" source="Communication.Email" type="DomainEvent">
 			<field name="subject" type="String"></field>
 			<field name="content" type="String"></field>
@@ -1378,8 +1381,8 @@ entity = EntityManager.get(type="Program", key=key)
 entity.year = snapshot.year
 entity.start = entity.start if entity.start != "" and int(entity.start.replace(":","")) &lt; int(snapshot.startTime.replace(":","")) else snapshot.startTime
 entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) &gt; int(snapshot.endTime.replace(":","")) else snapshot.endTime</custom-handler>
-			<query type="filter" authorization="anonymous" field-name="filter" graphql-namespace="Program"></query>
-			<query type="get" authorization="anonymous" field-name="get" graphql-namespace="Program"></query>
+			<query type="filter" authorization="anonymous" field-name="filter" graphql-namespace="Program" role=""></query>
+			<query type="get" authorization="anonymous" field-name="get" graphql-namespace="Program" role=""></query>
 		</view>
 		<view name="ProgramItem" data-retention-days="-1" exclude-notification="false">
 			<field name="summary" type="String"></field>
