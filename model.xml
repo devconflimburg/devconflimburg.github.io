@@ -139,6 +139,9 @@
 			<field name="sendAfter" type="String"></field>
 			<field name="group" type="String"></field>
 		</event>
+		<event type="DomainEvent" name="CommunicationEmailDeleted" source="Communication.Email">
+			<field name="id" type="String"></field>
+		</event>
 		<event name="WebSiteElementCreated" source="WebSite.Element" type="DomainEvent">
 			<field name="name" type="String"></field>
 			<field name="content" type="String"></field>
@@ -405,6 +408,7 @@
 					<mapping target="sendAfter" operand="set" value="sendAfter"></mapping>
 					<mapping target="group" operand="set" value="group"></mapping>
 				</event-handler>
+				<event-handler code='self.isDeleted = "hard"' on="CommunicationEmailDeleted"></event-handler>
 			</aggregate>
 		</subdomain>
 		<subdomain name="WebSite">
