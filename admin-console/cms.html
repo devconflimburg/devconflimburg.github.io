@@ -62,7 +62,7 @@
 
     <draftsman-query alias="content" authenticated
                      x-include="/prepared-statements/views/WebPageElement/filter.txt"></draftsman-query>
-    <div class="data-element" @refresh="content = $store.content.Element.filter.resultset"></div>
+    <div class="data-element" @refresh="content = $store.content.Element.filter.resultset.filter(x => x.key != 'next-edition')"></div>
 
   </div>
 

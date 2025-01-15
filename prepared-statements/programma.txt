@@ -3,6 +3,7 @@ query MyQuery($year: ID = "2024") {
     get(key: $year) {
       start
       end
+      year
       programItem {
         id
         title

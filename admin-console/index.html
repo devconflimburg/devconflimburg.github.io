@@ -221,8 +221,7 @@
                  x-init="setInterval(function(){tab=getFrame(window.location.hash,tab)},100)">
                 <br>
                 <template x-if="$store.next">
-                    <iframe style="width:100%;height:95vh" :src="tab" frameborder="0" scrolling="no"
-                            x-effect="console.log('Load tab:', tab);setTimeout(function(){resizeIframe($el)},1000)"></iframe>
+                    <iframe style="width:100%;height:90vh" :src="tab" frameborder="0"></iframe>
                 </template>
             </div>
         </main>
