@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation RemoveProgramItem($id: String = "", $year: String = "") {
+  Conference{
+    removeProgramItem(input: {id: $id,year: $year}) {
+       correlationId
+    }
+  }
+}
