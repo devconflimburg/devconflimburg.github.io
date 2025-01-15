@@ -66,86 +66,123 @@
          }
          return numberA - numberB; // Vergelijk de nummers
      })">
-      <table class="table table-striped">
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Title</th>
-          <th>Speaker</th>
-          <th>Room</th>
-          <th>Start Time</th>
-          <th>End Time</th>
-          <th>Duration (min)</th>
-          <th>Breakout</th>
-          <th>Session</th>
-          <th>Summary</th>
-        </tr>
-        </thead>
-        <tbody>
+
+      <div class="container" x-data="{searchQuery: ''}">
+        <div class="mb-4">
+          <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Search by title, room, speaker, or summary..."
+                  @input="searchQuery = searchQuery.toLowerCase()"
+                  x-model="searchQuery"
+          >
+        </div>
         <template x-for="item in programma" :key="item.id">
-          <tr x-data="{command: {...item}}">
-            <td x-text="item.id"></td>
+          <div class="card mb-4 w-100"
+               x-show="!searchQuery
+                    || command.title.toLowerCase().includes(searchQuery)
+                    || command.room.toLowerCase().includes(searchQuery)
+                    || command.speaker.toLowerCase().includes(searchQuery)
+                    || command.summary.toLowerCase().includes(searchQuery)"
+               x-data="{ command: { ...item } }">
+            <div class="card-body">
+              <h5 class="card-title">Program Item: <span x-text="item.id"></span></h5>
 
-            <!-- verdelen over twee rijen -->
-            <td>
-              <textarea
-                      class="form-control"
-                      rows="1"
-                      x-model="command.title"
-                      placeholder="Type your message here..."></textarea>
-            </td>
-            <td>
-              <textarea
-                      class="form-control"
-                      rows="1"
-                      x-model="command.speaker"
-                      placeholder="Type your message here..."></textarea>
-            </td>
-            <td>
-              <select
-                      class="form-select"
-                      x-model="command.room">
-                <option>Theater</option>
-                <option>Manage</option>
-                <option>Graanschuur</option>
-                <option>Kersentuin</option>
-              </select>
-            </td>
-            <td>
-              <input
-                      type="time"
-                      class="form-control"
-                      x-model="command.startTime">
-            </td>
-            <td x-text="addMinutesToTime(command.startTime, command.duration)"></td>
-            <td>
-              <input
-                      type="number"
-                      class="form-control"
-                      min="5"
-                      max="120"
-                      step="5"
-                      x-model.number="command.duration"
-                      @input="command.duration = parseInt(command.duration) || 0"> min
-            </td>
-            <td x-text="item.breakout ? 'Yes' : 'No'"></td>
-            <td x-text="item.session"></td>
-            <td>
-              <textarea
-                      class="form-control"
-                      rows="8"
-                      x-model="command.summary"
-                      placeholder="Type your message here..."></textarea>
-            </td>
-            <!-- -->
+              <!-- Content Grid -->
+              <div class="row g-3">
+                <!-- Title -->
+                <div class="col-12">
+                  <label for="title" class="form-label">Title</label>
+                  <textarea
+                          id="title"
+                          class="form-control"
+                          rows="1"
+                          x-model="command.title"
+                          placeholder="Enter title"></textarea>
+                </div>
 
-            <td x-show="JSON.stringify(command) !== JSON.stringify(item)" x-cloak x-transition>
-              <button type="button" class="btn btn-outline-success" @click="update_item(command)">Save</button>
-            </td>
-          </tr>
+                <!-- Speaker and Room -->
+                <div class="col-md-6">
+                  <label for="speaker" class="form-label">Speaker</label>
+                  <textarea
+                          id="speaker"
+                          class="form-control"
+                          rows="1"
+                          x-model="command.speaker"
+                          placeholder="Enter speaker"></textarea>
+                </div>
+                <div class="col-md-6">
+                  <label for="room" class="form-label">Room</label>
+                  <select id="room" class="form-select" x-model="command.room">
+                    <option>Theater</option>
+                    <option>Manage</option>
+                    <option>Graanschuur</option>
+                    <option>Kersentuin</option>
+                  </select>
+                </div>
+
+                <!-- Start Time and Duration -->
+                <div class="col-md-6">
+                  <label for="startTime" class="form-label">Start Time</label>
+                  <input
+                          type="time"
+                          id="startTime"
+                          class="form-control"
+                          x-model="command.startTime">
+                </div>
+                <div class="col-md-6">
+                  <label for="duration" class="form-label">Duration (min)</label>
+                  <input
+                          type="number"
+                          id="duration"
+                          class="form-control"
+                          min="5"
+                          max="120"
+                          step="5"
+                          x-model.number="command.duration"
+                          @input="command.duration = parseInt(command.duration) || 0">
+                  <small class="text-muted">End Time: <span x-text="addMinutesToTime(command.startTime, command.duration)"></span></small>
+                </div>
+
+                <!-- Breakout and Session -->
+                <div class="col-md-6">
+                  <label for="breakout" class="form-label">Breakout</label>
+                  <p class="form-control" x-text="item.breakout ? 'Yes' : 'No'"></p>
+                </div>
+                <div class="col-md-6">
+                  <label for="session" class="form-label">Session</label>
+                  <p class="form-control" x-text="item.session"></p>
+                </div>
+
+                <!-- Summary -->
+                <div class="col-12">
+                  <label for="summary" class="form-label">Summary</label>
+                  <textarea
+                          id="summary"
+                          class="form-control"
+                          rows="4"
+                          x-model="command.summary"
+                          placeholder="Enter summary"></textarea>
+                </div>
+
+                <!-- Save Button -->
+                <div class="col-12 text-end">
+                  <button
+                          type="button"
+                          class="btn btn-outline-success"
+                          x-show="JSON.stringify(command) !== JSON.stringify(item)"
+                          x-cloak
+                          x-transition
+                          @click="update_item(command)">
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </template>
-        </tbody>
-      </table>
+      </div>
+
     </div>
 
   </div>
