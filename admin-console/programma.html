@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <title>Programma</title>
+  <script>var must_be_signed_in = true;</script>
+  <script src="/js/configuration.js"></script>
+  <script src="/js/configuration-staging.js"></script>
+
+  <link rel="stylesheet" href="/css/draftsman.css" />
+  <script src="/js/framework.js"></script>
+  <script src="/js/cache.js"></script>
+  <script src="https://unpkg.com/@vimesh/ui"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+        integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+</head>
+<body x-data="{show_only_unverified: $persist(false), search: $persist('')}">
+
+  <script>
+    function update_item(item){
+        let modal = new bootstrap.Modal(document.getElementById("traceModal"), {});
+        modal.show();
+        send_mutation("update-item",item);
+      }
+    function addMinutesToTime(time, minutesToAdd) {
+      // Split de tijd (HH:mm) in uren en minuten
+      const [hours, minutes] = time.split(':').map(Number);
+
+      // Bereken de totale minuten
+      const totalMinutes = hours * 60 + minutes + minutesToAdd;
+
+      // Bereken nieuwe uren en minuten
+      const newHours = Math.floor(totalMinutes / 60) % 24; // Zorg dat het 24-uurs tijd blijft
+      const newMinutes = totalMinutes % 60;
+
+      // Formatteer de nieuwe tijd als HH:mm
+      return `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}`;
+  }
+  </script>
+  <div class="container">
+    <h1>Programma</h1>
+    <hr>
+
+    <div class="data-element" x-data="{ programma: [] }"
+         @refresh="programma = $store.programma.get.programItem.sort((a, b) => {
+         // Sorteer eerst op startTime (bijvoorbeeld '09:00')
+         if (a.startTime !== b.startTime) {
+             return a.startTime.localeCompare(b.startTime);
+         }
+
+         // Sorteer secundair op ID (bijvoorbeeld '2025-1')
+         const [yearA, numberA] = a.id.split('-').map(Number);
+         const [yearB, numberB] = b.id.split('-').map(Number);
+
+         if (yearA !== yearB) {
+             return yearA - yearB; // Vergelijk de jaren
+         }
+         return numberA - numberB; // Vergelijk de nummers
+     })">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Speaker</th>
+          <th>Room</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Duration (min)</th>
+          <th>Breakout</th>
+          <th>Session</th>
+          <th>Summary</th>
+        </tr>
+        </thead>
+        <tbody>
+        <template x-for="item in programma" :key="item.id">
+          <tr x-data="{command: {...item}}">
+            <td x-text="item.id"></td>
+
+            <!-- verdelen over twee rijen -->
+            <td>
+              <textarea
+                      class="form-control"
+                      rows="1"
+                      x-model="command.title"
+                      placeholder="Type your message here..."></textarea>
+            </td>
+            <td>
+              <textarea
+                      class="form-control"
+                      rows="1"
+                      x-model="command.speaker"
+                      placeholder="Type your message here..."></textarea>
+            </td>
+            <td>
+              <select
+                      class="form-select"
+                      x-model="command.room">
+                <option>Theater</option>
+                <option>Manage</option>
+                <option>Graanschuur</option>
+                <option>Kersentuin</option>
+              </select>
+            </td>
+            <td>
+              <input
+                      type="time"
+                      class="form-control"
+                      x-model="command.startTime">
+            </td>
+            <td x-text="addMinutesToTime(command.startTime, command.duration)"></td>
+            <td>
+              <input
+                      type="number"
+                      class="form-control"
+                      min="5"
+                      max="120"
+                      step="5"
+                      x-model.number="command.duration"
+                      @input="command.duration = parseInt(command.duration) || 0"> min
+            </td>
+            <td x-text="item.breakout ? 'Yes' : 'No'"></td>
+            <td x-text="item.session"></td>
+            <td>
+              <textarea
+                      class="form-control"
+                      rows="8"
+                      x-model="command.summary"
+                      placeholder="Type your message here..."></textarea>
+            </td>
+            <!-- -->
+
+            <td x-show="JSON.stringify(command) !== JSON.stringify(item)" x-cloak x-transition>
+              <button type="button" class="btn btn-outline-success" @click="update_item(command)">Save</button>
+            </td>
+          </tr>
+        </template>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Modal -->
+  <div x-import="trace-modal">
+    <ui-trace-modal></ui-trace-modal>
+  </div>
+
+  <draftsman-query alias="programma" x-include="/prepared-statements/programma.txt">
+  </draftsman-query>
+
+  <draftsman-mutation command="update-item" authenticated
+                      x-include="/prepared-statements/commands/AddProgramItemConference.txt">
+  </draftsman-mutation>
+
+
+  <draftsman-notification message="updated" type="ProgramItem"
+                          @notification="console.log('Received message:',$event.detail);Draftsman.force_reload_data();">
+  </draftsman-notification>
+
+
+</body>
+</html>

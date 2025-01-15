@@ -36,9 +36,13 @@ var rooms = ["Forum",
              "Social zone",
              "No-code-zone",
              "Scriptingroom",
-             "Hackingdorm"];
+             "Hackingdorm",
+             "Theater",
+             "Manage",
+             "Graanschuur",
+             "Kersentuin"];
 var talks = rooms.map(x => []);
-var classes = ["one","two","three","four","five"]
+var classes = ["one","two","three","four","five","one","two","three","four"]
 function get_talks(programma){
     var prev = rooms.map(x => programma.get.start);
     console.log(programma.get.programItem);

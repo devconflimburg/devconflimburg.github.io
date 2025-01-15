@@ -2,6 +2,7 @@ query MyQuery {
   WebSite {
     Element {
       get(key: "next-edition") {
+        content
         edition {
           year
           date
