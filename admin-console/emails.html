@@ -80,8 +80,8 @@
                 <option value="visitor-all">Visitor All</option>
                 <option value="visitor-shows">Visitor Shows</option>
                 <option value="visitor-noshows">Visitor No-Shows</option>
-                <option value="subscriptions">Subscriptions</option>
-                <option value="all">All</option>
+                <option value="subscriptions" disabled>Subscriptions</option>
+                <option value="all" disabled>All</option>
               </select>
             </td>
             <td>
@@ -91,6 +91,7 @@
                       x-model="email.content" rows="3"></textarea>
             </td>
             <td>
+              <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
               <button type="button"
                       @click="let target = prompt('Verzend naar','info@devconf.nl');if(target){
                       $store.mutation.send('send-sample',{
@@ -103,6 +104,16 @@
                       class="btn btn-outline-info">
                 Proef Distributie
               </button>
+              <button type="button"
+                      @click="let target = confirm('Verwijder email permanent');if(target){
+                      $store.mutation.send('delete-email',{
+                        id: email.id
+                      });
+                    }"
+                      class="btn btn-outline-danger">
+                Delete
+              </button>
+              </div>
             </td>
           </tr>
         </template>
@@ -209,6 +220,14 @@
       <draftsman-trace command="send-sample"
                        status="success"
                        @trace="Draftsman.empty_track_and_trace_log()">
+      </draftsman-trace>
+
+      <draftsman-mutation command="delete-email" x-include="/prepared-statements/commands/DeleteEmail.txt" authenticated>
+      </draftsman-mutation>
+
+      <draftsman-trace command="delete-email"
+                       status="success"
+                       @trace="Draftsman.empty_track_and_trace_log();Draftsman.reload_data();">
       </draftsman-trace>
 
       <draftsman-query alias="emails" authenticated
