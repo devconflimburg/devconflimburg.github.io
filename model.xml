@@ -339,6 +339,27 @@
 						</expected>
 					</test-case>
 				</command>
+				<command name="Delete">
+					<trigger source="DeleteEmailRequested" idempotency-key="" key-field="id">
+						<mapping target="id" value="id"></mapping>
+					</trigger>
+					<processor type="emit-event" ref="CommunicationEmailDeleted" name="">
+						<mapping target="id" value="#flow.id"></mapping>
+					</processor>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="DeleteEmailRequested">
+						<input name="id" type="String" value="dummy"></input>
+						<expected domain-event="CommunicationEmailDeleted">
+							<field name="id" type="String" value="dummy"></field>
+						</expected>
+						<state>{
+  "id": "dummy"
+}</state>
+						<expected-state pk="dummy">{
+  "id": "dummy",
+  "isDeleted": "hard"
+}</expected-state>
+					</test-case>
+				</command>
 				<command name="MarkAsSend">
 					<trigger source="MarkAsSendEmailRequested" key-field="id" idempotency-key="">
 						<mapping target="id" value="id"></mapping>
