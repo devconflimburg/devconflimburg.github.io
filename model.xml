@@ -170,6 +170,7 @@
 			<field name="dietaryNotes" type="String"></field>
 			<field name="subscribeToNewsletter" type="Boolean"></field>
 			<field name="allowSharingWithRecruiters" type="Boolean"></field>
+			<field name="eventTimeToLive" type="Int"></field>
 		</event>
 		<event name="ConferenceRegistrationManagerUpdated" source="Conference.RegistrationManager" type="DomainEvent">
 			<field name="closeDate" type="String"></field>
@@ -532,7 +533,7 @@
 			</aggregate>
 		</subdomain>
 		<subdomain name="Conference">
-			<aggregate name="RegistrationManager" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
+			<aggregate name="RegistrationManager" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0" business-key="year">
 				<field name="closeDate" type="String"></field>
 				<field name="visitors" type="StringList"></field>
 				<field name="year" type="String"></field>
@@ -540,13 +541,13 @@
 				<field name="openDate" type="String"></field>
 				<field name="maxVisitors" type="Int"></field>
 				<command name="Configure" create-command="false">
-					<trigger key-field="year" source="ConfigureConferenceRegistrationManagerRequested">
+					<trigger key-field="year" source="ConfigureConferenceRegistrationManagerRequested" idempotency-key="">
 						<mapping value="closeDate" target="closeDate"></mapping>
 						<mapping value="openDate" target="openDate"></mapping>
 						<mapping value="maxVisitors" target="maxVisitors"></mapping>
 						<mapping value="year" target="year"></mapping>
 					</trigger>
-					<processor type="emit-event" ref="ConferenceRegistrationManagerUpdated" id="XQMGH">
+					<processor type="emit-event" ref="ConferenceRegistrationManagerUpdated" name="">
 						<mapping target="closeDate" value="#flow.closeDate"></mapping>
 						<mapping target="openDate" value="#flow.openDate"></mapping>
 						<mapping target="maxVisitors" value="#flow.maxVisitors"></mapping>
@@ -556,11 +557,21 @@
 						<input name="openDate" type="String" value="01-01-2023"></input>
 						<input name="maxVisitors" type="Number" value="10"></input>
 						<input name="year" type="String" value="2024"></input>
-						<state>{"openDate": "05-05-2023", "closeDate": "10-10-2023", "maxVisitors": 200}</state>
-						<expected domain-event="ConferenceRegistrationManagerUpdated" id="TPUqd6">
+						<state>{
+  "closeDate": "10-10-2023",
+  "maxVisitors": 200,
+  "openDate": "05-05-2023",
+  "year": "2024"
+}</state>
+						<expected domain-event="ConferenceRegistrationManagerUpdated">
 							<field name="maxVisitors" type="Number" value="10"></field>
 						</expected>
-						<expected-state pk="2024">{"openDate": "01-01-2023", "closeDate": "01-01-2123", "maxVisitors": 10}</expected-state>
+						<expected-state pk="2024">{
+  "closeDate": "01-01-2123",
+  "maxVisitors": 10,
+  "openDate": "01-01-2023",
+  "year": "2024"
+}</expected-state>
 					</test-case>
 				</command>
 				<command name="Initialize" create-command="true">
@@ -631,7 +642,7 @@
 					</test-case>
 				</command>
 				<command name="RegisterVisitor" create-command="false">
-					<trigger key-field="year" source="RegisterVisitorConferenceRegistrationManagerRequested">
+					<trigger key-field="year" source="RegisterVisitorConferenceRegistrationManagerRequested" idempotency-key="">
 						<mapping value="firstName" target="firstName"></mapping>
 						<mapping value="lastName" target="lastName"></mapping>
 						<mapping value="year" target="year"></mapping>
@@ -644,8 +655,8 @@
 						<mapping target="subscribeToNewsletter" value="subscribeToNewsletter"></mapping>
 						<mapping target="allowSharingWithRecruiters" value="allowSharingWithRecruiters"></mapping>
 					</trigger>
-					<processor type="code" handler="register_visitor" file="lib/VisitorManagement.py" id="O4qkj"></processor>
-					<processor type="emit-event" ref="ConferenceRegistrationManagerVisitorRegistered" id="SX5yG">
+					<processor type="code" handler="register_visitor" file="lib/VisitorManagement.py" name=""></processor>
+					<processor type="emit-event" ref="ConferenceRegistrationManagerVisitorRegistered" name="">
 						<mapping target="year" value="#flow.year"></mapping>
 						<mapping target="ticketId" value="#flow.ticketId"></mapping>
 						<mapping target="firstName" value="#flow.firstName"></mapping>
@@ -658,6 +669,7 @@
 						<mapping target="dietaryNotes" value="#flow.dietaryNotes"></mapping>
 						<mapping target="subscribeToNewsletter" value="#flow.subscribeToNewsletter"></mapping>
 						<mapping target="allowSharingWithRecruiters" value="#flow.allowSharingWithRecruiters"></mapping>
+						<mapping target="eventTimeToLive" value="#7776000"></mapping>
 					</processor>
 					<test-case name="RegistrationClosed" expected-processing-status="error" trigger-event="RegisterVisitorConferenceRegistrationManagerRequested" user="systemuser">
 						<input name="firstName" value="John" type="String"></input>
@@ -671,7 +683,11 @@
 						<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
 						<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
 						<input name="breakouts" type="NestedObject">[{"id": "2024-1"}]</input>
-						<state>{"openDate": "01-01-2010", "closeDate": "01-01-2011"}</state>
+						<state>{
+  "closeDate": "01-01-2011",
+  "openDate": "01-01-2010"
+}</state>
+						<expected-state>{}</expected-state>
 					</test-case>
 					<test-case name="NoSeatsLeft" expected-processing-status="error" trigger-event="RegisterVisitorConferenceRegistrationManagerRequested" user="systemuser">
 						<input name="firstName" value="John" type="String"></input>
@@ -685,7 +701,16 @@
 						<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
 						<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
 						<input name="breakouts" type="NestedObject">[{"id": "2024-1"}, {"id": "2024-2"}]</input>
-						<state>{"openDate": "01-01-2023", "closeDate": "01-01-2123", "maxVisitors": 1, "visitors": ["dummy"], "registeredVisitors": 1}</state>
+						<state>{
+  "closeDate": "01-01-2123",
+  "maxVisitors": 1,
+  "openDate": "01-01-2023",
+  "registeredVisitors": 1,
+  "visitors": [
+    "dummy"
+  ]
+}</state>
+						<expected-state>{}</expected-state>
 					</test-case>
 					<test-case name="RegisterVisitor" expected-processing-status="success" trigger-event="RegisterVisitorConferenceRegistrationManagerRequested" user="systemuser">
 						<input name="firstName" value="John" type="String"></input>
@@ -699,14 +724,25 @@
 						<input name="dietaryNotes" value="2024" type="String"></input>
 						<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
 						<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
-						<state>{"openDate": "01-01-2023", "closeDate": "01-01-2123", "maxVisitors": 10}</state>
+						<state>{
+  "closeDate": "01-01-2123",
+  "maxVisitors": 10,
+  "openDate": "01-01-2023",
+  "year": "2024"
+}</state>
 						<expected domain-event="ConferenceRegistrationManagerVisitorRegistered">
 							<field value="devconf-ticket:328042609457990298653290252337988412086" name="ticketId" type="String"></field>
 							<field value="john.doe@example.com" name="email" type="String"></field>
 							<field value="2024-1,2024-2" name="breakouts" type="String"></field>
 							<field value="f94bff90-ab56-42ec-a916-d47540b832ce" name="control" type="String"></field>
 						</expected>
-						<expected-state pk="2024">{"visitors": ["devconf-ticket:328042609457990298653290252337988412086"], "registeredVisitors": 1}</expected-state>
+						<expected-state pk="2024">{
+  "registeredVisitors": 1,
+  "visitors": [
+    "devconf-ticket:328042609457990298653290252337988412086"
+  ],
+  "year": "2024"
+}</expected-state>
 					</test-case>
 					<test-case name="AlreadyRegistered" expected-processing-status="error" trigger-event="RegisterVisitorConferenceRegistrationManagerRequested" user="systemuser">
 						<input name="firstName" value="John" type="String"></input>
@@ -720,7 +756,16 @@
 						<input name="dietaryNotes" value="2024" type="String"></input>
 						<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
 						<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
-						<state>{"openDate": "01-01-2023", "closeDate": "01-01-2123", "maxVisitors": 200, "visitors": ["devconf-ticket:328042609457990298653290252337988412086"], "registeredVisitors": 1}</state>
+						<state>{
+  "closeDate": "01-01-2123",
+  "maxVisitors": 200,
+  "openDate": "01-01-2023",
+  "registeredVisitors": 1,
+  "visitors": [
+    "devconf-ticket:328042609457990298653290252337988412086"
+  ]
+}</state>
+						<expected-state>{}</expected-state>
 					</test-case>
 				</command>
 				<event-handler on="ConferenceRegistrationManagerVisitorRegistered" code="self.registeredVisitors += 1|LB|self.visitors.append(event.ticketId)"></event-handler>
