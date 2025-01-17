@@ -1,0 +1,15 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query FilterEmailSubscription {
+  Email {
+    Subscription {
+      filter {
+         resultset { 
+          key
+          email
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+}

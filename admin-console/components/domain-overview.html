@@ -325,6 +325,14 @@
                 </div>
 
                 
+                <div x-show="component == 'EmailSubscription/filter'" x-cloak x-transition>
+                    <div x-import="views/EmailSubscription/filter">
+                        <h6>EmailSubscription.filter</h6>
+                        <ui-EmailSubscription-filter></ui-EmailSubscription-filter>
+                    </div>
+                </div>
+
+                
                 <div x-show="component == 'Edition/filter'" x-cloak x-transition>
                     <div x-import="views/Edition/filter">
                         <h6>Edition.filter</h6>
@@ -461,6 +469,11 @@
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'email.filter'.includes(search.toLowerCase())"
                             @click="component = 'Email/filter'">Email.filter
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'emailsubscription.filter'.includes(search.toLowerCase())"
+                            @click="component = 'EmailSubscription/filter'">EmailSubscription.filter
                     </button>
                     
                     <button type="button" class="btn btn-outline-primary"
