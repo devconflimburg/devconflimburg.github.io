@@ -1964,7 +1964,7 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 				<input name="subject" type="String" value="Test"></input>
 				<input name="contentUpdate" type="String" value="Hello World!"></input>
 				<input name="contentInitial" type="String" value="Hello"></input>
-				<input name="sendAfter" type="String" value="2024-01-01T10:00"></input>
+				<input name="sendAfter" type="String" value="2099-01-01T10:00"></input>
 			</activity>
 			<activity type="mutation" description="Create Email" path="Email.create">
 				<input name="subject" type="String" value="#subject#"></input>
