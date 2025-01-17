@@ -29,6 +29,9 @@
 			<field name="subject" type="String"></field>
 			<field name="content" type="String"></field>
 		</event>
+		<event graphql-namespace="Email" graphql-name="unsubscribe" name="UnsubscribeEmailRequested" type="ActorEvent" authorization="anonymous" role="administrator">
+			<field name="email" type="String" pattern=""></field>
+		</event>
 		<event graphql-namespace="Email" graphql-name="send" name="SendEmailRequested" authorization="role" type="ActorEvent" role="administrator">
 			<field name="id" type="String"></field>
 			<field name="email" type="String" pattern="{{Email}}"></field>
@@ -146,6 +149,9 @@
 			<field name="email" type="String"></field>
 			<field name="firstName" type="String"></field>
 			<field name="lastName" type="String"></field>
+		</event>
+		<event type="DomainEvent" name="Unsubscribed" source="Communication.Subscription">
+			<field name="email" type="String"></field>
 		</event>
 		<event name="ConferenceProgramItemCreated" source="Conference.ProgramItem" type="DomainEvent">
 			<field name="summary" type="String"></field>
@@ -479,11 +485,34 @@
 }</expected-state>
 					</test-case>
 				</command>
+				<command name="Unsubscribe">
+					<trigger source="UnsubscribeEmailRequested" idempotency-key="" key-field="email">
+						<mapping target="email" value="email"></mapping>
+					</trigger>
+					<processor type="emit-event" ref="Unsubscribed" name="">
+						<mapping target="email" value="#flow.email"></mapping>
+					</processor>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="UnsubscribeEmailRequested">
+						<input name="email" type="String" value="john.doe@example.com"></input>
+						<expected domain-event="Unsubscribed">
+							<field name="email" type="String" value="john.doe@example.com"></field>
+						</expected>
+						<state>{
+  "email": "john.doe@example.com",
+  "isDeleted": ""
+}</state>
+						<expected-state pk="john.doe@example.com">{
+  "email": "john.doe@example.com",
+  "isDeleted": "hard"
+}</expected-state>
+					</test-case>
+				</command>
 				<event-handler on="SubscriptionCreated">
 					<mapping target="email" value="email" operand="set"></mapping>
 					<mapping target="firstName" value="firstName" operand="set"></mapping>
 					<mapping target="lastName" value="lastName" operand="set"></mapping>
 				</event-handler>
+				<event-handler code='self.isDeleted = "hard"' on="Unsubscribed"></event-handler>
 			</aggregate>
 		</subdomain>
 		<subdomain name="Conference">

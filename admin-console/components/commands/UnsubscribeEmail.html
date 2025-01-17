@@ -1,0 +1,26 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="UnsubscribeEmail">
+    <div x-import="basic-form;tables">
+
+        <!-- The command object -->
+        <draftsman-mutation command="UnsubscribeEmail" x-include="/prepared-statements/commands/UnsubscribeEmail.txt" authenticated>
+        </draftsman-mutation>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="UnsubscribeEmail"
+              x-include="/form-definitions/UnsubscribeEmail.json"></div>
+
+        <!-- The trace table -->
+        <ui-trace-table></ui-trace-table>
+
+        <!-- The form -->
+        <ui-basic-form alias="UnsubscribeEmail"></ui-basic-form>
+
+        <draftsman-trace command="UnsubscribeEmail"
+              status="success"
+              @trace="
+                setTimeout(Draftsman.empty_track_and_trace_log,5000);
+                $dispatch('setdata', { command: 'UnsubscribeEmail', data: {} });">
+        </draftsman-trace>
+    </div>
+</template>
