@@ -115,7 +115,7 @@
 			<field name="control" type="String"></field>
 			<field name="ticketId" type="String"></field>
 		</event>
-		<event graphql-namespace="Ticket" graphql-name="verify" name="VerifyTicketRequested" authorization="anonymous" type="ActorEvent">
+		<event graphql-namespace="Ticket" graphql-name="verify" name="VerifyTicketRequested" authorization="anonymous" type="ActorEvent" role="">
 			<field name="ticketId" type="String"></field>
 			<field name="control" type="String"></field>
 		</event>
@@ -213,6 +213,7 @@
 			<field name="ticketId" type="String"></field>
 			<field name="reason" type="String"></field>
 			<field name="year" type="String"></field>
+			<field name="eventTimeToLive" type="Int"></field>
 		</event>
 		<event name="ConferenceEditionProgramItemAdded" source="Conference.Edition" type="DomainEvent">
 			<field name="id" type="String"></field>
@@ -642,7 +643,7 @@
 					</test-case>
 				</command>
 				<command name="Create" create-command="true">
-					<trigger key-field="ticketId" source="ConferenceRegistrationManagerVisitorRegistered">
+					<trigger key-field="ticketId" source="ConferenceRegistrationManagerVisitorRegistered" idempotency-key="">
 						<mapping value="year" target="year"></mapping>
 						<mapping value="ticketId" target="ticketId"></mapping>
 						<mapping value="firstName" target="firstName"></mapping>
@@ -654,7 +655,7 @@
 						<mapping target="subscribeToNewsletter" value="subscribeToNewsletter"></mapping>
 						<mapping target="allowSharingWithRecruiters" value="allowSharingWithRecruiters"></mapping>
 					</trigger>
-					<processor type="emit-event" ref="ConferenceVisitorCreated" id="mFsax">
+					<processor type="emit-event" ref="ConferenceVisitorCreated" name="">
 						<mapping target="firstName" value="#flow.firstName"></mapping>
 						<mapping target="lastName" value="#flow.lastName"></mapping>
 						<mapping target="year" value="#flow.year"></mapping>
@@ -677,15 +678,15 @@
 						<input name="dietaryNotes" value="2024" type="String"></input>
 						<input name="subscribeToNewsletter" value="true" type="Boolean"></input>
 						<input name="allowSharingWithRecruiters" value="true" type="Boolean"></input>
-						<expected domain-event="ConferenceVisitorCreated" id="uqL01N">
+						<expected domain-event="ConferenceVisitorCreated">
 							<field name="ticketId" type="String" value="devconf-ticket:189673085831463618233454140431942137832"></field>
 						</expected>
 						<expected-state pk="devconf-ticket:189673085831463618233454140431942137832">{
-  "ticketId": "devconf-ticket:189673085831463618233454140431942137832",
-  "year": "2024",
+  "email": "john.doe@example.com",
   "firstName": "John",
   "lastName": "Doe",
-  "email": "john.doe@example.com"
+  "ticketId": "devconf-ticket:189673085831463618233454140431942137832",
+  "year": "2024"
 }</expected-state>
 						<state>{}</state>
 					</test-case>
@@ -712,20 +713,21 @@
 				<field name="openDate" type="String"></field>
 				<field name="maxVisitors" type="Int"></field>
 				<command name="DeregsiterVisitor">
-					<trigger source="DeregisterVisitorConferenceRegistrationManagerRequested" key-field="year">
+					<trigger source="DeregisterVisitorConferenceRegistrationManagerRequested" key-field="year" idempotency-key="">
 						<mapping target="email" value="email"></mapping>
 						<mapping target="ticketId" value="ticketId"></mapping>
 						<mapping target="reason" value="reason"></mapping>
 						<mapping target="year" value="year"></mapping>
 					</trigger>
-					<processor type="validator" id="Kzppq0" condition="flow.ticketId in flow.entity.visitors" exception="Ticket {flow.email}/{flow.ticketId} not found in registration manager"></processor>
-					<processor type="emit-event" id="WX7jUh" ref="VisitorDeregistered">
+					<processor type="validator" condition="flow.ticketId in flow.entity.visitors" exception="Ticket {flow.email}/{flow.ticketId} not found in registration manager" name=""></processor>
+					<processor type="emit-event" ref="VisitorDeregistered" name="">
 						<mapping target="email" value="#flow.email"></mapping>
 						<mapping target="ticketId" value="#flow.ticketId"></mapping>
 						<mapping target="reason" value="#flow.reason"></mapping>
 						<mapping target="year" value="#flow.year"></mapping>
+						<mapping target="eventTimeToLive" value="#7776000"></mapping>
 					</processor>
-					<test-case name="Happyflow" trigger-event="DeregisterVisitorConferenceRegistrationManagerRequested">
+					<test-case name="Happyflow" trigger-event="DeregisterVisitorConferenceRegistrationManagerRequested" expected-processing-status="success">
 						<input name="email" value="john.doe@example.com" type="String"></input>
 						<input name="ticketId" value="123" type="String"></input>
 						<input name="reason" value="For testing" type="String"></input>
@@ -737,15 +739,18 @@
 						</expected>
 						<state>{
   "closeDate": "",
-  "visitors": ["123"],
-  "year": "2010",
-  "registeredVisitors": 1,
+  "maxVisitors": 10,
   "openDate": "",
-  "maxVisitors": 10
+  "registeredVisitors": 1,
+  "visitors": [
+    "123"
+  ],
+  "year": "2010"
 }</state>
 						<expected-state pk="2010">{
+  "registeredVisitors": 0,
   "visitors": [],
-  "registeredVisitors": 0
+  "year": "2010"
 }</expected-state>
 					</test-case>
 					<test-case name="UnknownRegistration" trigger-event="DeregisterVisitorConferenceRegistrationManagerRequested" expected-processing-status="error">
@@ -753,6 +758,10 @@
 						<input name="ticketId" value="123" type="String"></input>
 						<input name="reason" value="For testing" type="String"></input>
 						<input name="year" value="2010" type="String"></input>
+						<state>{}</state>
+						<expected-state pk="">{
+  "year": ""
+}</expected-state>
 					</test-case>
 				</command>
 				<command name="Initialize" create-command="true">
@@ -1401,7 +1410,7 @@
 			<field name="isSend" type="Boolean"></field>
 			<field name="sendAfter" type="String"></field>
 			<field name="group" type="String"></field>
-			<snapshot-handler id="PBAOPm" sub-domain="Communication" aggregate="Email" key-mapping="id" processor="item">
+			<snapshot-handler sub-domain="Communication" aggregate="Email" key-mapping="id" processor="item">
 				<mapping target="id" operand="set" value="id"></mapping>
 				<mapping target="subject" operand="set" value="subject"></mapping>
 				<mapping target="content" operand="set" value="content"></mapping>
@@ -1740,7 +1749,7 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" query="query MyQuery {|LB|  Visitor {|LB|    filter(limit: 1000) {|LB|      resultset {|LB|        email|LB|        firstName|LB|        lastName|LB|        ticket {|LB|          redeemed|LB|        }|LB|      }|LB|    }|LB|  }|LB|  Email {|LB|    Subscription {|LB|      filter(limit: 1000) {|LB|        resultset {|LB|          firstName|LB|          lastName|LB|          email|LB|        }|LB|      }|LB|    }|LB|  }|LB|}|LB|"></activity>
 			<activity type="loop" array="#flow.emails">
 				<activity type="set-variable" name="emailId" expression='#item["id"]'></activity>
-				<activity type="code" code='targets = []|LB||LB|if item["group"].startswith("visitor") or item["group"] == "all":|LB|    targets.extend(flow.visitors["data"]["Visitor"]["filter"]["resultset"])|LB||LB|if item["group"] in ["subscriptions", "all"]:|LB|    for item in flow.visitors["data"]["Email"]["Subscription"]["filter"]["resultset"]:|LB|        item["subscription"] = True|LB|    targets.extend(flow.visitors["data"]["Email"]["Subscription"]["filter"]["resultset"])|LB||LB|if item["group"] == "visitor-shows":|LB|    targets = [target for target in targets if target["ticket"]["redeemed"]]|LB|elif item["group"] == "visitor-noshows":|LB|    targets = [target for target in targets if not target["ticket"]["redeemed"]]|LB||LB|targets = {target["email"]: {|LB|            "email": target["email"].replace("\n",""),|LB|            "firstName": target["firstName"].replace("\n",""),|LB|            "lastName": target["lastName"].replace("\n",""),|LB|            "subscription": target["subscription"] if target["subscription"] else False|LB|        } for target in targets}|LB|flow.targets = enumerate(targets.values())|LB||LB|if os.environ["Stage"] == "staging":|LB|    flow.controlTarget = "devconf@endtest-mail.io"|LB|else:|LB|    flow.controlTarget = "devconf@apg.nl"'></activity>
+				<activity type="code" code='targets = []|LB||LB|if item["group"].startswith("visitor") or item["group"] == "all":|LB|    targets.extend(flow.visitors["data"]["Visitor"]["filter"]["resultset"])|LB||LB|if item["group"] in ["subscriptions", "all"]:|LB|    for item in flow.visitors["data"]["Email"]["Subscription"]["filter"]["resultset"]:|LB|        item["subscription"] = True|LB|    target.extends(flow.visitors["data"]["Email"]["Subscription"]["filter"]["resultset"])|LB||LB|if item["group"] == "visitor-shows":|LB|    targets = [target for target in targets if target["ticket"]["redeemed"]]|LB|elif item["group"] == "visitor-noshows":|LB|    targets = [target for target in targets if not target["ticket"]["redeemed"]]|LB||LB|targets = {target["email"]: {|LB|            "email": target["email"].replace("\n",""),|LB|            "firstName": target["firstName"].replace("\n",""),|LB|            "lastName": target["lastName"].replace("\n",""),|LB|            "subscription": bool(target.get("subscription"))|LB|        } for target in targets}|LB|flow.targets = enumerate(targets.values())|LB||LB|if os.environ["Stage"] == "staging":|LB|    flow.controlTarget = "devconf@endtest-mail.io"|LB|else:|LB|    flow.controlTarget = "devconf@apg.nl"'></activity>
 				<activity type="call-internal-api" name="emailResult" query='mutation Distribute{|LB|  Email {|LB|    mark_as_send: markAsSend(input: {id: "{{flow.emailId}}"}) {|LB|      correlationId|LB|    }|LB|    {% for index, target in flow.targets %}|LB|    T{{index}}: send(input: {id: "{{flow.emailId}}", email: "{{target.email}}", firstName: "{{target.firstName}}", lastName: "{{target.lastName}}"}) {|LB|      correlationId|LB|    }|LB|    {% endfor %}|LB|    control: send(input: {id: "{{flow.emailId}}", email: "{{flow.controlTarget}}", firstName: "Control", lastName: "User"}) {|LB|      correlationId|LB|    }|LB|  }|LB|}'></activity>
 			</activity>
 		</notifier>
@@ -1955,7 +1964,7 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 				<input name="subject" type="String" value="Test"></input>
 				<input name="contentUpdate" type="String" value="Hello World!"></input>
 				<input name="contentInitial" type="String" value="Hello"></input>
-				<input name="sendAfter" type="String" value="2024-01-01T10:00"></input>
+				<input name="sendAfter" type="String" value="2099-01-01T10:00"></input>
 			</activity>
 			<activity type="mutation" description="Create Email" path="Email.create">
 				<input name="subject" type="String" value="#subject#"></input>
