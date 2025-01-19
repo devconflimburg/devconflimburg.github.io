@@ -1755,7 +1755,7 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			</activity>
 		</notifier>
 	</notifiers>
-	<functional-scenarios clean-db="true" clean-iam="true" minimum-event-coverage="80" minimum-view-coverage="80">
+	<functional-scenarios clean-db="true" clean-iam="false" minimum-event-coverage="80" minimum-view-coverage="80">
 		<scenario name="CreateProgram" extends="">
 			<activity type="grant-role" description="noodzakelijke rol voor content management" role="administrator"></activity>
 			<activity type="set-variables" description='Start variabelen voor het "CreateProgram" test scenario'>
