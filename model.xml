@@ -1684,8 +1684,8 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
 			<activity type="iam-create-systemuser" fail-silent="true" id="vMB9LZ"></activity>
-			<activity id="vkYuPh" type="create-iam-group" group-name="#'administrator'"></activity>
-			<activity id="wjJU3t" group-name="#'administrator'" type="add-user-to-iam-group" username="#'system-user'"></activity>
+			<activity id="vkYuPh" type="create-iam-group" group-name="#'administrator'" fail-silent="true"></activity>
+			<activity id="wjJU3t" group-name="#'administrator'" type="add-user-to-iam-group" username="#'system-user'" fail-silent="true"></activity>
 			<activity id="wjJU3t2" group-name="#'administrator'" type="add-user-to-iam-group" username="#'bo.hanssen'" fail-silent="true"></activity>
 		</notifier>
 		<notifier name="ExecuteSendEmail">
