@@ -34,5 +34,13 @@
     "pattern": "",
     "placeholder": "",
     "default": ""
+  },
+  {
+    "name": "enableUnsubscribe",
+    "title": "Enableunsubscribe",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "false",
+    "default": "false"
   }
 ]

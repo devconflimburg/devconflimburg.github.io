@@ -1,7 +1,7 @@
 # This file is managed by Tracepaper
-mutation Send($id: String = "", $email: String = "", $firstName: String = "", $lastName: String = "") {
+mutation Send($id: String = "", $email: String = "", $firstName: String = "", $lastName: String = "", $enableUnsubscribe: String = "false") {
   Email{
-    send(input: {id: $id,email: $email,firstName: $firstName,lastName: $lastName}) {
+    send(input: {id: $id,email: $email,firstName: $firstName,lastName: $lastName,enableUnsubscribe: $enableUnsubscribe}) {
        correlationId
     }
   }
