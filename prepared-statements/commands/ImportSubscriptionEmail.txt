@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation ImportSubscription($email: String = "", $firstName: String = "", $lastName: String = "") {
+  Email{
+    importSubscription(input: {email: $email,firstName: $firstName,lastName: $lastName}) {
+       correlationId
+    }
+  }
+}

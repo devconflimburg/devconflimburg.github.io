@@ -1,0 +1,26 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="ImportSubscriptionEmail">
+    <div x-import="basic-form;tables">
+
+        <!-- The command object -->
+        <draftsman-mutation command="ImportSubscriptionEmail" x-include="/prepared-statements/commands/ImportSubscriptionEmail.txt" authenticated>
+        </draftsman-mutation>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="ImportSubscriptionEmail"
+              x-include="/form-definitions/ImportSubscriptionEmail.json"></div>
+
+        <!-- The trace table -->
+        <ui-trace-table></ui-trace-table>
+
+        <!-- The form -->
+        <ui-basic-form alias="ImportSubscriptionEmail"></ui-basic-form>
+
+        <draftsman-trace command="ImportSubscriptionEmail"
+              status="success"
+              @trace="
+                setTimeout(Draftsman.empty_track_and_trace_log,5000);
+                $dispatch('setdata', { command: 'ImportSubscriptionEmail', data: {} });">
+        </draftsman-trace>
+    </div>
+</template>

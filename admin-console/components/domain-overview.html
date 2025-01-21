@@ -37,6 +37,12 @@
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'ImportSubscriptionEmail'"
+                                x-show="'importsubscriptionemail'.includes(search.toLowerCase())">
+                            ImportSubscriptionEmail
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
                                 @click="Draftsman.empty_track_and_trace_log();component = 'SendEmail'"
                                 x-show="'sendemail'.includes(search.toLowerCase())">
                             SendEmail
@@ -173,6 +179,14 @@
                     <div x-import="commands/UnsubscribeEmail">
                         <h6>UnsubscribeEmail</h6>
                         <ui-UnsubscribeEmail></ui-UnsubscribeEmail>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'ImportSubscriptionEmail'" x-cloak x-transition>
+                    <div x-import="commands/ImportSubscriptionEmail">
+                        <h6>ImportSubscriptionEmail</h6>
+                        <ui-ImportSubscriptionEmail></ui-ImportSubscriptionEmail>
                     </div>
                 </div>
 
