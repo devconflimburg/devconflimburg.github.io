@@ -1708,11 +1708,11 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 				<mapping target="lastName" value="lastName"></mapping>
 				<mapping target="enableUnsubscribe" value="enableUnsubscribe"></mapping>
 			</trigger>
-			<activity type="call-internal-api" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|' id="UvXrSn"></activity>
-			<activity type="code" python-file="lib/MailGun.py" handler="prepare_email" id="WUCOyC"></activity>
-			<activity type="render-template" template-file="templates/GeneralMail.html" name="html" id="MpSXnp"></activity>
-			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="gGXrDz"></activity>
-			<activity type="code" python-file="lib/MailGun.py" handler="log_only" id="LRoPOT"></activity>
+			<activity type="call-internal-api" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|' id="fHvTUd"></activity>
+			<activity type="code" python-file="lib/MailGun.py" handler="prepare_email" id="eyULNF"></activity>
+			<activity type="render-template" template-file="templates/GeneralMail.html" name="html" id="kvBTqf"></activity>
+			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="OLzDXr"></activity>
+			<activity type="code" python-file="lib/MailGun.py" handler="log_only" id="rnBvni"></activity>
 		</notifier>
 		<notifier name="HandleResendRequest">
 			<trigger source="HandleLostTicketRequested">
@@ -1758,13 +1758,18 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			<trigger source="@cron(0 * * * ? *)" idempotency-key="">
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
-			<activity type="call-internal-api" name="emails" query="query MyQuery {|LB|  Email {|LB|    filter(isSend_equals: false) {|LB|      resultset {|LB|        sendAfter|LB|        id|LB|        isSend|LB|        group|LB|      }|LB|    }|LB|  }|LB|}|LB|" id="RTnrBR"></activity>
-			<activity type="code" code="import datetime,pytz|LB|timezone = pytz.timezone(&quot;Europe/Amsterdam&quot;)|LB||LB|now  = datetime.datetime.now(timezone)|LB|flow.emails = [email for email in flow.emails[&quot;data&quot;][&quot;Email&quot;][&quot;filter&quot;][&quot;resultset&quot;] if |LB|    not email.isSend and email[&quot;sendAfter&quot;] != &quot;&quot; and|LB|    datetime.datetime.strptime(email[&quot;sendAfter&quot;], '%Y-%m-%dT%H:%M') &lt;= now.replace(tzinfo=None)]" id="uSpYbf"></activity>
-			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" query="query MyQuery {|LB|  Visitor {|LB|    filter(limit: 1000) {|LB|      resultset {|LB|        email|LB|        firstName|LB|        lastName|LB|        ticket {|LB|          redeemed|LB|        }|LB|      }|LB|    }|LB|  }|LB|  Email {|LB|    Subscription {|LB|      filter(limit: 1000) {|LB|        resultset {|LB|          firstName|LB|          lastName|LB|          email|LB|        }|LB|      }|LB|    }|LB|  }|LB|}|LB|" id="qcBSHr"></activity>
-			<activity type="loop" array="#flow.emails" id="uxBJYz">
-				<activity type="set-variable" name="emailId" expression='#item["id"]' id="WrsYyz"></activity>
-				<activity type="code" code='targets = []|LB||LB|if item["group"].startswith("visitor") or item["group"] == "all":|LB|    targets.extend(flow.visitors["data"]["Visitor"]["filter"]["resultset"])|LB||LB|if item["group"] in ["subscriptions", "all"]:|LB|    targets.extend([{"email": sub["email"],"firstName": sub["firstName"],"lastName": sub["lastName"],"subscription": True} for sub in flow.visitors["data"]["Email"]["Subscription"]["filter"]["resultset"]])|LB||LB|if item["group"] == "visitor-shows":|LB|    targets = [target for target in targets if target["ticket"]["redeemed"]]|LB|elif item["group"] == "visitor-noshows":|LB|    targets = [target for target in targets if not target["ticket"]["redeemed"]]|LB||LB|targets = {target["email"]: {|LB|            "email": target["email"].replace("\n",""),|LB|            "firstName": target["firstName"].replace("\n",""),|LB|            "lastName": target["lastName"].replace("\n",""),|LB|            "subscription": "true" if bool(target.get("subscription")) else "false"|LB|        } for target in targets}|LB|flow.targets = enumerate(targets.values())|LB||LB|if os.environ["Stage"] == "staging":|LB|    flow.controlTarget = "devconf@endtest-mail.io"|LB|else:|LB|    flow.controlTarget = "devconf@apg.nl"' id="gNNSVx"></activity>
-				<activity type="call-internal-api" name="emailResult" query='mutation Distribute{|LB|  Email {|LB|    mark_as_send: markAsSend(input: {id: "{{flow.emailId}}"}) {|LB|      correlationId|LB|    }|LB|    {% for index, target in flow.targets %}|LB|    T{{index}}: send(input: {id: "{{flow.emailId}}", email: "{{target.email}}", firstName: "{{target.firstName}}", lastName: "{{target.lastName}}",enableUnsubscribe: "{{target.subscription}}"}) {|LB|      correlationId|LB|    }|LB|    {% endfor %}|LB|    control: send(input: {id: "{{flow.emailId}}", email: "{{flow.controlTarget}}", firstName: "Control", lastName: "User"}) {|LB|      correlationId|LB|    }|LB|  }|LB|}' id="gHqStL"></activity>
+			<activity type="call-internal-api" name="emails" template-file="templates/FetchBulkMails.txt" id="qyBvUC"></activity>
+			<activity type="code" python-file="lib/BulkMailUtils.py" handler="filter_mails" id="UxkzCm"></activity>
+			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" template-file="templates/FetchBulkMailTargets.txt" id="PjINYz"></activity>
+			<activity type="loop" array="#flow.emails" id="MGfvLD">
+				<activity type="set-variable" name="emailId" expression='#item["id"]' id="exgxLe"></activity>
+				<activity type="set-variable" name="item" expression="#item" id="EfgiLW"></activity>
+				<activity type="code" python-file="lib/BulkMailUtils.py" handler="create_distribution_shards" id="zbWnUp"></activity>
+			</activity>
+			<activity type="loop" array="#flow.distributions" id="MdQyTN">
+				<activity type="set-variable" name="emailId" expression='#item["emailId"]' id="VXdKBW"></activity>
+				<activity type="set-variable" name="targets" expression='#item["targets"]' id="SgSyhX"></activity>
+				<activity type="call-internal-api" name="emailResult" template-file="templates/DistributeBulkMail.txt" id="MGlckW"></activity>
 			</activity>
 		</notifier>
 	</notifiers>
