@@ -66,5 +66,13 @@
     "pattern": "",
     "placeholder": "",
     "default": ""
+  },
+  {
+    "name": "sessionizeId",
+    "title": "Sessionizeid",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
   }
 ]

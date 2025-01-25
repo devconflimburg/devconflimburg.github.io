@@ -56,6 +56,7 @@
 			<field name="title" type="String"></field>
 			<field name="room" type="String"></field>
 			<field name="id" type="String"></field>
+			<field name="sessionizeId" type="String" default=""></field>
 		</event>
 		<event name="InitializeEditionConferenceRequested" authorization="role" role="administrator" type="ActorEvent" graphql-name="initializeEdition" graphql-namespace="Conference">
 			<field name="date" type="String" pattern="{{Date}}"></field>
@@ -231,6 +232,7 @@
 			<field name="duration" type="Int"></field>
 			<field name="breakout" type="Boolean"></field>
 			<field name="session" type="Int"></field>
+			<field name="sessionizeId" type="String"></field>
 		</event>
 		<event type="DomainEvent" name="ConferenceEditionProgramItemRemoved" source="Conference.Edition">
 			<field name="id" type="String"></field>
@@ -1038,6 +1040,7 @@
 						<mapping value="title" target="title"></mapping>
 						<mapping value="room" target="room"></mapping>
 						<mapping target="id" value="id"></mapping>
+						<mapping target="sessionizeId" value="sessionizeId"></mapping>
 					</trigger>
 					<processor type="code" handler="determine_id_and_breakouts" file="lib/ProgrammaManagement.py" name=""></processor>
 					<processor type="emit-event" ref="ConferenceEditionProgramItemAdded" name="">
@@ -1050,16 +1053,18 @@
 						<mapping target="duration" value="#flow.duration"></mapping>
 						<mapping target="breakout" value="#flow.breakout"></mapping>
 						<mapping target="session" value="#flow.session"></mapping>
+						<mapping target="sessionizeId" value="#flow.sessionizeId"></mapping>
 					</processor>
 					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="AddProgramItemConferenceRequested" user="systemuser">
 						<input name="summary" type="String" value="Hello World!"></input>
-						<input name="duration" type="Number" value="45"></input>
+						<input name="duration" type="Int" value="45"></input>
 						<input name="year" type="String" value="2024"></input>
 						<input name="speaker" type="String" value="John Doe"></input>
 						<input name="startTime" type="String" value="09:00"></input>
 						<input name="title" type="String" value="Dummy"></input>
 						<input name="room" type="String" value="Forum"></input>
 						<input name="id" type="String" value="2024-1"></input>
+						<input name="sessionizeId" type="String" value=""></input>
 						<expected domain-event="ConferenceEditionProgramItemAdded">
 							<field name="id" type="String" value="2024-1"></field>
 							<field name="breakout" type="Boolean" value="False"></field>
@@ -1711,11 +1716,11 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 				<mapping target="lastName" value="lastName"></mapping>
 				<mapping target="enableUnsubscribe" value="enableUnsubscribe"></mapping>
 			</trigger>
-			<activity type="call-internal-api" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|' id="lvWnbM"></activity>
-			<activity type="code" python-file="lib/MailGun.py" handler="prepare_email" id="ddnkKx"></activity>
-			<activity type="render-template" template-file="templates/GeneralMail.html" name="html" id="lSOfxA"></activity>
-			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="XZwriu"></activity>
-			<activity type="code" python-file="lib/MailGun.py" handler="send" id="seheAh"></activity>
+			<activity type="call-internal-api" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|' id="UvXrSn"></activity>
+			<activity type="code" python-file="lib/MailGun.py" handler="prepare_email" id="WUCOyC"></activity>
+			<activity type="render-template" template-file="templates/GeneralMail.html" name="html" id="MpSXnp"></activity>
+			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="gGXrDz"></activity>
+			<activity type="code" python-file="lib/MailGun.py" handler="send" id="LRoPOT"></activity>
 		</notifier>
 		<notifier name="HandleResendRequest">
 			<trigger source="HandleLostTicketRequested">
@@ -1761,18 +1766,18 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			<trigger source="@cron(0 * * * ? *)" idempotency-key="">
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
-			<activity type="call-internal-api" name="emails" template-file="templates/FetchBulkMails.txt" id="bWkGmD"></activity>
-			<activity type="code" python-file="lib/BulkMailUtils.py" handler="filter_mails" id="fyvSfY"></activity>
-			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" template-file="templates/FetchBulkMailTargets.txt" id="ncJuac"></activity>
-			<activity type="loop" array="#flow.emails" id="EHBuLY">
-				<activity type="set-variable" name="emailId" expression='#item["id"]' id="LWqoZA"></activity>
-				<activity type="set-variable" name="item" expression="#item" id="qiHtSW"></activity>
-				<activity type="code" python-file="lib/BulkMailUtils.py" handler="create_distribution_shards" id="pQOcUj"></activity>
+			<activity type="call-internal-api" name="emails" template-file="templates/FetchBulkMails.txt" id="RTnrBR"></activity>
+			<activity type="code" python-file="lib/BulkMailUtils.py" handler="filter_mails" id="uSpYbf"></activity>
+			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" template-file="templates/FetchBulkMailTargets.txt" id="qcBSHr"></activity>
+			<activity type="loop" array="#flow.emails" id="uxBJYz">
+				<activity type="set-variable" name="emailId" expression='#item["id"]' id="WrsYyz"></activity>
+				<activity type="set-variable" name="item" expression="#item" id="gNNSVx"></activity>
+				<activity type="code" python-file="lib/BulkMailUtils.py" handler="create_distribution_shards" id="gHqStL"></activity>
 			</activity>
-			<activity type="loop" array="#flow.distributions" id="mpEhCC">
-				<activity type="set-variable" name="emailId" expression='#item["emailId"]' id="XrPYUq"></activity>
-				<activity type="set-variable" name="targets" expression='#item["targets"]' id="sbeppD"></activity>
-				<activity type="call-internal-api" name="emailResult" template-file="templates/DistributeBulkMail.txt" id="jOxjWm"></activity>
+			<activity type="loop" array="#flow.distributions" id="APaMLL">
+				<activity type="set-variable" name="emailId" expression='#item["emailId"]' id="SEMEuo"></activity>
+				<activity type="set-variable" name="targets" expression='#item["targets"]' id="MrvBBz"></activity>
+				<activity type="call-internal-api" name="emailResult" template-file="templates/DistributeBulkMail.txt" id="uBWBvG"></activity>
 			</activity>
 		</notifier>
 	</notifiers>

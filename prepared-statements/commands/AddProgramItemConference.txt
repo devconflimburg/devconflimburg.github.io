@@ -1,7 +1,7 @@
 # This file is managed by Tracepaper
-mutation AddProgramItem($summary: String = "", $duration: Int = 0, $year: String = "", $speaker: String = "", $startTime: String = "", $title: String = "", $room: String = "", $id: String = "") {
+mutation AddProgramItem($summary: String = "", $duration: Int = 0, $year: String = "", $speaker: String = "", $startTime: String = "", $title: String = "", $room: String = "", $id: String = "", $sessionizeId: String = "") {
   Conference{
-    addProgramItem(input: {summary: $summary,duration: $duration,year: $year,speaker: $speaker,startTime: $startTime,title: $title,room: $room,id: $id}) {
+    addProgramItem(input: {summary: $summary,duration: $duration,year: $year,speaker: $speaker,startTime: $startTime,title: $title,room: $room,id: $id,sessionizeId: $sessionizeId}) {
        correlationId
     }
   }
