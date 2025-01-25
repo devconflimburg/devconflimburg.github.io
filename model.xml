@@ -538,6 +538,7 @@
 				<field name="endTime" type="String"></field>
 				<field name="title" type="String"></field>
 				<field name="room" type="String"></field>
+				<field name="sessionizeId" type="String"></field>
 				<command name="Delete">
 					<trigger source="ConferenceEditionProgramItemRemoved" idempotency-key="" key-field="id">
 						<mapping target="id" value="id"></mapping>
@@ -1548,6 +1549,7 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			<field name="startTime" type="String"></field>
 			<field name="id" type="String" pk="true"></field>
 			<field name="endTime" type="String"></field>
+			<field name="sessionizeId" type="String"></field>
 			<snapshot-handler sub-domain="Conference" aggregate="ProgramItem" key-mapping="id" processor="item">
 				<mapping target="summary" operand="set" value="summary"></mapping>
 				<mapping target="duration" operand="set" value="duration"></mapping>
@@ -1558,6 +1560,7 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 				<mapping target="endTime" operand="set" value="endTime"></mapping>
 				<mapping target="title" operand="set" value="title"></mapping>
 				<mapping target="room" operand="set" value="room"></mapping>
+				<mapping target="sessionizeId" operand="set" value="sessionizeId"></mapping>
 				<delete condition="#snapshot.isDeleted != ''"></delete>
 			</snapshot-handler>
 			<custom-handler sub-domain="Conference" aggregate="Edition">for item_key, item in snapshot.program.items():
@@ -1708,11 +1711,11 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 				<mapping target="lastName" value="lastName"></mapping>
 				<mapping target="enableUnsubscribe" value="enableUnsubscribe"></mapping>
 			</trigger>
-			<activity type="call-internal-api" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|' id="RyBTAs"></activity>
-			<activity type="code" python-file="lib/MailGun.py" handler="prepare_email" id="ZGuKes"></activity>
-			<activity type="render-template" template-file="templates/GeneralMail.html" name="html" id="jMKHup"></activity>
-			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="SDUmUh"></activity>
-			<activity type="code" python-file="lib/MailGun.py" handler="send" id="QQlLCP"></activity>
+			<activity type="call-internal-api" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|' id="lvWnbM"></activity>
+			<activity type="code" python-file="lib/MailGun.py" handler="prepare_email" id="ddnkKx"></activity>
+			<activity type="render-template" template-file="templates/GeneralMail.html" name="html" id="lSOfxA"></activity>
+			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="XZwriu"></activity>
+			<activity type="code" python-file="lib/MailGun.py" handler="send" id="seheAh"></activity>
 		</notifier>
 		<notifier name="HandleResendRequest">
 			<trigger source="HandleLostTicketRequested">
@@ -1758,18 +1761,18 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			<trigger source="@cron(0 * * * ? *)" idempotency-key="">
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
-			<activity type="call-internal-api" name="emails" template-file="templates/FetchBulkMails.txt" id="hSmmgh"></activity>
-			<activity type="code" python-file="lib/BulkMailUtils.py" handler="filter_mails" id="PkZoNj"></activity>
-			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" template-file="templates/FetchBulkMailTargets.txt" id="SaFfnE"></activity>
-			<activity type="loop" array="#flow.emails" id="mdPSBV">
-				<activity type="set-variable" name="emailId" expression='#item["id"]' id="zagksM"></activity>
-				<activity type="set-variable" name="item" expression="#item" id="WCQPAP"></activity>
-				<activity type="code" python-file="lib/BulkMailUtils.py" handler="create_distribution_shards" id="soUOlI"></activity>
+			<activity type="call-internal-api" name="emails" template-file="templates/FetchBulkMails.txt" id="bWkGmD"></activity>
+			<activity type="code" python-file="lib/BulkMailUtils.py" handler="filter_mails" id="fyvSfY"></activity>
+			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" template-file="templates/FetchBulkMailTargets.txt" id="ncJuac"></activity>
+			<activity type="loop" array="#flow.emails" id="EHBuLY">
+				<activity type="set-variable" name="emailId" expression='#item["id"]' id="LWqoZA"></activity>
+				<activity type="set-variable" name="item" expression="#item" id="qiHtSW"></activity>
+				<activity type="code" python-file="lib/BulkMailUtils.py" handler="create_distribution_shards" id="pQOcUj"></activity>
 			</activity>
-			<activity type="loop" array="#flow.distributions" id="GwPtQf">
-				<activity type="set-variable" name="emailId" expression='#item["emailId"]' id="jsyPwm"></activity>
-				<activity type="set-variable" name="targets" expression='#item["targets"]' id="dKvbXg"></activity>
-				<activity type="call-internal-api" name="emailResult" template-file="templates/DistributeBulkMail.txt" id="NHWmzI"></activity>
+			<activity type="loop" array="#flow.distributions" id="mpEhCC">
+				<activity type="set-variable" name="emailId" expression='#item["emailId"]' id="XrPYUq"></activity>
+				<activity type="set-variable" name="targets" expression='#item["targets"]' id="sbeppD"></activity>
+				<activity type="call-internal-api" name="emailResult" template-file="templates/DistributeBulkMail.txt" id="jOxjWm"></activity>
 			</activity>
 		</notifier>
 	</notifiers>
