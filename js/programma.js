@@ -38,7 +38,7 @@ var rooms = ["Forum",
              "Scriptingroom",
              "Hackingdorm",
              "Theater",
-             "Manage",
+             "Manege",
              "Graanschuur",
              "Kersentuin"];
 var talks = rooms.map(x => []);
