@@ -1,105 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geolocation Arrow</title>
-    <style>
-        body {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-          margin: 0;
-          font-family: Arial, sans-serif;
-          background-color: #f0f0f0;
-        }
-        #arrow {
-          width: 100px;
-          height: 100px;
-          background: url('/assets/arrow.png') no-repeat center/contain;
-          transform-origin: center;
-          transform: rotate(0deg);
-          display: none; /* Verberg de pijl tot de gebruiker begint */
-        }
-        button {
-          padding: 10px 20px;
-          font-size: 16px;
-          background-color: #007BFF;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-        }
-        button:active {
-          background-color: #0056b3;
-        }
-    </style>
-</head>
+<html>
 <body>
-<div id="arrow"></div>
-<button id="startButton">Start Navigeren</button>
+
+<h2>JavaScript Geolocation API</h2>
+<p>Click the button to get your coordinates.</p>
+
+<button onclick="getLocation()">Try It</button>
+
+<p id="demo"></p>
 
 <script>
-    const targetLatitude = 50.846557; // Vul de breedtegraad van de zaal in
-    const targetLongitude = 5.690111; // Vul de lengtegraad van de zaal in
-
-    const arrow = document.getElementById('arrow');
-    const startButton = document.getElementById('startButton');
-
-    // Helper: Bereken de hoek (bearing) tussen twee locaties
-    function calculateBearing(lat1, lon1, lat2, lon2) {
-        const toRadians = (deg) => (deg * Math.PI) / 180;
-        const toDegrees = (rad) => (rad * 180) / Math.PI;
-
-        const dLon = toRadians(lon2 - lon1);
-        const y = Math.sin(dLon) * Math.cos(toRadians(lat2));
-        const x =
-            Math.cos(toRadians(lat1)) * Math.sin(toRadians(lat2)) -
-            Math.sin(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.cos(dLon);
-
-        return (toDegrees(Math.atan2(y, x)) + 360) % 360; // Bearing in graden
+    const x = document.getElementById("demo");
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(showPosition);
+      } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+      }
     }
-
-    // Update de pijl op basis van locatie en oriëntatie
-    function updateArrow(currentLatitude, currentLongitude, deviceHeading) {
-        const bearingToTarget = calculateBearing(
-            currentLatitude,
-            currentLongitude,
-            targetLatitude,
-            targetLongitude
-        );
-
-        const adjustedBearing = bearingToTarget - deviceHeading; // Houd rekening met apparaatrotatie
-        arrow.style.transform = `rotate(${adjustedBearing}deg)`;
+    function showPosition(position) {
+      x.innerHTML = "Latitude: " + position.coords.latitude +
+      "<br>Longitude: " + position.coords.longitude;
     }
-
-    // Start navigatie na gebruikersinteractie
-    startButton.addEventListener('click', () => {
-        startButton.style.display = 'none'; // Verberg de knop
-        arrow.style.display = 'block'; // Toon de pijl
-
-        navigator.geolocation.watchPosition(
-            (position) => {
-                const currentLatitude = position.coords.latitude;
-                const currentLongitude = position.coords.longitude;
-                console.log(position); 
-                // Update de pijl met DeviceOrientation
-                window.addEventListener('deviceorientation', (event) => {
-                    const deviceHeading = event.alpha || 0; // In graden
-                    updateArrow(currentLatitude, currentLongitude, deviceHeading);
-                });
-            },
-            (error) => {
-                console.error('Geolocation error:', error);
-                alert('Kon locatie niet ophalen.');
-            },
-            { enableHighAccuracy: true,
-        maximumAge: 0,
-        timeout: 5000}
-        );
-    });
 </script>
+
 </body>
 </html>
