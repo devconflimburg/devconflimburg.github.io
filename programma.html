@@ -94,11 +94,28 @@
               <div class="modal-body">
                 <div style="float: left; font-size: 15px;" x-text="talk.room"></div>
                 <div class="pull-right" style="float: right;">
-                <span style="font-size: 10px;">
-                  <span x-text="talk.startTime"></span> - <span x-text="talk.endTime"></span>
-                </span>
+                  <span style="font-size: 10px;">
+                    <span x-text="talk.startTime"></span> - <span x-text="talk.endTime"></span>
+                  </span>
                 </div><br>
-                <div x-html="convertMarkdownToHtml(talk.summary)"></div>
+                <div x-data="{content: []}" x-init="content = talk.summary.split('<!-- -->')">
+                  <div x-html="convertMarkdownToHtml(content[0])"></div>
+                  <template x-for="speaker in content.splice(1)">
+                    <div class="row g-3" x-data="{info: []}" x-init="info = speaker.split('#%#').map(x => x.split('#?#').at(1))">
+                      <div class="col-md-3">
+                        <div class="container mt-5 text-center">
+                          <img :src="info[3]" alt="Profile Picture"
+                               class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                          <h5 class="mt-3" x-text="info[0]"></h5>
+                          <p x-text="info[2]"></p>
+                        </div>
+                      </div>
+                      <div class="col-md-9">
+                        <p x-text="info[1]"></p>
+                      </div>
+                    </div>
+                  </template>
+                </div>
               </div>
             </div>
           </div>
@@ -134,7 +151,25 @@
             <div :id="'talk' + item.id" class="accordion-collapse collapse"
                  :aria-labelledby="item.id + 'heading'" data-bs-parent="#programAccordion">
               <div class="accordion-body">
-                <div x-html="convertMarkdownToHtml(item.summary)"></div>
+<!--                <div x-html="convertMarkdownToHtml(item.summary)"></div>-->
+                <div x-data="{content: []}" x-init="content = item.summary.split('<!-- -->')">
+                  <div x-html="convertMarkdownToHtml(content[0])"></div>
+                  <template x-for="speaker in content.splice(1)">
+                    <div class="row g-3" x-data="{info: []}" x-init="info = speaker.split('#%#').map(x => x.split('#?#').at(1))">
+                      <div class="col-md-3">
+                        <div class="container mt-5 text-center">
+                          <img :src="info[3]" alt="Profile Picture"
+                               class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                          <h5 class="mt-3" x-text="info[0]"></h5>
+                          <p x-text="info[2]"></p>
+                        </div>
+                      </div>
+                      <div class="col-md-9">
+                        <p x-text="info[1]"></p>
+                      </div>
+                    </div>
+                  </template>
+                </div>
               </div>
             </div>
           </div>

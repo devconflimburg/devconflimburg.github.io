@@ -16,6 +16,7 @@ query MyQuery($year: ID = "2024") {
         breakout
         session
         year
+        sessionizeId
       }
     }
   }

@@ -213,8 +213,9 @@
 
                 <!-- Content Grid -->
                 <div class="row g-3">
-                  <!-- Title -->
-                  <div class="col-12">
+                  <!-- Title & ID-->
+                  <div class="col-md-6">
+                    <label for="speaker" class="form-label">Speaker</label>
                     <label for="title" class="form-label">Title</label>
                     <textarea
                             id="title"
@@ -222,6 +223,10 @@
                             rows="1"
                             x-model="command.title"
                             placeholder="Enter title"></textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="sessionizeId" class="form-label">Sessionize ID</label>
+                    <input type="text" class="form-control" id="sessionizeId" x-model="command.sessionizeId"/>
                   </div>
 
                   <!-- Speaker and Room -->
