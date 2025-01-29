@@ -41,13 +41,15 @@
 
             <template x-if="bucket">
                 <section class="m-1 d-block d-xl-none text-center">
-                    <video
-                            autoplay muted  loop playsinline controls
-                            class="img-fluid rounded-3 my-5">
-                        <source :src="'https://' + bucket + '/aftermovie/devConf_2024_mobile.mp4'" type="video/mp4">
-                        <source :src="'https://' + bucket + '/aftermovie/devConf_2023.mp4'" type="video/mp4">
-                        <source src="/assets/devConf_2023.mp4" type="video/mp4">
-                    </video>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#videoModal">
+                        <video
+                                muted autoplay loop playsinline
+                                class="img-fluid rounded-3 my-5">
+                            <source :src="'https://' + bucket + '/aftermovie/devConf_2024_mobile.mp4'" type="video/mp4">
+                            <source :src="'https://' + bucket + '/aftermovie/devConf_2023.mp4'" type="video/mp4">
+                            <source src="/assets/devConf_2023.mp4" type="video/mp4">
+                        </video>
+                    </a>
                 </section>
             </template>
 
