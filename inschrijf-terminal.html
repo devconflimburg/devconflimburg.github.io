@@ -41,8 +41,8 @@
             <!-- The prompt, command.instruction is set from the javascript
                  primarily from the "next_command" function. The other <span>
                  is used as an input. When the enter key is used the "enter_command" function is invoked -->
-            <span x-text="command.instruction"></span>>&nbsp;
-            <span id="input-element" contenteditable="true" autofocus @keyup.enter="enter_command($el)"></span>
+            <span x-html="command.instruction"></span>>&nbsp;
+            <span id="input-element" contenteditable="true" style="color: white;" autofocus @keyup.enter="enter_command($el)"></span>
         </p>
     </div>
 

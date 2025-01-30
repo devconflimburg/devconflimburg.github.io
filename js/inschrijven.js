@@ -114,12 +114,15 @@ function next_command(){
     } else if (current_state == "attendingAfterEventDrinks") {
         command.instruction = "Ben je aanwezig tijdens de netwerk borrel? [y/N]";
     } else if (current_state == "subscribeToNewsletter") {
-        command.instruction = "Wil je op de hoogte gehouden worden door onze nieuwsbrief? [y/N]";
+        command.instruction = "<br>Wil je toegevoegd worden aan onze distributielijst?";
+        command.instruction += "<br>We gebruiken deze lijst voor het uitzenden van de <i>Call for Speakers</i> en de aankondiging van een nieuwe editie.";
+        command.instruction += "<br>We bewaren je gegevens 2,5 jaar, daarna worden ze automatisch verwijderd, tenzij je je opnieuw aanmeldt.";
+        command.instruction += "<br>Aanmelden voor de distributielijst? [y/N]";
     } else if (current_state == "allowSharingWithRecruiters"){
         command.instruction = "Mogen we je email adres delen met Work@APG? [y/N]";
     } else if (current_state.startsWith("breakout")){
        let session = parseInt(current_state.replace("breakout-",""));
-       write_log("Breakout sessie " + session);
+       write_log("<br>Breakout sessie " + session);
        breakouts[session].forEach((breakout,index) => {
         write_log(index + ") " + breakout.title);
        });
@@ -155,7 +158,7 @@ function enter_command(element){
         }
         if (!submitted){
             setTimeout(function(){
-                write_log("We gaan je ticket aanmaken, een moment...");
+                write_log("<br>We gaan je ticket aanmaken, een moment...");
             },1);
             send_mutation("register",form);
             submitted = true;
@@ -168,7 +171,7 @@ function enter_command(element){
         let index = parseInt(element.innerText);
         if (!breakouts[session][index]){
             let options = breakouts[session].length - 1;
-            write_log(command.instruction + "> " + element.innerText);
+            write_log(command.instruction + "> <span style='color: white;'>" + element.innerText + "</span>");
             write_log("<i style='color:red;'>Please select a value between 0-" + options +"</i>")
             element.innerText = "";
         }
@@ -179,11 +182,13 @@ function enter_command(element){
 
     if (current_state == "attendingLunch"){
         form[current_state] = element.innerText.trim().toLowerCase() != "n";
+        element.innerText = form[current_state] ? "y" : "n";
     }
     if (["attendingAfterEventDrinks","subscribeToNewsletter","allowSharingWithRecruiters"].includes(current_state)){
         form[current_state] = element.innerText.trim().toLowerCase() == "y";
+        element.innerText = form[current_state] ? "y" : "n";
     }
-    write_log(command.instruction + "> " + element.innerText);
+    write_log(command.instruction + "> <span style='color: white;'>" + element.innerText + "</span>");
     element.innerText = "";
     command.instruction = "";
     console.log(form);
@@ -202,6 +207,7 @@ function append_tracelog(log_message){
     if(message.command == "SendTicketVerification-Notifier" && message.status == "success"){
         setTimeout(function(){
             write_log(`Er is een verificatie e-mail naar <i>${form.email}</i> gestuurd, gebruik de link om de inschrijving af te ronden.`);
+            write_log(`<h2 style="color: red;">Let op: je registratie is pas compleet wanneer je de verificatielink in de e-mail gebruikt. Indien we geen verificatie ontvangen, word je over 2 weken automatisch uitgeschreven.</b>`);
         },1000);
     }
 }
