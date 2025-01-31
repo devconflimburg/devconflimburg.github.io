@@ -107,7 +107,7 @@
                           <img :src="info[3]" alt="Profile Picture"
                                class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
                           <h5 class="mt-3" x-text="info[0]"></h5>
-                          <p x-text="info[2]"></p>
+                          <p x-html="convertMarkdownToHtml(info[2])"></p>
                         </div>
                       </div>
                       <div class="col-md-9">
@@ -161,7 +161,7 @@
                           <img :src="info[3]" alt="Profile Picture"
                                class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
                           <h5 class="mt-3" x-text="info[0]"></h5>
-                          <p x-text="info[2]"></p>
+                          <p x-html="convertMarkdownToHtml(info[2])"></p>
                         </div>
                       </div>
                       <div class="col-md-9">
