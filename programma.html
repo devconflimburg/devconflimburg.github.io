@@ -100,6 +100,7 @@
                 </div><br>
                 <div x-data="{content: []}" x-init="content = talk.summary.split('<!-- -->')">
                   <div x-html="convertMarkdownToHtml(content[0])"></div>
+                  <hr>
                   <template x-for="speaker in content.splice(1)">
                     <div class="row g-3" x-data="{info: []}" x-init="info = speaker.split('#%#').map(x => x.split('#?#').at(1))">
                       <div class="col-md-3">
