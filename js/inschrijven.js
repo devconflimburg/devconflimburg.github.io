@@ -159,6 +159,8 @@ function enter_command(element){
             write_log(command.instruction + "> <span style='color: white;'>" + element.innerText + "</span>");
             write_log("<i style='color:red;'>Kies ja of reset!</i>")
             element.innerText = "";
+            element.focus();
+            return;
         }
         if (!submitted){
             setTimeout(function(){
