@@ -156,7 +156,9 @@ function enter_command(element){
     if (current_state == "submit"){
         console.log(element.innerText.trim().toLowerCase(),submitted);
         if (element.innerText.trim().toLowerCase() != "ja"){
-            throw "invalid input";
+            write_log(command.instruction + "> <span style='color: white;'>" + element.innerText + "</span>");
+            write_log("<i style='color:red;'>Kies ja of reset!</i>")
+            element.innerText = "";
         }
         if (!submitted){
             setTimeout(function(){
