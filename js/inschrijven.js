@@ -208,9 +208,10 @@ function append_tracelog(log_message){
     write_log(line);
     if(message.command == "SendTicketVerification-Notifier" && message.status == "success"){
         setTimeout(function(){
-            write_log(`Er is een verificatie e-mail naar <i>${form.email}</i> gestuurd, gebruik de link om de inschrijving af te ronden.`);
-            write_log(`<h2 style="color: red;">Let op: je registratie is pas compleet wanneer je de verificatielink in de e-mail gebruikt. Indien we geen verificatie ontvangen, word je over 2 weken automatisch uitgeschreven.</b>`);
-        },1000);
+            write_log(`Er is een verificatie-e-mail gestuurd naar <i>${form.email}</i>. Klik op de link in de e-mail om je inschrijving te voltooien.`);
+            write_log(`Geen e-mail ontvangen? Controleer je spamfolder. Nog steeds niets? <a href="mailto:info@devconf.nl">Neem contact op</a>.`);
+            write_log(`<h2 style="color: red;">Let op: je inschrijving is pas voltooid na e-mailverificatie. Zonder bevestiging wordt je registratie over 2 weken automatisch geannuleerd.</h2>`);
+        }, 1000);
     }
 }
 
