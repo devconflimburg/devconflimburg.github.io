@@ -119,7 +119,8 @@ function next_command(){
         command.instruction += "<br>We bewaren je gegevens 2,5 jaar, daarna worden ze automatisch verwijderd, tenzij je je opnieuw aanmeldt.";
         command.instruction += "<br>Aanmelden voor de distributielijst? [y/N]";
     } else if (current_state == "allowSharingWithRecruiters"){
-        command.instruction = "Mogen we je email adres delen met Work@APG? [y/N]";
+        command.instruction = "<br>devConf is gesponsord door APG, maar een initiatief van APG IT-medewerkers. Work@APG houdt je op de hoogte van carrièremogelijkheden bij APG.";
+        command.instruction += "<br>Geef je toestemming om je e-mailadres te delen met Work@APG? [y/N]";
     } else if (current_state.startsWith("breakout")){
        let session = parseInt(current_state.replace("breakout-",""));
        write_log("<br>Breakout sessie " + session);
