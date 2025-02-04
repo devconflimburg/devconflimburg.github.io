@@ -1,86 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <script src="/js/configuration.js"></script>
-        <script src="/js/configuration-staging.js"></script>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="devConf, een DevOps conferentie in het zuiden" />
+    <title>devConf</title>
 
-        <link rel="stylesheet" href="/css/draftsman.css" />
-        <script src="/js/framework.js"></script>
-        <script src="/js/cache.js"></script>
-        <script src="https://unpkg.com/@vimesh/ui"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
-        <script src="/js/utils.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
-        <script src="https://unpkg.com/alpinejs" defer></script>
-        <script async defer data-domain="devconf.nl"
-                src="https://analytics.bohanssen.com/js/plausible.js"></script>
+    <!-- CSS en scripts -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <link href="/css/devconf.css" rel="stylesheet" />
 
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="devConf, een DevOps conferentie in het zuiden" />
-        <title>devConf</title>
+    <!-- Andere scripts -->
+    <script src="/js/configuration.js"></script>
+    <script src="/js/configuration-staging.js"></script>
+    <link rel="stylesheet" href="/css/draftsman.css" />
+    <script src="/js/framework.js"></script>
+    <script src="/js/cache.js"></script>
+    <script src="https://unpkg.com/@vimesh/ui"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script async defer data-domain="devconf.nl" src="https://analytics.bohanssen.com/js/plausible.js"></script>
+    <script src="/js/variables.js"></script>
+    <script src="/js/inschrijven.js"></script>
 
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <link href="/css/styles.css" rel="stylesheet" />
-        <link href="/css/devconf.css" rel="stylesheet" />
-        <script src="/js/variables.js"></script>
-        <script src="/js/inschrijven.js"></script>
+    <!-- Zorg dat html en body 100% hoogte hebben -->
+    <style>
+        html, body {
+          height: 100%;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column h-100" x-cloak x-data="{}" x-import="navbar; footer; home/banner; home/call-to-action; home/signup-newsletter">
+<!-- Main content neemt de beschikbare ruimte in -->
+<main class="flex-grow-1">
+    <ui-navbar></ui-navbar>
+    <ui-banner></ui-banner>
 
-        <!-- -->
+    <template x-if="bucket">
+        <section class="m-1 d-block d-xl-none text-center">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#videoModal">
+                <video id="mobile-video" muted autoplay loop playsinline class="img-fluid rounded-3 my-5">
+                    <source :src="'https://' + bucket + '/aftermovie/devConf_2024_mobile.mp4'" type="video/mp4">
+                    <source :src="'https://' + bucket + '/aftermovie/devConf_2023.mp4'" type="video/mp4">
+                    <source src="/assets/devConf_2023.mp4" type="video/mp4">
+                </video>
+            </a>
 
-    </head>
-    <body class="d-flex flex-column h-100" x-cloak x-data="{}" x-import="navbar;
-                                                                         footer;
-                                                                         home/banner;
-                                                                         home/call-to-action;
-                                                                         home/signup-newsletter">
-        <main class="flex-shrink-0">
-            <ui-navbar></ui-navbar>
-            <ui-banner></ui-banner>
+            <script>
+                const video = document.getElementById("mobile-video");
 
-            <template x-if="bucket">
-                <section class="m-1 d-block d-xl-none text-center">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#videoModal">
-                        <video  id="mobile-video"
-                                muted autoplay loop playsinline
-                                class="img-fluid rounded-3 my-5">
-                            <source :src="'https://' + bucket + '/aftermovie/devConf_2024_mobile.mp4'" type="video/mp4">
-                            <source :src="'https://' + bucket + '/aftermovie/devConf_2023.mp4'" type="video/mp4">
-                            <source src="/assets/devConf_2023.mp4" type="video/mp4">
-                        </video>
-                    </a>
+                function startVideoOnScroll() {
+                  if (video.paused) {
+                    video.play().catch(error => {
+                      console.error("Autoplay blokkade: ", error);
+                    });
+                  }
+                }
 
-                    <script>
-                        const video = document.getElementById("mobile-video");
+                // Fallback: Start de video bij scrollen als deze nog niet speelt
+                window.addEventListener("scroll", function onScroll() {
+                  startVideoOnScroll();
+                  window.removeEventListener("scroll", onScroll); // Verwijder event na starten
+                });
+            </script>
+        </section>
+    </template>
 
-                        function startVideoOnScroll() {
-                            if (video.paused) {
-                                video.play().catch(error => {
-                                    console.error("Autoplay blokkade: ", error);
-                                });
-                            }
-                        }
+    <ui-call-to-action></ui-call-to-action>
 
-                        // Fallback: Start de video bij scrollen als deze nog niet speelt
-                        window.addEventListener("scroll", function onScroll() {
-                            startVideoOnScroll();
-                            window.removeEventListener("scroll", onScroll); // Verwijder event na starten
-                        });
-                    </script>
-                </section>
-            </template>
+    <draftsman-notification message="updated" type="RegistrationManager"
+                            @notification="console.log('Received message:',$event.detail);Draftsman.reload_data();">
+    </draftsman-notification>
+</main>
 
-            <ui-call-to-action></ui-call-to-action>
+<!-- Footer component -->
+<ui-footer></ui-footer>
 
-            <draftsman-notification message="updated" type="RegistrationManager"
-                                    @notification="console.log('Received message:',$event.detail);Draftsman.reload_data();">
-            </draftsman-notification>
-        </main>
-        <ui-footer></ui-footer>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/locale/nl.js"></script>
-        <script>moment.locale("nl");</script>
-    </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/locale/nl.js"></script>
+<script>moment.locale("nl");</script>
+</body>
 </html>
