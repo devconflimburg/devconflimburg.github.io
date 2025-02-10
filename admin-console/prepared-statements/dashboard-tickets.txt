@@ -1,4 +1,4 @@
-query MyQuery($year: String = "2024") {
+query MyQuery($year: String = "2025") {
   Ticket {
     filter(year_equals: $year, limit: 1000) {
       resultset {

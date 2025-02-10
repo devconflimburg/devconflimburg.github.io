@@ -1,0 +1,3 @@
+mutation TriggerSnapshot {
+  triggerSnapshot(aggregate: "Conference-Ticket", identifier: "devconf-ticket:320672936922375611888333798041292528134")
+}
