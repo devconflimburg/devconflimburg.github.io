@@ -1,4 +1,4 @@
-query MyQuery($year: ID = "2024") {
+query MyQuery($year: ID = "2025") {
   Program {
     get(key: $year) {
       start
