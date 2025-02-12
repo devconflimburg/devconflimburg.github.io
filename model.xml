@@ -1,65 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <draftsman project-name="ManagementSystem" xmlns="https://tracepaper.draftsman.io">
 	<global>
+		<pattern name="EmailGroup" regex="^(visitor-all|visitor-shows|visitor-noshows|subscriptions|all)$"></pattern>
+		<pattern name="DateTime" regex="^(?:20)\d{2}-\d{2}-\d{2}T\d{2}:\d{2}$"></pattern>
+		<pattern name="Email" regex="^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$"></pattern>
+		<pattern name="TimeNotation" regex="^\d{2}:\d{2}$"></pattern>
+		<pattern name="Date" regex="^\d{2}-\d{2}-(?:20)\d{2}$"></pattern>
 		<pattern name="ProgramItemId" regex="^(?:20)\d{2}-\d{1,2}$"></pattern>
 		<pattern name="Year" regex="^(?:20)\d{2}$"></pattern>
-		<pattern name="DateTime" regex="^(?:20)\d{2}-\d{2}-\d{2}T\d{2}:\d{2}$"></pattern>
-		<pattern name="Date" regex="^\d{2}-\d{2}-(?:20)\d{2}$"></pattern>
-		<pattern name="TimeNotation" regex="^\d{2}:\d{2}$"></pattern>
-		<pattern name="EmailGroup" regex="^(visitor-all|visitor-shows|visitor-noshows|subscriptions|all)$"></pattern>
-		<pattern name="Email" regex="^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$"></pattern>
 		<dependency name="markdown2" version="2.5.2"></dependency>
 	</global>
 	<events>
-		<event graphql-namespace="Email" graphql-name="unsubscribe" name="UnsubscribeEmailRequested" type="ActorEvent" authorization="anonymous" role="administrator">
-			<field name="email" type="String" pattern=""></field>
-		</event>
-		<event graphql-namespace="Email" graphql-name="delete" name="DeleteEmailRequested" type="ActorEvent" authorization="role" role="administrator">
-			<field name="id" type="String"></field>
-		</event>
-		<event graphql-namespace="Email" graphql-name="markAsSend" name="MarkAsSendEmailRequested" authorization="role" type="ActorEvent" role="administrator">
-			<field name="id" type="String"></field>
-		</event>
-		<event graphql-namespace="Email" graphql-name="create" name="CreateEmailRequested" authorization="role" type="ActorEvent" role="administrator">
-			<field name="id" type="String" auto-fill="uuid"></field>
-			<field name="subject" type="String"></field>
+		<event name="UpdateWebSiteElementRequested" authorization="authenticated" type="ActorEvent" graphql-name="update" graphql-namespace="WebSite.Element">
+			<field name="name" type="String"></field>
 			<field name="content" type="String"></field>
 		</event>
-		<event graphql-namespace="Email" graphql-name="update" name="UpdateEmailRequested" authorization="role" type="ActorEvent" role="administrator">
-			<field name="id" type="String"></field>
-			<field name="subject" type="String"></field>
+		<event name="CreateWebSiteElementRequested" authorization="role" role="administrator" type="ActorEvent" graphql-name="create" graphql-namespace="WebSite.Element">
+			<field name="name" type="String"></field>
 			<field name="content" type="String"></field>
-		</event>
-		<event graphql-namespace="Email" graphql-name="schedule" name="ScheduleEmailRequested" authorization="role" type="ActorEvent" role="administrator">
-			<field name="id" type="String"></field>
-			<field name="sendAfter" type="String" pattern="{{DateTime}}"></field>
-			<field name="group" type="String" pattern="{{EmailGroup}}" default="all"></field>
-		</event>
-		<event graphql-namespace="Email" graphql-name="importSubscription" name="ImportSubscriptionEmailRequested" type="ActorEvent" authorization="role" role="administrator">
-			<field name="email" type="String"></field>
-			<field name="firstName" type="String"></field>
-			<field name="lastName" type="String"></field>
-		</event>
-		<event graphql-namespace="Email" graphql-name="send" name="SendEmailRequested" authorization="role" type="ActorEvent" role="administrator">
-			<field name="id" type="String"></field>
-			<field name="email" type="String" pattern="{{Email}}"></field>
-			<field name="firstName" type="String"></field>
-			<field name="lastName" type="String"></field>
-			<field name="enableUnsubscribe" type="String" default="false"></field>
 		</event>
 		<event graphql-namespace="Ticket" graphql-name="handleLost" name="HandleLostTicketRequested" authorization="anonymous" type="ActorEvent">
 			<field name="email" type="String" pattern="{{Email}}"></field>
 		</event>
-		<event graphql-namespace="Ticket" graphql-name="resend" name="ResendTicketRequested" authorization="role" type="ActorEvent" role="administrator">
-			<field name="ticketId" type="String"></field>
-			<field name="reminder" type="Boolean" default="false"></field>
-		</event>
-		<event graphql-namespace="Ticket" graphql-name="redeem" name="RedeemTicketRequested" authorization="role" type="ActorEvent" role="administrator">
-			<field name="ticketId" type="String"></field>
-		</event>
 		<event graphql-namespace="Ticket" graphql-name="verify" name="VerifyTicketRequested" authorization="anonymous" type="ActorEvent" role="">
 			<field name="ticketId" type="String"></field>
 			<field name="control" type="String"></field>
+		</event>
+		<event graphql-namespace="Ticket" graphql-name="resend" name="ResendTicketRequested" authorization="role" type="ActorEvent" role="administrator">
+			<field name="ticketId" type="String"></field>
+			<field name="reminder" type="Boolean" default="false"></field>
 		</event>
 		<event name="ResendVerificationTicketRequested" authorization="role" role="administrator" type="ActorEvent" graphql-name="resendVerification" graphql-namespace="Ticket">
 			<field name="firstName" type="String"></field>
@@ -69,9 +38,44 @@
 			<field name="control" type="String"></field>
 			<field name="ticketId" type="String"></field>
 		</event>
-		<event graphql-namespace="Conference" graphql-name="removeProgramItem" name="RemoveProgramItemConferenceRequested" type="ActorEvent" authorization="role" role="administrator">
+		<event graphql-namespace="Ticket" graphql-name="redeem" name="RedeemTicketRequested" authorization="role" type="ActorEvent" role="administrator">
+			<field name="ticketId" type="String"></field>
+		</event>
+		<event graphql-namespace="Email" graphql-name="markAsSend" name="MarkAsSendEmailRequested" authorization="role" type="ActorEvent" role="administrator">
 			<field name="id" type="String"></field>
-			<field name="year" type="String" pattern="{{Year}}"></field>
+		</event>
+		<event graphql-namespace="Email" graphql-name="unsubscribe" name="UnsubscribeEmailRequested" type="ActorEvent" authorization="anonymous" role="administrator">
+			<field name="email" type="String" pattern=""></field>
+		</event>
+		<event graphql-namespace="Email" graphql-name="schedule" name="ScheduleEmailRequested" authorization="role" type="ActorEvent" role="administrator">
+			<field name="id" type="String"></field>
+			<field name="sendAfter" type="String" pattern="{{DateTime}}"></field>
+			<field name="group" type="String" pattern="{{EmailGroup}}" default="all"></field>
+		</event>
+		<event graphql-namespace="Email" graphql-name="delete" name="DeleteEmailRequested" type="ActorEvent" authorization="role" role="administrator">
+			<field name="id" type="String"></field>
+		</event>
+		<event graphql-namespace="Email" graphql-name="create" name="CreateEmailRequested" authorization="role" type="ActorEvent" role="administrator">
+			<field name="id" type="String" auto-fill="uuid"></field>
+			<field name="subject" type="String"></field>
+			<field name="content" type="String"></field>
+		</event>
+		<event graphql-namespace="Email" graphql-name="send" name="SendEmailRequested" authorization="role" type="ActorEvent" role="administrator">
+			<field name="id" type="String"></field>
+			<field name="email" type="String" pattern="{{Email}}"></field>
+			<field name="firstName" type="String"></field>
+			<field name="lastName" type="String"></field>
+			<field name="enableUnsubscribe" type="String" default="false"></field>
+		</event>
+		<event graphql-namespace="Email" graphql-name="importSubscription" name="ImportSubscriptionEmailRequested" type="ActorEvent" authorization="role" role="administrator">
+			<field name="email" type="String"></field>
+			<field name="firstName" type="String"></field>
+			<field name="lastName" type="String"></field>
+		</event>
+		<event graphql-namespace="Email" graphql-name="update" name="UpdateEmailRequested" authorization="role" type="ActorEvent" role="administrator">
+			<field name="id" type="String"></field>
+			<field name="subject" type="String"></field>
+			<field name="content" type="String"></field>
 		</event>
 		<event name="AddProgramItemConferenceRequested" authorization="role" role="administrator" type="ActorEvent" graphql-name="addProgramItem" graphql-namespace="Conference">
 			<field name="summary" type="String"></field>
@@ -84,16 +88,23 @@
 			<field name="id" type="String"></field>
 			<field name="sessionizeId" type="String" default=""></field>
 		</event>
+		<event graphql-namespace="Conference" graphql-name="removeProgramItem" name="RemoveProgramItemConferenceRequested" type="ActorEvent" authorization="role" role="administrator">
+			<field name="id" type="String"></field>
+			<field name="year" type="String" pattern="{{Year}}"></field>
+		</event>
 		<event name="InitializeEditionConferenceRequested" authorization="role" role="administrator" type="ActorEvent" graphql-name="initializeEdition" graphql-namespace="Conference">
 			<field name="date" type="String" pattern="{{Date}}"></field>
 			<field name="year" type="String" pattern="{{Year}}"></field>
 			<field name="tagline" type="String"></field>
 		</event>
-		<event graphql-namespace="Conference.RegistrationManager" graphql-name="deregisterVisitor" name="DeregisterVisitorConferenceRegistrationManagerRequested" authorization="anonymous" type="ActorEvent">
-			<field name="email" type="String" pattern=""></field>
-			<field name="ticketId" type="String"></field>
-			<field name="reason" type="String"></field>
-			<field name="year" type="String" pattern="{{Year}}"></field>
+		<event name="CreateConferenceTalkProposalRequested" authorization="anonymous" type="ActorEvent" graphql-name="create" graphql-namespace="Conference.TalkProposal">
+			<field name="difficultyLevel" type="String"></field>
+			<field name="name" type="String"></field>
+			<field name="abstract" type="String"></field>
+			<field name="biography" type="String"></field>
+			<field name="id" type="String"></field>
+			<field name="title" type="String"></field>
+			<field name="email" type="String"></field>
 		</event>
 		<event name="RegisterVisitorConferenceRegistrationManagerRequested" authorization="anonymous" type="ActorEvent" graphql-name="registerVisitor" graphql-namespace="Conference.RegistrationManager" role="">
 			<field name="firstName" type="String"></field>
@@ -116,25 +127,37 @@
 			<field name="openDate" type="String" pattern="{{Date}}"></field>
 			<field name="maxVisitors" type="Int"></field>
 		</event>
-		<event name="CreateConferenceTalkProposalRequested" authorization="anonymous" type="ActorEvent" graphql-name="create" graphql-namespace="Conference.TalkProposal">
-			<field name="difficultyLevel" type="String"></field>
+		<event graphql-namespace="Conference.RegistrationManager" graphql-name="deregisterVisitor" name="DeregisterVisitorConferenceRegistrationManagerRequested" authorization="anonymous" type="ActorEvent">
+			<field name="email" type="String" pattern=""></field>
+			<field name="ticketId" type="String"></field>
+			<field name="reason" type="String"></field>
+			<field name="year" type="String" pattern="{{Year}}"></field>
+		</event>
+		<event name="PhotoAddedToAlbum" source="WebSite.Album" type="DomainEvent">
+			<field name="year" type="String"></field>
+			<nested-object name="images" business-key="newField">
+				<field name="path" type="String"></field>
+				<field name="uploadedBy" type="String"></field>
+			</nested-object>
+		</event>
+		<event name="WebSiteElementUpdated" source="WebSite.Element" type="DomainEvent">
 			<field name="name" type="String"></field>
-			<field name="abstract" type="String"></field>
-			<field name="biography" type="String"></field>
-			<field name="id" type="String"></field>
-			<field name="title" type="String"></field>
+			<field name="content" type="String"></field>
+		</event>
+		<event name="WebSiteElementCreated" source="WebSite.Element" type="DomainEvent">
+			<field name="name" type="String"></field>
+			<field name="content" type="String"></field>
+		</event>
+		<event type="DomainEvent" name="SubscriptionCreated" source="Communication.Subscription">
+			<field name="email" type="String"></field>
+			<field name="firstName" type="String"></field>
+			<field name="lastName" type="String"></field>
+		</event>
+		<event type="DomainEvent" name="Unsubscribed" source="Communication.Subscription">
 			<field name="email" type="String"></field>
 		</event>
-		<event name="CreateWebSiteElementRequested" authorization="role" role="administrator" type="ActorEvent" graphql-name="create" graphql-namespace="WebSite.Element">
-			<field name="name" type="String"></field>
-			<field name="content" type="String"></field>
-		</event>
-		<event name="UpdateWebSiteElementRequested" authorization="authenticated" type="ActorEvent" graphql-name="update" graphql-namespace="WebSite.Element">
-			<field name="name" type="String"></field>
-			<field name="content" type="String"></field>
-		</event>
-		<event type="DomainEvent" name="CommunicationEmailDeleted" source="Communication.Email">
-			<field name="id" type="String"></field>
+		<event name="EmailMarkedAsSend" source="Communication.Email" type="DomainEvent">
+			<field name="isSend" type="Boolean" default="true"></field>
 		</event>
 		<event name="EmailUpdated" source="Communication.Email" type="DomainEvent">
 			<field name="subject" type="String"></field>
@@ -144,62 +167,22 @@
 			<field name="sendAfter" type="String"></field>
 			<field name="group" type="String"></field>
 		</event>
-		<event name="EmailMarkedAsSend" source="Communication.Email" type="DomainEvent">
-			<field name="isSend" type="Boolean" default="true"></field>
-		</event>
 		<event name="EmailCreated" source="Communication.Email" type="DomainEvent">
 			<field name="id" type="String"></field>
 			<field name="subject" type="String"></field>
 			<field name="content" type="String"></field>
 		</event>
-		<event type="DomainEvent" name="Unsubscribed" source="Communication.Subscription">
-			<field name="email" type="String"></field>
-		</event>
-		<event type="DomainEvent" name="SubscriptionCreated" source="Communication.Subscription">
-			<field name="email" type="String"></field>
-			<field name="firstName" type="String"></field>
-			<field name="lastName" type="String"></field>
-		</event>
-		<event name="TicketDeleted" source="Conference.Ticket" type="DomainEvent">
-			<field name="ticketId" type="String"></field>
-		</event>
-		<event name="ConferenceTicketCreated" source="Conference.Ticket" type="DomainEvent">
-			<field name="year" type="String"></field>
-			<field name="ticketId" type="String"></field>
-			<field name="breakouts" type="String"></field>
-			<field name="control" type="String"></field>
-			<field name="createdAt" type="Int"></field>
-		</event>
-		<event name="ConferenceTicketVerified" source="Conference.Ticket" type="DomainEvent">
-			<field name="ticketId" type="String"></field>
-			<field name="verified" type="Boolean" default="false"></field>
-			<field name="verifiedAt" type="Int"></field>
-		</event>
-		<event name="ConferenceTicketRedeemed" source="Conference.Ticket" type="DomainEvent">
-			<field name="ticketId" type="String"></field>
-			<field name="redeemed" type="Boolean" default="true"></field>
-			<field name="redeemedAt" type="Int"></field>
-		</event>
-		<event type="DomainEvent" name="ConferenceProgramItemRemoved" source="Conference.ProgramItem">
+		<event type="DomainEvent" name="CommunicationEmailDeleted" source="Communication.Email">
 			<field name="id" type="String"></field>
 		</event>
-		<event name="ConferenceProgramItemCreated" source="Conference.ProgramItem" type="DomainEvent">
-			<field name="summary" type="String"></field>
-			<field name="duration" type="Int"></field>
-			<field name="year" type="String"></field>
-			<field name="speaker" type="String"></field>
-			<field name="startTime" type="String"></field>
+		<event name="ConferenceTalkProposalCreated" source="Conference.TalkProposal" type="DomainEvent">
+			<field name="difficultyLevel" type="String"></field>
+			<field name="name" type="String"></field>
+			<field name="abstract" type="String"></field>
+			<field name="biography" type="String"></field>
 			<field name="id" type="String"></field>
-			<field name="endTime" type="String"></field>
 			<field name="title" type="String"></field>
-			<field name="room" type="String"></field>
-			<field name="sessionizeId" type="String"></field>
-		</event>
-		<event name="ConferenceRegistrationManagerInitialized" source="Conference.RegistrationManager" type="DomainEvent">
-			<field name="closeDate" type="String"></field>
-			<field name="openDate" type="String"></field>
-			<field name="maxVisitors" type="Int"></field>
-			<field name="year" type="String"></field>
+			<field name="email" type="String"></field>
 		</event>
 		<event name="ConferenceRegistrationManagerUpdated" source="Conference.RegistrationManager" type="DomainEvent">
 			<field name="closeDate" type="String"></field>
@@ -228,14 +211,14 @@
 			<field name="year" type="String"></field>
 			<field name="eventTimeToLive" type="Int"></field>
 		</event>
-		<event name="ConferenceTalkProposalCreated" source="Conference.TalkProposal" type="DomainEvent">
-			<field name="difficultyLevel" type="String"></field>
-			<field name="name" type="String"></field>
-			<field name="abstract" type="String"></field>
-			<field name="biography" type="String"></field>
+		<event name="ConferenceRegistrationManagerInitialized" source="Conference.RegistrationManager" type="DomainEvent">
+			<field name="closeDate" type="String"></field>
+			<field name="openDate" type="String"></field>
+			<field name="maxVisitors" type="Int"></field>
+			<field name="year" type="String"></field>
+		</event>
+		<event type="DomainEvent" name="ConferenceEditionProgramItemRemoved" source="Conference.Edition">
 			<field name="id" type="String"></field>
-			<field name="title" type="String"></field>
-			<field name="email" type="String"></field>
 		</event>
 		<event name="ConferenceEditionInitialized" source="Conference.Edition" type="DomainEvent">
 			<field name="date" type="String"></field>
@@ -254,9 +237,6 @@
 			<field name="session" type="Int"></field>
 			<field name="sessionizeId" type="String"></field>
 		</event>
-		<event type="DomainEvent" name="ConferenceEditionProgramItemRemoved" source="Conference.Edition">
-			<field name="id" type="String"></field>
-		</event>
 		<event name="ConferenceVisitorCreated" source="Conference.Visitor" type="DomainEvent">
 			<field name="firstName" type="String"></field>
 			<field name="lastName" type="String"></field>
@@ -272,20 +252,40 @@
 		<event name="VisitorDeleted" source="Conference.Visitor" type="DomainEvent">
 			<field name="email" type="String"></field>
 		</event>
-		<event name="PhotoAddedToAlbum" source="WebSite.Album" type="DomainEvent">
+		<event name="ConferenceTicketCreated" source="Conference.Ticket" type="DomainEvent">
 			<field name="year" type="String"></field>
-			<nested-object name="images" business-key="newField">
-				<field name="path" type="String"></field>
-				<field name="uploadedBy" type="String"></field>
-			</nested-object>
+			<field name="ticketId" type="String"></field>
+			<field name="breakouts" type="String"></field>
+			<field name="control" type="String"></field>
+			<field name="createdAt" type="Int"></field>
 		</event>
-		<event name="WebSiteElementCreated" source="WebSite.Element" type="DomainEvent">
-			<field name="name" type="String"></field>
-			<field name="content" type="String"></field>
+		<event name="ConferenceTicketVerified" source="Conference.Ticket" type="DomainEvent">
+			<field name="ticketId" type="String"></field>
+			<field name="verified" type="Boolean" default="false"></field>
+			<field name="verifiedAt" type="Int"></field>
 		</event>
-		<event name="WebSiteElementUpdated" source="WebSite.Element" type="DomainEvent">
-			<field name="name" type="String"></field>
-			<field name="content" type="String"></field>
+		<event name="TicketDeleted" source="Conference.Ticket" type="DomainEvent">
+			<field name="ticketId" type="String"></field>
+		</event>
+		<event name="ConferenceTicketRedeemed" source="Conference.Ticket" type="DomainEvent">
+			<field name="ticketId" type="String"></field>
+			<field name="redeemed" type="Boolean" default="true"></field>
+			<field name="redeemedAt" type="Int"></field>
+		</event>
+		<event name="ConferenceProgramItemCreated" source="Conference.ProgramItem" type="DomainEvent">
+			<field name="summary" type="String"></field>
+			<field name="duration" type="Int"></field>
+			<field name="year" type="String"></field>
+			<field name="speaker" type="String"></field>
+			<field name="startTime" type="String"></field>
+			<field name="id" type="String"></field>
+			<field name="endTime" type="String"></field>
+			<field name="title" type="String"></field>
+			<field name="room" type="String"></field>
+			<field name="sessionizeId" type="String"></field>
+		</event>
+		<event type="DomainEvent" name="ConferenceProgramItemRemoved" source="Conference.ProgramItem">
+			<field name="id" type="String"></field>
 		</event>
 		<event name="FileUploaded" type="DomainEvent" source="appsync">
 			<field name="bucket" type="String"></field>
@@ -295,190 +295,110 @@
 		</event>
 	</events>
 	<domain>
-		<subdomain name="Communication">
-			<aggregate name="Email" business-key="id" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
-				<field name="id" type="String"></field>
-				<field name="subject" type="String"></field>
-				<field name="content" type="String"></field>
-				<field name="isSend" type="Boolean"></field>
-				<field name="sendAfter" type="String"></field>
-				<field name="group" type="String"></field>
-				<command name="Schedule">
-					<trigger source="ScheduleEmailRequested" key-field="id" idempotency-key="">
-						<mapping target="sendAfter" value="sendAfter"></mapping>
-						<mapping target="group" value="group"></mapping>
+		<subdomain name="WebSite">
+			<aggregate name="Album" business-key="year" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
+				<field name="year" type="String"></field>
+				<command name="AddPhoto">
+					<trigger source="FileUploaded" key-field="#event.uri.split('/')[1]">
+						<mapping target="path" value="uri"></mapping>
+						<mapping target="bucket" value="bucket"></mapping>
+						<mapping target="username" value="username"></mapping>
 					</trigger>
-					<processor type="validator" condition="flow.entity.version != 0" exception="May not be the initial request" name=""></processor>
-					<processor type="emit-event" ref="EmailScheduled" name="">
-						<mapping target="sendAfter" value="#flow.sendAfter"></mapping>
-						<mapping target="group" value="#flow.group"></mapping>
+					<processor type="set-variable" id="ARb13v" name="year" expression="flow.identity"></processor>
+					<processor type="code" id="bKXtcT" file="" handler="" code='flow.images = [{|LB|    "path": flow.path,|LB|    "uploadedBy": flow.username|LB|}]|LB||LB|flow.validEdition = False|LB||LB|try:|LB|    flow.validEdition = int(flow.year) &gt; 2018|LB|except:|LB|    pass'></processor>
+					<processor type="validator" id="NjcSCR" condition="flow.validEdition" exception="Album must be coupled to a valid year, but was [{flow.year}]"></processor>
+					<processor type="validator" id="FQABQS" condition='"-web-" in flow.bucket' exception="This function only reacts to public uploads 'web-bucket', but the selected bucket was [{flow.bucket}]"></processor>
+					<processor type="emit-event" id="Zb9cXI" ref="PhotoAddedToAlbum">
+						<mapping target="year" value="#flow.year"></mapping>
+						<mapping target="images" value="#flow.images"></mapping>
 					</processor>
-					<test-case name="ScheduleEmail" trigger-event="ScheduleEmailRequested" expected-processing-status="success">
-						<input name="id" value="6a058611-a7c1-45fd-9aae-cfb263e22720" type="String"></input>
-						<input name="sendAfter" value="1970-01-01T00:00" type="String"></input>
-						<input name="group" value="all" type="String"></input>
-						<expected domain-event="EmailScheduled">
-							<field value="1970-01-01T00:00" name="sendAfter" type="String"></field>
-							<field value="all" name="group" type="String"></field>
+					<test-case name="AddPhotoToAlbum" trigger-event="FileUploaded">
+						<input name="bucket" value="-web-" type="String"></input>
+						<input name="uri" value="userhash/2019/test" type="String"></input>
+						<input name="location" value="-" type="String"></input>
+						<input name="username" value="j.doe" type="String"></input>
+						<expected domain-event="PhotoAddedToAlbum">
+							<field value="2019" name="year" type="String"></field>
 						</expected>
-						<state>{
-  "id": "6a058611-a7c1-45fd-9aae-cfb263e22720",
-  "version": 1
-}</state>
-						<expected-state pk="6a058611-a7c1-45fd-9aae-cfb263e22720">{
-  "group": "all",
-  "id": "6a058611-a7c1-45fd-9aae-cfb263e22720",
-  "sendAfter": "1970-01-01T00:00"
+						<expected-state pk="2019">{
+  "year": "2019",
+  "images": {
+    "userhash/2019/test": {
+      "path": "userhash/2019/test",
+      "uploadedBy": "j.doe"
+    }
+  }
 }</expected-state>
 					</test-case>
 				</command>
-				<command name="Update">
-					<trigger source="UpdateEmailRequested" key-field="id" idempotency-key="">
-						<mapping target="subject" value="subject"></mapping>
-						<mapping target="content" value="content"></mapping>
+				<event-handler on="PhotoAddedToAlbum">
+					<nested-mapping source="images" target="images" business-key="path">
+						<mapping target="path" operand="set" value="path"></mapping>
+						<mapping target="uploadedBy" operand="set" value="uploadedBy"></mapping>
+					</nested-mapping>
+					<mapping target="year" operand="set" value="year"></mapping>
+				</event-handler>
+				<nested-object name="images" business-key="newField">
+					<field name="path" type="String"></field>
+					<field name="uploadedBy" type="String"></field>
+				</nested-object>
+			</aggregate>
+			<aggregate name="Element" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0" business-key="name">
+				<field name="name" type="String"></field>
+				<field name="content" type="String"></field>
+				<command name="Update" create-command="false">
+					<trigger key-field="name" source="UpdateWebSiteElementRequested">
+						<mapping value="name" target="name"></mapping>
+						<mapping value="content" target="content"></mapping>
 					</trigger>
-					<processor type="validator" condition="flow.entity.version != 0" exception="May not be the initial request" name=""></processor>
-					<processor type="emit-event" ref="EmailUpdated" name="">
-						<mapping target="subject" value="#flow.subject"></mapping>
+					<processor type="code" handler="decode_content" file="lib/Utils.py" id="kmdno"></processor>
+					<processor type="emit-event" ref="WebSiteElementUpdated" id="UIkoJ">
+						<mapping target="name" value="#flow.name"></mapping>
 						<mapping target="content" value="#flow.content"></mapping>
 					</processor>
-					<test-case name="UpdateEmail" trigger-event="UpdateEmailRequested" expected-processing-status="success">
-						<input name="id" value="3ba9c8dc-f525-4d95-be97-2d18db3fe43e" type="String"></input>
-						<input name="subject" value="post" type="String"></input>
-						<input name="content" value="post-content" type="String"></input>
-						<expected-state pk="3ba9c8dc-f525-4d95-be97-2d18db3fe43e">{
-  "content": "post-content",
-  "id": "3ba9c8dc-f525-4d95-be97-2d18db3fe43e",
-  "subject": "post"
-}</expected-state>
-						<state>{
-  "content": "pre-content",
-  "id": "3ba9c8dc-f525-4d95-be97-2d18db3fe43e",
-  "subject": "pre",
-  "version": 1
-}</state>
-						<expected domain-event="EmailUpdated">
-							<field value="post" name="subject" type="String"></field>
-							<field value="post-content" name="content" type="String"></field>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="UpdateWebSiteElementRequested" user="systemuser">
+						<input name="name" type="String" value="test"></input>
+						<input name="content" type="String" value="Hello World!"></input>
+						<expected domain-event="WebSiteElementUpdated">
+							<field name="name" type="String" value="test"></field>
+							<field name="content" type="String" value="Hello World!"></field>
 						</expected>
-					</test-case>
-				</command>
-				<command name="MarkAsSend">
-					<trigger source="MarkAsSendEmailRequested" key-field="id" idempotency-key="">
-						<mapping target="id" value="id"></mapping>
-					</trigger>
-					<processor type="validator" condition="flow.entity.version != 0" exception="My log message {flow.requestor} not be the initial request" name=""></processor>
-					<processor type="set-variable" name="isSend" expression="True"></processor>
-					<processor type="emit-event" ref="EmailMarkedAsSend" name="">
-						<mapping target="isSend" value="#flow.isSend"></mapping>
-					</processor>
-					<test-case name="MarkAsSend" trigger-event="MarkAsSendEmailRequested" expected-processing-status="success">
-						<input name="id" value="1c9878b4-a964-45db-b8cf-aa615ef4cb5c" type="String"></input>
-						<expected domain-event="EmailMarkedAsSend">
-							<field value="true" name="isSend" type="Boolean"></field>
-						</expected>
-						<state>{
-  "id": "1c9878b4-a964-45db-b8cf-aa615ef4cb5c",
-  "version": 1
-}</state>
-						<expected-state pk="1c9878b4-a964-45db-b8cf-aa615ef4cb5c">{
-  "id": "1c9878b4-a964-45db-b8cf-aa615ef4cb5c",
-  "isSend": true
-}</expected-state>
 					</test-case>
 				</command>
 				<command name="Create" create-command="true">
-					<trigger source="CreateEmailRequested" key-field="id">
-						<mapping target="id" value="id"></mapping>
-						<mapping target="subject" value="subject"></mapping>
-						<mapping target="content" value="content"></mapping>
+					<trigger key-field="name" source="CreateWebSiteElementRequested">
+						<mapping value="name" target="name"></mapping>
+						<mapping value="content" target="content"></mapping>
 					</trigger>
-					<processor type="emit-event" id="U97Ddc" ref="EmailCreated">
-						<mapping target="id" value="#flow.id"></mapping>
-						<mapping target="subject" value="#flow.subject"></mapping>
+					<processor type="code" handler="decode_content" file="lib/Utils.py" id="lGGTT"></processor>
+					<processor type="emit-event" ref="WebSiteElementCreated" id="G3nyz">
+						<mapping target="name" value="#flow.name"></mapping>
 						<mapping target="content" value="#flow.content"></mapping>
 					</processor>
-					<test-case name="CreateEmail" trigger-event="CreateEmailRequested">
-						<input name="id" value="328f8cd9-ee3b-455b-b18b-c07f19b76807" type="String"></input>
-						<input name="subject" value="Test mail" type="String"></input>
-						<input name="content" value="Hello World!" type="String"></input>
-						<expected domain-event="EmailCreated">
-							<field value="328f8cd9-ee3b-455b-b18b-c07f19b76807" name="id" type="String"></field>
-							<field value="Test mail" name="subject" type="String"></field>
-							<field value="Hello World!" name="content" type="String"></field>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="CreateWebSiteElementRequested" user="systemuser">
+						<input name="name" type="String" value="call-to-action"></input>
+						<input name="content" type="String" value="Hello World!"></input>
+						<expected domain-event="WebSiteElementCreated">
+							<field name="name" type="String" value="call-to-action"></field>
+							<field name="content" type="String" value="Hello World!"></field>
 						</expected>
-						<expected-state pk="328f8cd9-ee3b-455b-b18b-c07f19b76807">{
-  "id": "328f8cd9-ee3b-455b-b18b-c07f19b76807",
-  "subject": "Test mail",
-  "content": "Hello World!"
-}</expected-state>
 					</test-case>
 				</command>
-				<command name="Delete">
-					<trigger source="DeleteEmailRequested" idempotency-key="" key-field="id">
-						<mapping target="id" value="id"></mapping>
-					</trigger>
-					<processor type="emit-event" ref="CommunicationEmailDeleted" name="">
-						<mapping target="id" value="#flow.id"></mapping>
-					</processor>
-					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="DeleteEmailRequested">
-						<input name="id" type="String" value="dummy"></input>
-						<expected domain-event="CommunicationEmailDeleted">
-							<field name="id" type="String" value="dummy"></field>
-						</expected>
-						<state>{
-  "id": "dummy"
-}</state>
-						<expected-state pk="dummy">{
-  "id": "dummy",
-  "isDeleted": "hard"
-}</expected-state>
-					</test-case>
-				</command>
-				<event-handler code='self.isDeleted = "hard"' on="CommunicationEmailDeleted"></event-handler>
-				<event-handler on="EmailUpdated">
-					<mapping target="subject" operand="set" value="subject"></mapping>
-					<mapping target="content" operand="set" value="content"></mapping>
+				<event-handler on="WebSiteElementUpdated">
+					<mapping value="name" target="name" operand="set"></mapping>
+					<mapping value="content" target="content" operand="set"></mapping>
 				</event-handler>
-				<event-handler on="EmailScheduled">
-					<mapping target="sendAfter" operand="set" value="sendAfter"></mapping>
-					<mapping target="group" operand="set" value="group"></mapping>
-				</event-handler>
-				<event-handler on="EmailMarkedAsSend">
-					<mapping target="isSend" operand="set" value="isSend"></mapping>
-				</event-handler>
-				<event-handler on="EmailCreated">
-					<mapping target="id" operand="set" value="id"></mapping>
-					<mapping target="subject" operand="set" value="subject"></mapping>
-					<mapping target="content" operand="set" value="content"></mapping>
+				<event-handler on="WebSiteElementCreated">
+					<mapping value="name" target="name" operand="set"></mapping>
+					<mapping value="content" target="content" operand="set"></mapping>
 				</event-handler>
 			</aggregate>
+		</subdomain>
+		<subdomain name="Communication">
 			<aggregate name="Subscription" business-key="email" event-ttl="78840000">
 				<field name="email" type="String"></field>
 				<field name="firstName" type="String"></field>
 				<field name="lastName" type="String"></field>
-				<command name="Unsubscribe">
-					<trigger source="UnsubscribeEmailRequested" idempotency-key="" key-field="email">
-						<mapping target="email" value="email"></mapping>
-					</trigger>
-					<processor type="emit-event" ref="Unsubscribed" name="">
-						<mapping target="email" value="#flow.email"></mapping>
-					</processor>
-					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="UnsubscribeEmailRequested">
-						<input name="email" type="String" value="john.doe@example.com"></input>
-						<expected domain-event="Unsubscribed">
-							<field name="email" type="String" value="john.doe@example.com"></field>
-						</expected>
-						<state>{
-  "email": "john.doe@example.com",
-  "isDeleted": ""
-}</state>
-						<expected-state pk="john.doe@example.com">{
-  "email": "john.doe@example.com",
-  "isDeleted": "hard"
-}</expected-state>
-					</test-case>
-				</command>
 				<command name="Create">
 					<trigger source="ConferenceVisitorCreated" idempotency-key="" key-field="email">
 						<mapping target="firstName" value="firstName"></mapping>
@@ -522,273 +442,249 @@
 }</expected-state>
 					</test-case>
 				</command>
-				<event-handler code='self.isDeleted = "hard"' on="Unsubscribed"></event-handler>
+				<command name="Unsubscribe">
+					<trigger source="UnsubscribeEmailRequested" idempotency-key="" key-field="email">
+						<mapping target="email" value="email"></mapping>
+					</trigger>
+					<processor type="emit-event" ref="Unsubscribed" name="">
+						<mapping target="email" value="#flow.email"></mapping>
+					</processor>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="UnsubscribeEmailRequested">
+						<input name="email" type="String" value="john.doe@example.com"></input>
+						<expected domain-event="Unsubscribed">
+							<field name="email" type="String" value="john.doe@example.com"></field>
+						</expected>
+						<state>{
+  "email": "john.doe@example.com",
+  "isDeleted": ""
+}</state>
+						<expected-state pk="john.doe@example.com">{
+  "email": "john.doe@example.com",
+  "isDeleted": "hard"
+}</expected-state>
+					</test-case>
+				</command>
 				<event-handler on="SubscriptionCreated">
 					<mapping target="email" value="email" operand="set"></mapping>
 					<mapping target="firstName" value="firstName" operand="set"></mapping>
 					<mapping target="lastName" value="lastName" operand="set"></mapping>
 				</event-handler>
+				<event-handler code='self.isDeleted = "hard"' on="Unsubscribed"></event-handler>
 			</aggregate>
-		</subdomain>
-		<subdomain name="Conference">
-			<aggregate name="Ticket" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
-				<field name="year" type="String"></field>
-				<field name="verified" type="Boolean"></field>
-				<field name="ticketId" type="String"></field>
-				<field name="breakouts" type="String"></field>
-				<field name="control" type="String"></field>
-				<field name="redeemed" type="Boolean"></field>
-				<field name="createdAt" type="Int"></field>
-				<field name="verifiedAt" type="Int"></field>
-				<field name="redeemedAt" type="Int"></field>
-				<command name="Verify">
-					<trigger source="VerifyTicketRequested" key-field="ticketId">
-						<mapping target="ticketId" value="ticketId"></mapping>
-						<mapping target="control" value="control"></mapping>
-						<mapping target="verified" value="#True"></mapping>
-					</trigger>
-					<processor type="validator" id="M1vejN" condition="flow.control == flow.entity.control" exception="Control value [{flow.control}] does not match the ticket [{flow.entity.control}]"></processor>
-					<processor type="validator" id="GhDcyQ" condition="flow.entity.verified == False" exception="Already verified"></processor>
-					<processor type="code" id="Ki2o7X" file="lib/TicketUtils.py" handler="get_timestamp"></processor>
-					<processor type="emit-event" id="9iWObF" ref="ConferenceTicketVerified">
-						<mapping target="ticketId" value="#flow.ticketId"></mapping>
-						<mapping target="verified" value="#flow.verified"></mapping>
-						<mapping target="verifiedAt" value="#flow.timestamp"></mapping>
-					</processor>
-					<test-case name="HappyFlow" trigger-event="VerifyTicketRequested">
-						<input name="ticketId" value="123" type="String"></input>
-						<input name="control" value="456" type="String"></input>
-						<expected domain-event="ConferenceTicketVerified">
-							<field value="123" name="ticketId" type="String"></field>
-						</expected>
-						<state>{
-  "verified": false,
-  "ticketId": "123",
-  "control": "456"
-}</state>
-						<expected-state pk="123">{
-  "verified": true
-}</expected-state>
-					</test-case>
-				</command>
-				<command name="Redeem">
-					<trigger source="RedeemTicketRequested" key-field="ticketId">
-						<mapping target="ticketId" value="ticketId"></mapping>
-						<mapping target="redeemed" value="#True"></mapping>
-					</trigger>
-					<processor type="validator" id="1toC90" condition="flow.entity.redeemed == False" exception="Ticket already redeemed"></processor>
-					<processor type="validator" id="7Z6hZr" condition="flow.entity.verified == True" exception="Invalid ticket"></processor>
-					<processor type="code" id="0Ud7Dq" file="lib/TicketUtils.py" handler="get_timestamp"></processor>
-					<processor type="emit-event" id="aqeUGS" ref="ConferenceTicketRedeemed">
-						<mapping target="ticketId" value="#flow.ticketId"></mapping>
-						<mapping target="redeemed" value="#flow.redeemed"></mapping>
-						<mapping target="redeemedAt" value="#flow.timestamp"></mapping>
-					</processor>
-					<test-case name="HappyFlow" trigger-event="RedeemTicketRequested">
-						<input name="ticketId" value="123" type="String"></input>
-						<expected domain-event="ConferenceTicketRedeemed">
-							<field value="123" name="ticketId" type="String"></field>
-							<field value="true" name="redeemed" type="Boolean"></field>
-						</expected>
-						<state>{
-  "verified": true,
-  "ticketId": "123",
-  "redeemed": false
-}</state>
-						<expected-state pk="123">{
-  "verified": true,
-  "ticketId": "123",
-  "redeemed": true
-}</expected-state>
-					</test-case>
-					<test-case name="InvalidTicket" trigger-event="RedeemTicketRequested" expected-processing-status="error">
-						<input name="ticketId" value="123" type="String"></input>
-					</test-case>
-					<test-case name="AlreadyRedeemed" trigger-event="RedeemTicketRequested" expected-processing-status="error">
-						<input name="ticketId" value="123" type="String"></input>
-					</test-case>
-				</command>
-				<command name="Create" create-command="true">
-					<trigger key-field="ticketId" source="ConferenceRegistrationManagerVisitorRegistered">
-						<mapping value="year" target="year"></mapping>
-						<mapping value="ticketId" target="ticketId"></mapping>
-						<mapping value="breakouts" target="breakouts"></mapping>
-						<mapping target="control" value="control"></mapping>
-					</trigger>
-					<processor type="code" id="4ZcAEI" file="lib/TicketUtils.py" handler="get_timestamp"></processor>
-					<processor type="emit-event" ref="ConferenceTicketCreated" id="3BC8k">
-						<mapping target="year" value="#flow.year"></mapping>
-						<mapping target="ticketId" value="#flow.ticketId"></mapping>
-						<mapping target="breakouts" value="#flow.breakouts"></mapping>
-						<mapping target="control" value="#flow.control"></mapping>
-						<mapping target="createdAt" value="#flow.timestamp"></mapping>
-					</processor>
-					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConferenceRegistrationManagerVisitorRegistered" user="systemuser">
-						<input name="year" value="2024" type="String"></input>
-						<input name="ticketId" value="devconf-ticket:189673085831463618233454140431942137832" type="String"></input>
-						<input name="firstName" value="" type="String"></input>
-						<input name="lastName" value="" type="String"></input>
-						<input name="email" value="" type="String"></input>
-						<input name="breakouts" value="2024-1,2024-2" type="String"></input>
-						<input name="control" value="d7e4aee8-e0fa-4873-84f8-3f4685ceaa32" type="String"></input>
-						<expected domain-event="ConferenceTicketCreated" id="LVng2r">
-							<field value="2024" name="year" type="String"></field>
-							<field value="devconf-ticket:189673085831463618233454140431942137832" name="ticketId" type="String"></field>
-							<field value="2024-1,2024-2" name="breakouts" type="String"></field>
-							<field value="d7e4aee8-e0fa-4873-84f8-3f4685ceaa32" name="control" type="String"></field>
-						</expected>
-						<expected-state pk="devconf-ticket:189673085831463618233454140431942137832">{"year": "2024", "ticketId": "devconf-ticket:189673085831463618233454140431942137832", "breakouts": "2024-1,2024-2","control":"d7e4aee8-e0fa-4873-84f8-3f4685ceaa32","verified":false,"redeemed":false}</expected-state>
-					</test-case>
-				</command>
-				<command name="Delete">
-					<trigger source="VisitorDeregistered" key-field="ticketId">
-						<mapping target="email" value="email"></mapping>
-						<mapping target="ticketId" value="ticketId"></mapping>
-						<mapping target="reason" value="reason"></mapping>
-					</trigger>
-					<processor type="emit-event" id="WpfrjX" ref="TicketDeleted">
-						<mapping target="ticketId" value="#flow.ticketId"></mapping>
-					</processor>
-					<test-case name="HappyFlow" trigger-event="VisitorDeregistered">
-						<input name="email" value="john.doe@example.com" type="String"></input>
-						<input name="ticketId" value="123" type="String"></input>
-						<input name="reason" value="For testing" type="String"></input>
-						<expected domain-event="TicketDeleted">
-							<field value="123" name="ticketId" type="String"></field>
-						</expected>
-						<expected-state pk="123">{
-  "isDeleted" : "hard"
-}</expected-state>
-					</test-case>
-				</command>
-				<event-handler on="TicketDeleted" code='self.isDeleted = "hard"'></event-handler>
-				<event-handler on="ConferenceTicketCreated">
-					<mapping value="year" target="year" operand="set"></mapping>
-					<mapping value="ticketId" target="ticketId" operand="set"></mapping>
-					<mapping value="breakouts" target="breakouts" operand="set"></mapping>
-					<mapping target="control" operand="set" value="control"></mapping>
-					<mapping target="createdAt" operand="set" value="createdAt"></mapping>
-				</event-handler>
-				<event-handler on="ConferenceTicketVerified">
-					<mapping target="verified" operand="set" value="verified"></mapping>
-					<mapping target="verifiedAt" operand="set" value="verifiedAt"></mapping>
-				</event-handler>
-				<event-handler on="ConferenceTicketRedeemed">
-					<mapping target="redeemed" operand="set" value="redeemed"></mapping>
-					<mapping target="redeemedAt" operand="set" value="redeemedAt"></mapping>
-				</event-handler>
-			</aggregate>
-			<aggregate name="ProgramItem" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0" business-key="id">
-				<field name="summary" type="String"></field>
-				<field name="duration" type="Int"></field>
-				<field name="year" type="String"></field>
-				<field name="speaker" type="String"></field>
-				<field name="startTime" type="String"></field>
+			<aggregate name="Email" business-key="id" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
 				<field name="id" type="String"></field>
-				<field name="endTime" type="String"></field>
-				<field name="title" type="String"></field>
-				<field name="room" type="String"></field>
-				<field name="sessionizeId" type="String"></field>
-				<command name="Create" create-command="false">
-					<trigger key-field="id" source="ConferenceEditionProgramItemAdded" idempotency-key="">
-						<mapping value="id" target="id"></mapping>
-						<mapping value="title" target="title"></mapping>
-						<mapping value="summary" target="summary"></mapping>
-						<mapping value="speaker" target="speaker"></mapping>
-						<mapping value="room" target="room"></mapping>
-						<mapping value="startTime" target="startTime"></mapping>
-						<mapping value="duration" target="duration"></mapping>
-						<mapping target="sessionizeId" value="sessionizeId"></mapping>
+				<field name="subject" type="String"></field>
+				<field name="content" type="String"></field>
+				<field name="isSend" type="Boolean"></field>
+				<field name="sendAfter" type="String"></field>
+				<field name="group" type="String"></field>
+				<command name="Update">
+					<trigger source="UpdateEmailRequested" key-field="id" idempotency-key="">
+						<mapping target="subject" value="subject"></mapping>
+						<mapping target="content" value="content"></mapping>
 					</trigger>
-					<processor type="code" handler="calculate_end_time" file="lib/ProgrammaManagement.py" name=""></processor>
-					<processor type="code" handler="decode_summary" file="lib/ProgrammaManagement.py" name=""></processor>
-					<processor type="set-variable" name="sessionizeId" expression="flow.sessionizeId.strip() if flow.sessionizeId else flow.entity.sessionizeId"></processor>
-					<processor type="emit-event" ref="ConferenceProgramItemCreated" name="">
-						<mapping target="summary" value="#flow.summary"></mapping>
-						<mapping target="duration" value="#flow.duration"></mapping>
-						<mapping target="year" value="#flow.year"></mapping>
-						<mapping target="speaker" value="#flow.speaker"></mapping>
-						<mapping target="startTime" value="#flow.startTime"></mapping>
-						<mapping target="id" value="#flow.id"></mapping>
-						<mapping target="endTime" value="#flow.endTime"></mapping>
-						<mapping target="title" value="#flow.title"></mapping>
-						<mapping target="room" value="#flow.room"></mapping>
-						<mapping target="sessionizeId" value="#flow.sessionizeId"></mapping>
+					<processor type="validator" condition="flow.entity.version != 0" exception="May not be the initial request" name=""></processor>
+					<processor type="emit-event" ref="EmailUpdated" name="">
+						<mapping target="subject" value="#flow.subject"></mapping>
+						<mapping target="content" value="#flow.content"></mapping>
 					</processor>
-					<test-case name="TimeOverflow" expected-processing-status="success" trigger-event="ConferenceEditionProgramItemAdded" user="systemuser">
-						<input name="id" type="String" value="2024-1"></input>
-						<input name="title" type="String" value="Test"></input>
-						<input name="summary" type="String" value="Hello World!"></input>
-						<input name="speaker" type="String" value="John Doe"></input>
-						<input name="room" type="String" value="Forum"></input>
-						<input name="startTime" type="String" value="09:45"></input>
-						<input name="duration" type="Number" value="30"></input>
-						<input name="breakout" type="Boolean" value="False"></input>
-						<input name="session" type="Int" value="0"></input>
-						<input name="sessionizeId" type="String" value=""></input>
-						<expected domain-event="ConferenceProgramItemCreated">
-							<field name="summary" type="String" value="Hello World!"></field>
-							<field name="endTime" type="String" value="10:15"></field>
-						</expected>
-						<state>{}</state>
-						<expected-state pk="">{
-  "id": ""
+					<test-case name="UpdateEmail" trigger-event="UpdateEmailRequested" expected-processing-status="success">
+						<input name="id" value="3ba9c8dc-f525-4d95-be97-2d18db3fe43e" type="String"></input>
+						<input name="subject" value="post" type="String"></input>
+						<input name="content" value="post-content" type="String"></input>
+						<expected-state pk="3ba9c8dc-f525-4d95-be97-2d18db3fe43e">{
+  "content": "post-content",
+  "id": "3ba9c8dc-f525-4d95-be97-2d18db3fe43e",
+  "subject": "post"
 }</expected-state>
-					</test-case>
-					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConferenceEditionProgramItemAdded" user="systemuser">
-						<input name="id" type="String" value="2024-1"></input>
-						<input name="title" type="String" value="Test"></input>
-						<input name="summary" type="String" value="base64:SGVsbG8gV29ybGQh"></input>
-						<input name="speaker" type="String" value="John Doe"></input>
-						<input name="room" type="String" value="Forum"></input>
-						<input name="startTime" type="String" value="09:00"></input>
-						<input name="duration" type="Int" value="45"></input>
-						<input name="breakout" type="Boolean" value="False"></input>
-						<input name="session" type="Int" value="0"></input>
-						<input name="sessionizeId" type="String" value=""></input>
-						<expected domain-event="ConferenceProgramItemCreated">
-							<field name="summary" type="String" value="Hello World!"></field>
-							<field name="endTime" type="String" value="09:45"></field>
+						<state>{
+  "content": "pre-content",
+  "id": "3ba9c8dc-f525-4d95-be97-2d18db3fe43e",
+  "subject": "pre",
+  "version": 1
+}</state>
+						<expected domain-event="EmailUpdated">
+							<field value="post" name="subject" type="String"></field>
+							<field value="post-content" name="content" type="String"></field>
 						</expected>
-						<state>{}</state>
-						<expected-state pk="">{
-  "id": ""
+					</test-case>
+				</command>
+				<command name="Schedule">
+					<trigger source="ScheduleEmailRequested" key-field="id" idempotency-key="">
+						<mapping target="sendAfter" value="sendAfter"></mapping>
+						<mapping target="group" value="group"></mapping>
+					</trigger>
+					<processor type="validator" condition="flow.entity.version != 0" exception="May not be the initial request" name=""></processor>
+					<processor type="emit-event" ref="EmailScheduled" name="">
+						<mapping target="sendAfter" value="#flow.sendAfter"></mapping>
+						<mapping target="group" value="#flow.group"></mapping>
+					</processor>
+					<test-case name="ScheduleEmail" trigger-event="ScheduleEmailRequested" expected-processing-status="success">
+						<input name="id" value="6a058611-a7c1-45fd-9aae-cfb263e22720" type="String"></input>
+						<input name="sendAfter" value="1970-01-01T00:00" type="String"></input>
+						<input name="group" value="all" type="String"></input>
+						<expected domain-event="EmailScheduled">
+							<field value="1970-01-01T00:00" name="sendAfter" type="String"></field>
+							<field value="all" name="group" type="String"></field>
+						</expected>
+						<state>{
+  "id": "6a058611-a7c1-45fd-9aae-cfb263e22720",
+  "version": 1
+}</state>
+						<expected-state pk="6a058611-a7c1-45fd-9aae-cfb263e22720">{
+  "group": "all",
+  "id": "6a058611-a7c1-45fd-9aae-cfb263e22720",
+  "sendAfter": "1970-01-01T00:00"
 }</expected-state>
 					</test-case>
 				</command>
 				<command name="Delete">
-					<trigger source="ConferenceEditionProgramItemRemoved" idempotency-key="" key-field="id">
+					<trigger source="DeleteEmailRequested" idempotency-key="" key-field="id">
 						<mapping target="id" value="id"></mapping>
 					</trigger>
-					<processor type="emit-event" ref="ConferenceProgramItemRemoved" name="">
+					<processor type="emit-event" ref="CommunicationEmailDeleted" name="">
 						<mapping target="id" value="#flow.id"></mapping>
 					</processor>
-					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConferenceEditionProgramItemRemoved">
-						<input name="id" type="String" value="2024-01"></input>
-						<expected domain-event="ConferenceProgramItemRemoved">
-							<field name="id" type="String" value="2024-01"></field>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="DeleteEmailRequested">
+						<input name="id" type="String" value="dummy"></input>
+						<expected domain-event="CommunicationEmailDeleted">
+							<field name="id" type="String" value="dummy"></field>
 						</expected>
 						<state>{
-  "id": "2024-01"
+  "id": "dummy"
 }</state>
-						<expected-state pk="2024-01">{
-  "id": "2024-01",
+						<expected-state pk="dummy">{
+  "id": "dummy",
   "isDeleted": "hard"
 }</expected-state>
 					</test-case>
 				</command>
-				<event-handler code='self.isDeleted = "hard"' on="ConferenceProgramItemRemoved"></event-handler>
-				<event-handler on="ConferenceProgramItemCreated">
-					<mapping value="summary" target="summary" operand="set"></mapping>
-					<mapping value="duration" target="duration" operand="set"></mapping>
-					<mapping value="year" target="year" operand="set"></mapping>
-					<mapping value="speaker" target="speaker" operand="set"></mapping>
-					<mapping value="startTime" target="startTime" operand="set"></mapping>
+				<command name="Create" create-command="true">
+					<trigger source="CreateEmailRequested" key-field="id">
+						<mapping target="id" value="id"></mapping>
+						<mapping target="subject" value="subject"></mapping>
+						<mapping target="content" value="content"></mapping>
+					</trigger>
+					<processor type="emit-event" id="U97Ddc" ref="EmailCreated">
+						<mapping target="id" value="#flow.id"></mapping>
+						<mapping target="subject" value="#flow.subject"></mapping>
+						<mapping target="content" value="#flow.content"></mapping>
+					</processor>
+					<test-case name="CreateEmail" trigger-event="CreateEmailRequested">
+						<input name="id" value="328f8cd9-ee3b-455b-b18b-c07f19b76807" type="String"></input>
+						<input name="subject" value="Test mail" type="String"></input>
+						<input name="content" value="Hello World!" type="String"></input>
+						<expected domain-event="EmailCreated">
+							<field value="328f8cd9-ee3b-455b-b18b-c07f19b76807" name="id" type="String"></field>
+							<field value="Test mail" name="subject" type="String"></field>
+							<field value="Hello World!" name="content" type="String"></field>
+						</expected>
+						<expected-state pk="328f8cd9-ee3b-455b-b18b-c07f19b76807">{
+  "id": "328f8cd9-ee3b-455b-b18b-c07f19b76807",
+  "subject": "Test mail",
+  "content": "Hello World!"
+}</expected-state>
+					</test-case>
+				</command>
+				<command name="MarkAsSend">
+					<trigger source="MarkAsSendEmailRequested" key-field="id" idempotency-key="">
+						<mapping target="id" value="id"></mapping>
+					</trigger>
+					<processor type="validator" condition="flow.entity.version != 0" exception="My log message {flow.requestor} not be the initial request" name=""></processor>
+					<processor type="set-variable" name="isSend" expression="True"></processor>
+					<processor type="emit-event" ref="EmailMarkedAsSend" name="">
+						<mapping target="isSend" value="#flow.isSend"></mapping>
+					</processor>
+					<test-case name="MarkAsSend" trigger-event="MarkAsSendEmailRequested" expected-processing-status="success">
+						<input name="id" value="1c9878b4-a964-45db-b8cf-aa615ef4cb5c" type="String"></input>
+						<expected domain-event="EmailMarkedAsSend">
+							<field value="true" name="isSend" type="Boolean"></field>
+						</expected>
+						<state>{
+  "id": "1c9878b4-a964-45db-b8cf-aa615ef4cb5c",
+  "version": 1
+}</state>
+						<expected-state pk="1c9878b4-a964-45db-b8cf-aa615ef4cb5c">{
+  "id": "1c9878b4-a964-45db-b8cf-aa615ef4cb5c",
+  "isSend": true
+}</expected-state>
+					</test-case>
+				</command>
+				<event-handler on="EmailMarkedAsSend">
+					<mapping target="isSend" operand="set" value="isSend"></mapping>
+				</event-handler>
+				<event-handler on="EmailUpdated">
+					<mapping target="subject" operand="set" value="subject"></mapping>
+					<mapping target="content" operand="set" value="content"></mapping>
+				</event-handler>
+				<event-handler on="EmailScheduled">
+					<mapping target="sendAfter" operand="set" value="sendAfter"></mapping>
+					<mapping target="group" operand="set" value="group"></mapping>
+				</event-handler>
+				<event-handler on="EmailCreated">
+					<mapping target="id" operand="set" value="id"></mapping>
+					<mapping target="subject" operand="set" value="subject"></mapping>
+					<mapping target="content" operand="set" value="content"></mapping>
+				</event-handler>
+				<event-handler code='self.isDeleted = "hard"' on="CommunicationEmailDeleted"></event-handler>
+			</aggregate>
+		</subdomain>
+		<subdomain name="Conference">
+			<aggregate name="TalkProposal" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
+				<field name="difficultyLevel" type="String"></field>
+				<field name="name" type="String"></field>
+				<field name="abstract" type="String"></field>
+				<field name="biography" type="String"></field>
+				<field name="id" type="String"></field>
+				<field name="title" type="String"></field>
+				<field name="email" type="String"></field>
+				<command name="Create" create-command="true">
+					<trigger key-field="id" source="CreateConferenceTalkProposalRequested">
+						<mapping value="difficultyLevel" target="difficultyLevel"></mapping>
+						<mapping value="name" target="name"></mapping>
+						<mapping value="abstract" target="abstract"></mapping>
+						<mapping value="biography" target="biography"></mapping>
+						<mapping value="id" target="id"></mapping>
+						<mapping value="title" target="title"></mapping>
+						<mapping value="email" target="email"></mapping>
+					</trigger>
+					<processor type="code" handler="decode_proposal" file="lib/Utils.py" id="Q3Bib"></processor>
+					<processor type="emit-event" ref="ConferenceTalkProposalCreated" id="iKfP9">
+						<mapping target="difficultyLevel" value="#flow.difficultyLevel"></mapping>
+						<mapping target="name" value="#flow.name"></mapping>
+						<mapping target="abstract" value="#flow.abstract"></mapping>
+						<mapping target="biography" value="#flow.biography"></mapping>
+						<mapping target="id" value="#flow.id"></mapping>
+						<mapping target="title" value="#flow.title"></mapping>
+						<mapping target="email" value="#flow.email"></mapping>
+					</processor>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="CreateConferenceTalkProposalRequested" user="systemuser">
+						<input name="difficultyLevel" type="String" value="novice"></input>
+						<input name="name" type="String" value="John Doe"></input>
+						<input name="abstract" type="String" value="base64:SGVsbG8gV29ybGQh"></input>
+						<input name="biography" type="String" value="base64:SGVsbG8gV29ybGQh"></input>
+						<input name="id" type="String" value="ba5994a0-adc9-40a9-ac8d-0b48389f2fc5"></input>
+						<input name="title" type="String" value="My Awesome Talk"></input>
+						<input name="email" type="String" value="john.doe@demo.nl"></input>
+						<expected domain-event="ConferenceTalkProposalCreated">
+							<field name="difficultyLevel" type="String" value="novice"></field>
+							<field name="name" type="String" value="John Doe"></field>
+							<field name="abstract" type="String" value="Hello World!"></field>
+							<field name="biography" type="String" value="Hello World!"></field>
+							<field name="id" type="String" value="ba5994a0-adc9-40a9-ac8d-0b48389f2fc5"></field>
+							<field name="title" type="String" value="My Awesome Talk"></field>
+							<field name="email" type="String" value="john.doe@demo.nl"></field>
+						</expected>
+					</test-case>
+				</command>
+				<event-handler on="ConferenceTalkProposalCreated">
+					<mapping value="difficultyLevel" target="difficultyLevel" operand="set"></mapping>
+					<mapping value="name" target="name" operand="set"></mapping>
+					<mapping value="abstract" target="abstract" operand="set"></mapping>
+					<mapping value="biography" target="biography" operand="set"></mapping>
 					<mapping value="id" target="id" operand="set"></mapping>
-					<mapping value="endTime" target="endTime" operand="set"></mapping>
 					<mapping value="title" target="title" operand="set"></mapping>
-					<mapping value="room" target="room" operand="set"></mapping>
-					<mapping target="sessionizeId" value="sessionizeId" operand="set"></mapping>
+					<mapping value="email" target="email" operand="set"></mapping>
 				</event-handler>
 			</aggregate>
 			<aggregate name="RegistrationManager" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0" business-key="year">
@@ -798,6 +694,40 @@
 				<field name="registeredVisitors" type="Int"></field>
 				<field name="openDate" type="String"></field>
 				<field name="maxVisitors" type="Int"></field>
+				<command name="Configure" create-command="false">
+					<trigger key-field="year" source="ConfigureConferenceRegistrationManagerRequested" idempotency-key="">
+						<mapping value="closeDate" target="closeDate"></mapping>
+						<mapping value="openDate" target="openDate"></mapping>
+						<mapping value="maxVisitors" target="maxVisitors"></mapping>
+						<mapping value="year" target="year"></mapping>
+					</trigger>
+					<processor type="emit-event" ref="ConferenceRegistrationManagerUpdated" name="">
+						<mapping target="closeDate" value="#flow.closeDate"></mapping>
+						<mapping target="openDate" value="#flow.openDate"></mapping>
+						<mapping target="maxVisitors" value="#flow.maxVisitors"></mapping>
+					</processor>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConfigureConferenceRegistrationManagerRequested" user="systemuser">
+						<input name="closeDate" type="String" value="01-01-2123"></input>
+						<input name="openDate" type="String" value="01-01-2023"></input>
+						<input name="maxVisitors" type="Number" value="10"></input>
+						<input name="year" type="String" value="2024"></input>
+						<state>{
+  "closeDate": "10-10-2023",
+  "maxVisitors": 200,
+  "openDate": "05-05-2023",
+  "year": "2024"
+}</state>
+						<expected domain-event="ConferenceRegistrationManagerUpdated">
+							<field name="maxVisitors" type="Number" value="10"></field>
+						</expected>
+						<expected-state pk="2024">{
+  "closeDate": "01-01-2123",
+  "maxVisitors": 10,
+  "openDate": "01-01-2023",
+  "year": "2024"
+}</expected-state>
+					</test-case>
+				</command>
 				<command name="DeregsiterVisitor">
 					<trigger source="DeregisterVisitorConferenceRegistrationManagerRequested" key-field="year" idempotency-key="">
 						<mapping target="email" value="email"></mapping>
@@ -850,38 +780,27 @@
 }</expected-state>
 					</test-case>
 				</command>
-				<command name="Configure" create-command="false">
-					<trigger key-field="year" source="ConfigureConferenceRegistrationManagerRequested" idempotency-key="">
-						<mapping value="closeDate" target="closeDate"></mapping>
-						<mapping value="openDate" target="openDate"></mapping>
-						<mapping value="maxVisitors" target="maxVisitors"></mapping>
+				<command name="Initialize" create-command="true">
+					<trigger key-field="year" source="ConferenceEditionInitialized">
+						<mapping value="date" target="date"></mapping>
+						<mapping value="#200" target="maxVisitors"></mapping>
 						<mapping value="year" target="year"></mapping>
 					</trigger>
-					<processor type="emit-event" ref="ConferenceRegistrationManagerUpdated" name="">
+					<processor type="code" handler="calculate_time_frame" file="lib/VisitorManagement.py" id="jGNDN"></processor>
+					<processor type="emit-event" ref="ConferenceRegistrationManagerInitialized" id="g6Oc2">
 						<mapping target="closeDate" value="#flow.closeDate"></mapping>
 						<mapping target="openDate" value="#flow.openDate"></mapping>
 						<mapping target="maxVisitors" value="#flow.maxVisitors"></mapping>
+						<mapping target="year" value="#flow.year"></mapping>
 					</processor>
-					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConfigureConferenceRegistrationManagerRequested" user="systemuser">
-						<input name="closeDate" type="String" value="01-01-2123"></input>
-						<input name="openDate" type="String" value="01-01-2023"></input>
-						<input name="maxVisitors" type="Number" value="10"></input>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConferenceEditionInitialized" user="systemuser">
+						<input name="date" type="String" value="27-03-2024"></input>
 						<input name="year" type="String" value="2024"></input>
-						<state>{
-  "closeDate": "10-10-2023",
-  "maxVisitors": 200,
-  "openDate": "05-05-2023",
-  "year": "2024"
-}</state>
-						<expected domain-event="ConferenceRegistrationManagerUpdated">
-							<field name="maxVisitors" type="Number" value="10"></field>
+						<expected domain-event="ConferenceRegistrationManagerInitialized">
+							<field name="closeDate" type="String" value="20-03-2024"></field>
+							<field name="openDate" type="String" value="31-01-2024"></field>
+							<field name="maxVisitors" type="Number" value="200"></field>
 						</expected>
-						<expected-state pk="2024">{
-  "closeDate": "01-01-2123",
-  "maxVisitors": 10,
-  "openDate": "01-01-2023",
-  "year": "2024"
-}</expected-state>
 					</test-case>
 				</command>
 				<command name="RegisterVisitor" create-command="false">
@@ -1011,35 +930,6 @@
 						<expected-state>{}</expected-state>
 					</test-case>
 				</command>
-				<command name="Initialize" create-command="true">
-					<trigger key-field="year" source="ConferenceEditionInitialized">
-						<mapping value="date" target="date"></mapping>
-						<mapping value="#200" target="maxVisitors"></mapping>
-						<mapping value="year" target="year"></mapping>
-					</trigger>
-					<processor type="code" handler="calculate_time_frame" file="lib/VisitorManagement.py" id="jGNDN"></processor>
-					<processor type="emit-event" ref="ConferenceRegistrationManagerInitialized" id="g6Oc2">
-						<mapping target="closeDate" value="#flow.closeDate"></mapping>
-						<mapping target="openDate" value="#flow.openDate"></mapping>
-						<mapping target="maxVisitors" value="#flow.maxVisitors"></mapping>
-						<mapping target="year" value="#flow.year"></mapping>
-					</processor>
-					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConferenceEditionInitialized" user="systemuser">
-						<input name="date" type="String" value="27-03-2024"></input>
-						<input name="year" type="String" value="2024"></input>
-						<expected domain-event="ConferenceRegistrationManagerInitialized">
-							<field name="closeDate" type="String" value="20-03-2024"></field>
-							<field name="openDate" type="String" value="31-01-2024"></field>
-							<field name="maxVisitors" type="Number" value="200"></field>
-						</expected>
-					</test-case>
-				</command>
-				<event-handler on="ConferenceRegistrationManagerInitialized">
-					<mapping value="closeDate" target="closeDate" operand="set"></mapping>
-					<mapping value="openDate" target="openDate" operand="set"></mapping>
-					<mapping value="maxVisitors" target="maxVisitors" operand="set"></mapping>
-					<mapping value="year" target="year" operand="set"></mapping>
-				</event-handler>
 				<event-handler on="ConferenceRegistrationManagerUpdated">
 					<mapping value="closeDate" target="closeDate" operand="set"></mapping>
 					<mapping value="openDate" target="openDate" operand="set"></mapping>
@@ -1047,62 +937,11 @@
 				</event-handler>
 				<event-handler on="ConferenceRegistrationManagerVisitorRegistered" code="self.registeredVisitors += 1|LB|self.visitors.append(event.ticketId)"></event-handler>
 				<event-handler on="VisitorDeregistered" code="self.registeredVisitors += -1|LB|self.visitors.remove(event.ticketId)"></event-handler>
-			</aggregate>
-			<aggregate name="TalkProposal" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
-				<field name="difficultyLevel" type="String"></field>
-				<field name="name" type="String"></field>
-				<field name="abstract" type="String"></field>
-				<field name="biography" type="String"></field>
-				<field name="id" type="String"></field>
-				<field name="title" type="String"></field>
-				<field name="email" type="String"></field>
-				<command name="Create" create-command="true">
-					<trigger key-field="id" source="CreateConferenceTalkProposalRequested">
-						<mapping value="difficultyLevel" target="difficultyLevel"></mapping>
-						<mapping value="name" target="name"></mapping>
-						<mapping value="abstract" target="abstract"></mapping>
-						<mapping value="biography" target="biography"></mapping>
-						<mapping value="id" target="id"></mapping>
-						<mapping value="title" target="title"></mapping>
-						<mapping value="email" target="email"></mapping>
-					</trigger>
-					<processor type="code" handler="decode_proposal" file="lib/Utils.py" id="Q3Bib"></processor>
-					<processor type="emit-event" ref="ConferenceTalkProposalCreated" id="iKfP9">
-						<mapping target="difficultyLevel" value="#flow.difficultyLevel"></mapping>
-						<mapping target="name" value="#flow.name"></mapping>
-						<mapping target="abstract" value="#flow.abstract"></mapping>
-						<mapping target="biography" value="#flow.biography"></mapping>
-						<mapping target="id" value="#flow.id"></mapping>
-						<mapping target="title" value="#flow.title"></mapping>
-						<mapping target="email" value="#flow.email"></mapping>
-					</processor>
-					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="CreateConferenceTalkProposalRequested" user="systemuser">
-						<input name="difficultyLevel" type="String" value="novice"></input>
-						<input name="name" type="String" value="John Doe"></input>
-						<input name="abstract" type="String" value="base64:SGVsbG8gV29ybGQh"></input>
-						<input name="biography" type="String" value="base64:SGVsbG8gV29ybGQh"></input>
-						<input name="id" type="String" value="ba5994a0-adc9-40a9-ac8d-0b48389f2fc5"></input>
-						<input name="title" type="String" value="My Awesome Talk"></input>
-						<input name="email" type="String" value="john.doe@demo.nl"></input>
-						<expected domain-event="ConferenceTalkProposalCreated">
-							<field name="difficultyLevel" type="String" value="novice"></field>
-							<field name="name" type="String" value="John Doe"></field>
-							<field name="abstract" type="String" value="Hello World!"></field>
-							<field name="biography" type="String" value="Hello World!"></field>
-							<field name="id" type="String" value="ba5994a0-adc9-40a9-ac8d-0b48389f2fc5"></field>
-							<field name="title" type="String" value="My Awesome Talk"></field>
-							<field name="email" type="String" value="john.doe@demo.nl"></field>
-						</expected>
-					</test-case>
-				</command>
-				<event-handler on="ConferenceTalkProposalCreated">
-					<mapping value="difficultyLevel" target="difficultyLevel" operand="set"></mapping>
-					<mapping value="name" target="name" operand="set"></mapping>
-					<mapping value="abstract" target="abstract" operand="set"></mapping>
-					<mapping value="biography" target="biography" operand="set"></mapping>
-					<mapping value="id" target="id" operand="set"></mapping>
-					<mapping value="title" target="title" operand="set"></mapping>
-					<mapping value="email" target="email" operand="set"></mapping>
+				<event-handler on="ConferenceRegistrationManagerInitialized">
+					<mapping value="closeDate" target="closeDate" operand="set"></mapping>
+					<mapping value="openDate" target="openDate" operand="set"></mapping>
+					<mapping value="maxVisitors" target="maxVisitors" operand="set"></mapping>
+					<mapping value="year" target="year" operand="set"></mapping>
 				</event-handler>
 			</aggregate>
 			<aggregate name="Edition" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0" business-key="year">
@@ -1110,28 +949,6 @@
 				<field name="year" type="String"></field>
 				<field name="tagline" type="String"></field>
 				<field name="program" type="Map"></field>
-				<command name="RemoveProgramItem">
-					<trigger source="RemoveProgramItemConferenceRequested" idempotency-key="" key-field="year">
-						<mapping target="id" value="id"></mapping>
-					</trigger>
-					<processor type="emit-event" ref="ConferenceEditionProgramItemRemoved" name="">
-						<mapping target="id" value="#flow.id"></mapping>
-					</processor>
-					<processor type="code" name="" file="lib/ProgrammaManagement.py" handler="redetermine_breakouts"></processor>
-					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="RemoveProgramItemConferenceRequested">
-						<state>{
-  "year": "2024"
-}</state>
-						<expected-state pk="">{
-  "year": ""
-}</expected-state>
-						<input name="id" type="String" value="2024-1"></input>
-						<input name="year" type="String" value="2024"></input>
-						<expected domain-event="ConferenceEditionProgramItemRemoved">
-							<field name="id" type="String" value="2024-1"></field>
-						</expected>
-					</test-case>
-				</command>
 				<command name="AddProgramItem" create-command="false">
 					<trigger key-field="year" source="AddProgramItemConferenceRequested" idempotency-key="">
 						<mapping value="summary" target="summary"></mapping>
@@ -1204,13 +1021,35 @@
 }</expected-state>
 					</test-case>
 				</command>
+				<command name="RemoveProgramItem">
+					<trigger source="RemoveProgramItemConferenceRequested" idempotency-key="" key-field="year">
+						<mapping target="id" value="id"></mapping>
+					</trigger>
+					<processor type="emit-event" ref="ConferenceEditionProgramItemRemoved" name="">
+						<mapping target="id" value="#flow.id"></mapping>
+					</processor>
+					<processor type="code" name="" file="lib/ProgrammaManagement.py" handler="redetermine_breakouts"></processor>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="RemoveProgramItemConferenceRequested">
+						<state>{
+  "year": "2024"
+}</state>
+						<expected-state pk="">{
+  "year": ""
+}</expected-state>
+						<input name="id" type="String" value="2024-1"></input>
+						<input name="year" type="String" value="2024"></input>
+						<expected domain-event="ConferenceEditionProgramItemRemoved">
+							<field name="id" type="String" value="2024-1"></field>
+						</expected>
+					</test-case>
+				</command>
+				<event-handler code="if event.id in self.program:|LB|    del self.program[event.id]" on="ConferenceEditionProgramItemRemoved"></event-handler>
 				<event-handler on="ConferenceEditionInitialized">
 					<mapping value="date" target="date" operand="set"></mapping>
 					<mapping value="year" target="year" operand="set"></mapping>
 					<mapping value="tagline" target="tagline" operand="set"></mapping>
 				</event-handler>
 				<event-handler on="ConferenceEditionProgramItemAdded" code='self.program[event.id] = {|LB|  "startTime" : event.startTime,|LB|  "breakout":event.breakout,|LB|  "session":event.session}'></event-handler>
-				<event-handler code="if event.id in self.program:|LB|    del self.program[event.id]" on="ConferenceEditionProgramItemRemoved"></event-handler>
 			</aggregate>
 			<aggregate name="Visitor" event-ttl="7776000" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0" business-key="ticketId">
 				<field name="firstName" type="String"></field>
@@ -1223,6 +1062,27 @@
 				<field name="dietaryNotes" type="String"></field>
 				<field name="subscribeToNewsletter" type="Boolean"></field>
 				<field name="allowSharingWithRecruiters" type="Boolean"></field>
+				<command name="Delete">
+					<trigger source="VisitorDeregistered" key-field="ticketId">
+						<mapping target="email" value="email"></mapping>
+						<mapping target="ticketId" value="ticketId"></mapping>
+						<mapping target="reason" value="reason"></mapping>
+					</trigger>
+					<processor type="emit-event" id="sx1qsU" ref="VisitorDeleted">
+						<mapping target="email" value="#flow.email"></mapping>
+					</processor>
+					<test-case name="HappyFlow" trigger-event="VisitorDeregistered">
+						<input name="email" value="john.doe@example.com" type="String"></input>
+						<input name="ticketId" value="123" type="String"></input>
+						<input name="reason" value="For testing" type="String"></input>
+						<expected domain-event="VisitorDeleted">
+							<field value="john.doe@example.com" name="email" type="String"></field>
+						</expected>
+						<expected-state pk="123">{
+  "isDeleted" : "hard"
+}</expected-state>
+					</test-case>
+				</command>
 				<command name="Create" create-command="true">
 					<trigger key-field="ticketId" source="ConferenceRegistrationManagerVisitorRegistered" idempotency-key="">
 						<mapping value="year" target="year"></mapping>
@@ -1272,27 +1132,6 @@
 						<state>{}</state>
 					</test-case>
 				</command>
-				<command name="Delete">
-					<trigger source="VisitorDeregistered" key-field="ticketId">
-						<mapping target="email" value="email"></mapping>
-						<mapping target="ticketId" value="ticketId"></mapping>
-						<mapping target="reason" value="reason"></mapping>
-					</trigger>
-					<processor type="emit-event" id="sx1qsU" ref="VisitorDeleted">
-						<mapping target="email" value="#flow.email"></mapping>
-					</processor>
-					<test-case name="HappyFlow" trigger-event="VisitorDeregistered">
-						<input name="email" value="john.doe@example.com" type="String"></input>
-						<input name="ticketId" value="123" type="String"></input>
-						<input name="reason" value="For testing" type="String"></input>
-						<expected domain-event="VisitorDeleted">
-							<field value="john.doe@example.com" name="email" type="String"></field>
-						</expected>
-						<expected-state pk="123">{
-  "isDeleted" : "hard"
-}</expected-state>
-					</test-case>
-				</command>
 				<event-handler on="ConferenceVisitorCreated">
 					<mapping value="firstName" target="firstName" operand="set"></mapping>
 					<mapping value="lastName" target="lastName" operand="set"></mapping>
@@ -1307,108 +1146,398 @@
 				</event-handler>
 				<event-handler on="VisitorDeleted" code='self.isDeleted = "hard"'></event-handler>
 			</aggregate>
-		</subdomain>
-		<subdomain name="WebSite">
-			<aggregate name="Album" business-key="year" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
+			<aggregate name="Ticket" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
 				<field name="year" type="String"></field>
-				<command name="AddPhoto">
-					<trigger source="FileUploaded" key-field="#event.uri.split('/')[1]">
-						<mapping target="path" value="uri"></mapping>
-						<mapping target="bucket" value="bucket"></mapping>
-						<mapping target="username" value="username"></mapping>
+				<field name="verified" type="Boolean"></field>
+				<field name="ticketId" type="String"></field>
+				<field name="breakouts" type="String"></field>
+				<field name="control" type="String"></field>
+				<field name="redeemed" type="Boolean"></field>
+				<field name="createdAt" type="Int"></field>
+				<field name="verifiedAt" type="Int"></field>
+				<field name="redeemedAt" type="Int"></field>
+				<command name="Verify">
+					<trigger source="VerifyTicketRequested" key-field="ticketId">
+						<mapping target="ticketId" value="ticketId"></mapping>
+						<mapping target="control" value="control"></mapping>
+						<mapping target="verified" value="#True"></mapping>
 					</trigger>
-					<processor type="set-variable" id="ARb13v" name="year" expression="flow.identity"></processor>
-					<processor type="code" id="bKXtcT" file="" handler="" code='flow.images = [{|LB|    "path": flow.path,|LB|    "uploadedBy": flow.username|LB|}]|LB||LB|flow.validEdition = False|LB||LB|try:|LB|    flow.validEdition = int(flow.year) &gt; 2018|LB|except:|LB|    pass'></processor>
-					<processor type="validator" id="NjcSCR" condition="flow.validEdition" exception="Album must be coupled to a valid year, but was [{flow.year}]"></processor>
-					<processor type="validator" id="FQABQS" condition='"-web-" in flow.bucket' exception="This function only reacts to public uploads 'web-bucket', but the selected bucket was [{flow.bucket}]"></processor>
-					<processor type="emit-event" id="Zb9cXI" ref="PhotoAddedToAlbum">
-						<mapping target="year" value="#flow.year"></mapping>
-						<mapping target="images" value="#flow.images"></mapping>
+					<processor type="validator" id="M1vejN" condition="flow.control == flow.entity.control" exception="Control value [{flow.control}] does not match the ticket [{flow.entity.control}]"></processor>
+					<processor type="validator" id="GhDcyQ" condition="flow.entity.verified == False" exception="Already verified"></processor>
+					<processor type="code" id="Ki2o7X" file="lib/TicketUtils.py" handler="get_timestamp"></processor>
+					<processor type="emit-event" id="9iWObF" ref="ConferenceTicketVerified">
+						<mapping target="ticketId" value="#flow.ticketId"></mapping>
+						<mapping target="verified" value="#flow.verified"></mapping>
+						<mapping target="verifiedAt" value="#flow.timestamp"></mapping>
 					</processor>
-					<test-case name="AddPhotoToAlbum" trigger-event="FileUploaded">
-						<input name="bucket" value="-web-" type="String"></input>
-						<input name="uri" value="userhash/2019/test" type="String"></input>
-						<input name="location" value="-" type="String"></input>
-						<input name="username" value="j.doe" type="String"></input>
-						<expected domain-event="PhotoAddedToAlbum">
-							<field value="2019" name="year" type="String"></field>
+					<test-case name="HappyFlow" trigger-event="VerifyTicketRequested">
+						<input name="ticketId" value="123" type="String"></input>
+						<input name="control" value="456" type="String"></input>
+						<expected domain-event="ConferenceTicketVerified">
+							<field value="123" name="ticketId" type="String"></field>
 						</expected>
-						<expected-state pk="2019">{
-  "year": "2019",
-  "images": {
-    "userhash/2019/test": {
-      "path": "userhash/2019/test",
-      "uploadedBy": "j.doe"
-    }
-  }
+						<state>{
+  "verified": false,
+  "ticketId": "123",
+  "control": "456"
+}</state>
+						<expected-state pk="123">{
+  "verified": true
 }</expected-state>
 					</test-case>
 				</command>
-				<event-handler on="PhotoAddedToAlbum">
-					<nested-mapping source="images" target="images" business-key="path">
-						<mapping target="path" operand="set" value="path"></mapping>
-						<mapping target="uploadedBy" operand="set" value="uploadedBy"></mapping>
-					</nested-mapping>
-					<mapping target="year" operand="set" value="year"></mapping>
+				<command name="Delete">
+					<trigger source="VisitorDeregistered" key-field="ticketId">
+						<mapping target="email" value="email"></mapping>
+						<mapping target="ticketId" value="ticketId"></mapping>
+						<mapping target="reason" value="reason"></mapping>
+					</trigger>
+					<processor type="emit-event" id="WpfrjX" ref="TicketDeleted">
+						<mapping target="ticketId" value="#flow.ticketId"></mapping>
+					</processor>
+					<test-case name="HappyFlow" trigger-event="VisitorDeregistered">
+						<input name="email" value="john.doe@example.com" type="String"></input>
+						<input name="ticketId" value="123" type="String"></input>
+						<input name="reason" value="For testing" type="String"></input>
+						<expected domain-event="TicketDeleted">
+							<field value="123" name="ticketId" type="String"></field>
+						</expected>
+						<expected-state pk="123">{
+  "isDeleted" : "hard"
+}</expected-state>
+					</test-case>
+				</command>
+				<command name="Create" create-command="false">
+					<trigger key-field="ticketId" source="ConferenceRegistrationManagerVisitorRegistered" idempotency-key="">
+						<mapping value="year" target="year"></mapping>
+						<mapping value="ticketId" target="ticketId"></mapping>
+						<mapping value="breakouts" target="breakouts"></mapping>
+						<mapping target="control" value="control"></mapping>
+					</trigger>
+					<processor type="code" file="lib/TicketUtils.py" handler="get_timestamp" name=""></processor>
+					<processor type="emit-event" ref="ConferenceTicketCreated" name="">
+						<mapping target="year" value="#flow.year"></mapping>
+						<mapping target="ticketId" value="#flow.ticketId"></mapping>
+						<mapping target="breakouts" value="#flow.breakouts"></mapping>
+						<mapping target="control" value="#flow.control"></mapping>
+						<mapping target="createdAt" value="#flow.timestamp"></mapping>
+					</processor>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConferenceRegistrationManagerVisitorRegistered" user="systemuser">
+						<input name="year" value="2024" type="String"></input>
+						<input name="ticketId" value="devconf-ticket:189673085831463618233454140431942137832" type="String"></input>
+						<input name="firstName" value="" type="String"></input>
+						<input name="lastName" value="" type="String"></input>
+						<input name="email" value="" type="String"></input>
+						<input name="breakouts" value="2024-1,2024-2" type="String"></input>
+						<input name="control" value="d7e4aee8-e0fa-4873-84f8-3f4685ceaa32" type="String"></input>
+						<expected domain-event="ConferenceTicketCreated">
+							<field value="2024" name="year" type="String"></field>
+							<field value="devconf-ticket:189673085831463618233454140431942137832" name="ticketId" type="String"></field>
+							<field value="2024-1,2024-2" name="breakouts" type="String"></field>
+							<field value="d7e4aee8-e0fa-4873-84f8-3f4685ceaa32" name="control" type="String"></field>
+						</expected>
+						<expected-state pk="devconf-ticket:189673085831463618233454140431942137832">{
+  "breakouts": "2024-1,2024-2",
+  "control": "d7e4aee8-e0fa-4873-84f8-3f4685ceaa32",
+  "redeemed": false,
+  "ticketId": "devconf-ticket:189673085831463618233454140431942137832",
+  "verified": false,
+  "year": "2024"
+}</expected-state>
+						<state>{}</state>
+					</test-case>
+				</command>
+				<command name="Redeem">
+					<trigger source="RedeemTicketRequested" key-field="ticketId">
+						<mapping target="ticketId" value="ticketId"></mapping>
+						<mapping target="redeemed" value="#True"></mapping>
+					</trigger>
+					<processor type="validator" id="1toC90" condition="flow.entity.redeemed == False" exception="Ticket already redeemed"></processor>
+					<processor type="validator" id="7Z6hZr" condition="flow.entity.verified == True" exception="Invalid ticket"></processor>
+					<processor type="code" id="0Ud7Dq" file="lib/TicketUtils.py" handler="get_timestamp"></processor>
+					<processor type="emit-event" id="aqeUGS" ref="ConferenceTicketRedeemed">
+						<mapping target="ticketId" value="#flow.ticketId"></mapping>
+						<mapping target="redeemed" value="#flow.redeemed"></mapping>
+						<mapping target="redeemedAt" value="#flow.timestamp"></mapping>
+					</processor>
+					<test-case name="HappyFlow" trigger-event="RedeemTicketRequested">
+						<input name="ticketId" value="123" type="String"></input>
+						<expected domain-event="ConferenceTicketRedeemed">
+							<field value="123" name="ticketId" type="String"></field>
+							<field value="true" name="redeemed" type="Boolean"></field>
+						</expected>
+						<state>{
+  "verified": true,
+  "ticketId": "123",
+  "redeemed": false
+}</state>
+						<expected-state pk="123">{
+  "verified": true,
+  "ticketId": "123",
+  "redeemed": true
+}</expected-state>
+					</test-case>
+					<test-case name="InvalidTicket" trigger-event="RedeemTicketRequested" expected-processing-status="error">
+						<input name="ticketId" value="123" type="String"></input>
+					</test-case>
+					<test-case name="AlreadyRedeemed" trigger-event="RedeemTicketRequested" expected-processing-status="error">
+						<input name="ticketId" value="123" type="String"></input>
+					</test-case>
+				</command>
+				<event-handler on="ConferenceTicketCreated">
+					<mapping value="year" target="year" operand="set"></mapping>
+					<mapping value="ticketId" target="ticketId" operand="set"></mapping>
+					<mapping value="breakouts" target="breakouts" operand="set"></mapping>
+					<mapping target="control" operand="set" value="control"></mapping>
+					<mapping target="createdAt" operand="set" value="createdAt"></mapping>
 				</event-handler>
-				<nested-object name="images" business-key="newField">
-					<field name="path" type="String"></field>
-					<field name="uploadedBy" type="String"></field>
-				</nested-object>
+				<event-handler on="ConferenceTicketVerified">
+					<mapping target="verified" operand="set" value="verified"></mapping>
+					<mapping target="verifiedAt" operand="set" value="verifiedAt"></mapping>
+				</event-handler>
+				<event-handler on="TicketDeleted" code='self.isDeleted = "hard"'></event-handler>
+				<event-handler on="ConferenceTicketRedeemed">
+					<mapping target="redeemed" operand="set" value="redeemed"></mapping>
+					<mapping target="redeemedAt" operand="set" value="redeemedAt"></mapping>
+				</event-handler>
 			</aggregate>
-			<aggregate name="Element" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0" business-key="name">
-				<field name="name" type="String"></field>
-				<field name="content" type="String"></field>
-				<command name="Update" create-command="false">
-					<trigger key-field="name" source="UpdateWebSiteElementRequested">
-						<mapping value="name" target="name"></mapping>
-						<mapping value="content" target="content"></mapping>
+			<aggregate name="ProgramItem" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0" business-key="id">
+				<field name="summary" type="String"></field>
+				<field name="duration" type="Int"></field>
+				<field name="year" type="String"></field>
+				<field name="speaker" type="String"></field>
+				<field name="startTime" type="String"></field>
+				<field name="id" type="String"></field>
+				<field name="endTime" type="String"></field>
+				<field name="title" type="String"></field>
+				<field name="room" type="String"></field>
+				<field name="sessionizeId" type="String"></field>
+				<command name="Delete">
+					<trigger source="ConferenceEditionProgramItemRemoved" idempotency-key="" key-field="id">
+						<mapping target="id" value="id"></mapping>
 					</trigger>
-					<processor type="code" handler="decode_content" file="lib/Utils.py" id="kmdno"></processor>
-					<processor type="emit-event" ref="WebSiteElementUpdated" id="UIkoJ">
-						<mapping target="name" value="#flow.name"></mapping>
-						<mapping target="content" value="#flow.content"></mapping>
+					<processor type="emit-event" ref="ConferenceProgramItemRemoved" name="">
+						<mapping target="id" value="#flow.id"></mapping>
 					</processor>
-					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="UpdateWebSiteElementRequested" user="systemuser">
-						<input name="name" type="String" value="test"></input>
-						<input name="content" type="String" value="Hello World!"></input>
-						<expected domain-event="WebSiteElementUpdated">
-							<field name="name" type="String" value="test"></field>
-							<field name="content" type="String" value="Hello World!"></field>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConferenceEditionProgramItemRemoved">
+						<input name="id" type="String" value="2024-01"></input>
+						<expected domain-event="ConferenceProgramItemRemoved">
+							<field name="id" type="String" value="2024-01"></field>
 						</expected>
+						<state>{
+  "id": "2024-01"
+}</state>
+						<expected-state pk="2024-01">{
+  "id": "2024-01",
+  "isDeleted": "hard"
+}</expected-state>
 					</test-case>
 				</command>
-				<command name="Create" create-command="true">
-					<trigger key-field="name" source="CreateWebSiteElementRequested">
-						<mapping value="name" target="name"></mapping>
-						<mapping value="content" target="content"></mapping>
+				<command name="Create" create-command="false">
+					<trigger key-field="id" source="ConferenceEditionProgramItemAdded" idempotency-key="">
+						<mapping value="id" target="id"></mapping>
+						<mapping value="title" target="title"></mapping>
+						<mapping value="summary" target="summary"></mapping>
+						<mapping value="speaker" target="speaker"></mapping>
+						<mapping value="room" target="room"></mapping>
+						<mapping value="startTime" target="startTime"></mapping>
+						<mapping value="duration" target="duration"></mapping>
+						<mapping target="sessionizeId" value="sessionizeId"></mapping>
 					</trigger>
-					<processor type="code" handler="decode_content" file="lib/Utils.py" id="lGGTT"></processor>
-					<processor type="emit-event" ref="WebSiteElementCreated" id="G3nyz">
-						<mapping target="name" value="#flow.name"></mapping>
-						<mapping target="content" value="#flow.content"></mapping>
+					<processor type="code" handler="calculate_end_time" file="lib/ProgrammaManagement.py" name=""></processor>
+					<processor type="code" handler="decode_summary" file="lib/ProgrammaManagement.py" name=""></processor>
+					<processor type="set-variable" name="sessionizeId" expression="flow.sessionizeId.strip() if flow.sessionizeId else flow.entity.sessionizeId"></processor>
+					<processor type="emit-event" ref="ConferenceProgramItemCreated" name="">
+						<mapping target="summary" value="#flow.summary"></mapping>
+						<mapping target="duration" value="#flow.duration"></mapping>
+						<mapping target="year" value="#flow.year"></mapping>
+						<mapping target="speaker" value="#flow.speaker"></mapping>
+						<mapping target="startTime" value="#flow.startTime"></mapping>
+						<mapping target="id" value="#flow.id"></mapping>
+						<mapping target="endTime" value="#flow.endTime"></mapping>
+						<mapping target="title" value="#flow.title"></mapping>
+						<mapping target="room" value="#flow.room"></mapping>
+						<mapping target="sessionizeId" value="#flow.sessionizeId"></mapping>
 					</processor>
-					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="CreateWebSiteElementRequested" user="systemuser">
-						<input name="name" type="String" value="call-to-action"></input>
-						<input name="content" type="String" value="Hello World!"></input>
-						<expected domain-event="WebSiteElementCreated">
-							<field name="name" type="String" value="call-to-action"></field>
-							<field name="content" type="String" value="Hello World!"></field>
+					<test-case name="TimeOverflow" expected-processing-status="success" trigger-event="ConferenceEditionProgramItemAdded" user="systemuser">
+						<input name="id" type="String" value="2024-1"></input>
+						<input name="title" type="String" value="Test"></input>
+						<input name="summary" type="String" value="Hello World!"></input>
+						<input name="speaker" type="String" value="John Doe"></input>
+						<input name="room" type="String" value="Forum"></input>
+						<input name="startTime" type="String" value="09:45"></input>
+						<input name="duration" type="Number" value="30"></input>
+						<input name="breakout" type="Boolean" value="False"></input>
+						<input name="session" type="Int" value="0"></input>
+						<input name="sessionizeId" type="String" value=""></input>
+						<expected domain-event="ConferenceProgramItemCreated">
+							<field name="summary" type="String" value="Hello World!"></field>
+							<field name="endTime" type="String" value="10:15"></field>
 						</expected>
+						<state>{}</state>
+						<expected-state pk="">{
+  "id": ""
+}</expected-state>
+					</test-case>
+					<test-case name="HappyFlow" expected-processing-status="success" trigger-event="ConferenceEditionProgramItemAdded" user="systemuser">
+						<input name="id" type="String" value="2024-1"></input>
+						<input name="title" type="String" value="Test"></input>
+						<input name="summary" type="String" value="base64:SGVsbG8gV29ybGQh"></input>
+						<input name="speaker" type="String" value="John Doe"></input>
+						<input name="room" type="String" value="Forum"></input>
+						<input name="startTime" type="String" value="09:00"></input>
+						<input name="duration" type="Int" value="45"></input>
+						<input name="breakout" type="Boolean" value="False"></input>
+						<input name="session" type="Int" value="0"></input>
+						<input name="sessionizeId" type="String" value=""></input>
+						<expected domain-event="ConferenceProgramItemCreated">
+							<field name="summary" type="String" value="Hello World!"></field>
+							<field name="endTime" type="String" value="09:45"></field>
+						</expected>
+						<state>{}</state>
+						<expected-state pk="">{
+  "id": ""
+}</expected-state>
 					</test-case>
 				</command>
-				<event-handler on="WebSiteElementCreated">
-					<mapping value="name" target="name" operand="set"></mapping>
-					<mapping value="content" target="content" operand="set"></mapping>
+				<event-handler on="ConferenceProgramItemCreated">
+					<mapping value="summary" target="summary" operand="set"></mapping>
+					<mapping value="duration" target="duration" operand="set"></mapping>
+					<mapping value="year" target="year" operand="set"></mapping>
+					<mapping value="speaker" target="speaker" operand="set"></mapping>
+					<mapping value="startTime" target="startTime" operand="set"></mapping>
+					<mapping value="id" target="id" operand="set"></mapping>
+					<mapping value="endTime" target="endTime" operand="set"></mapping>
+					<mapping value="title" target="title" operand="set"></mapping>
+					<mapping value="room" target="room" operand="set"></mapping>
+					<mapping target="sessionizeId" value="sessionizeId" operand="set"></mapping>
 				</event-handler>
-				<event-handler on="WebSiteElementUpdated">
-					<mapping value="name" target="name" operand="set"></mapping>
-					<mapping value="content" target="content" operand="set"></mapping>
-				</event-handler>
+				<event-handler code='self.isDeleted = "hard"' on="ConferenceProgramItemRemoved"></event-handler>
 			</aggregate>
 		</subdomain>
 	</domain>
 	<views>
+		<view name="TalkProposal" data-retention-days="-1" exclude-notification="false">
+			<field name="difficultyLevel" type="String"></field>
+			<field name="name" type="String"></field>
+			<field name="abstract" type="String"></field>
+			<field name="biography" type="String"></field>
+			<field name="id" type="String" pk="true"></field>
+			<field name="title" type="String"></field>
+			<field name="email" type="String"></field>
+			<snapshot-handler sub-domain="Conference" aggregate="TalkProposal" key-mapping="id" processor="item" id="kW1LRV">
+				<mapping target="difficultyLevel" operand="set" value="difficultyLevel"></mapping>
+				<mapping target="name" operand="set" value="name"></mapping>
+				<mapping target="abstract" operand="set" value="abstract"></mapping>
+				<mapping target="biography" operand="set" value="biography"></mapping>
+				<mapping target="id" operand="set" value="id"></mapping>
+				<mapping target="title" operand="set" value="title"></mapping>
+				<mapping target="email" operand="set" value="email"></mapping>
+			</snapshot-handler>
+			<query type="filter" authorization="role" role="administrator" field-name="filter" graphql-namespace="TalkProposal"></query>
+		</view>
+		<view name="Edition" data-retention-days="-1" exclude-notification="false">
+			<field name="date" type="String"></field>
+			<field name="year" type="String" pk="true"></field>
+			<field name="registrationManager" type="OneToOne" authorization="authenticated" foreign-key="year" ref="RegistrationManager"></field>
+			<field name="tagline" type="String"></field>
+			<field name="program" type="OneToOne" authorization="authenticated" foreign-key="year" ref="Program"></field>
+			<snapshot-handler sub-domain="Conference" aggregate="Edition" key-mapping="year" processor="item" id="ZUk0wn">
+				<mapping target="date" operand="set" value="date"></mapping>
+				<mapping target="year" operand="set" value="year"></mapping>
+				<mapping target="tagline" operand="set" value="tagline"></mapping>
+			</snapshot-handler>
+			<query type="filter" authorization="anonymous" field-name="filter" graphql-namespace="Edition"></query>
+			<query type="get" authorization="anonymous" field-name="get" graphql-namespace="Edition"></query>
+		</view>
+		<view name="Photo" data-retention-days="-1" exclude-notification="false">
+			<field name="path" type="String"></field>
+			<field name="uploadedBy" type="String"></field>
+		</view>
+		<view name="Album" data-retention-days="-1" exclude-notification="false">
+			<field name="year" type="String" pk="true"></field>
+			<field name="photos" type="ObjectList" ref="Photo" authorization="authenticated" foreign-key="year"></field>
+			<snapshot-handler id="vKBCfI" sub-domain="WebSite" aggregate="Album" key-mapping="year" processor="item">
+				<mapping target="year" operand="set" value="year"></mapping>
+				<mapping target="photos" operand="convert_items" value="images" template='{"path": value["path"],"uploadedBy": value["uploadedBy"]}'></mapping>
+				<delete condition="#snapshot.isDeleted != ''" id="3EteOt"></delete>
+			</snapshot-handler>
+			<query graphql-namespace="Album" field-name="get" type="get" authorization="anonymous"></query>
+			<query graphql-namespace="Album" field-name="filter" type="filter" authorization="anonymous"></query>
+		</view>
+		<view name="Visitor" data-retention-days="90" exclude-notification="true">
+			<field name="firstName" type="String"></field>
+			<field name="lastName" type="String"></field>
+			<field name="year" type="String"></field>
+			<field name="ticketId" type="String"></field>
+			<field name="attendingLunch" type="Boolean"></field>
+			<field name="attendingAfterEventDrinks" type="Boolean"></field>
+			<field name="dietaryNotes" type="String"></field>
+			<field name="subscribeToNewsletter" type="Boolean"></field>
+			<field name="allowSharingWithRecruiters" type="Boolean"></field>
+			<field name="email" type="String" pk="true"></field>
+			<field name="ticket" type="OneToOne" ref="Ticket" authorization="authenticated" foreign-key="ticketId"></field>
+			<snapshot-handler id="XvTaSi" sub-domain="Conference" aggregate="Visitor" key-mapping="email" processor="item">
+				<mapping target="firstName" operand="set" value="firstName"></mapping>
+				<mapping target="lastName" operand="set" value="lastName"></mapping>
+				<mapping target="year" operand="set" value="year"></mapping>
+				<mapping target="ticketId" operand="set" value="ticketId"></mapping>
+				<mapping target="email" operand="set" value="email"></mapping>
+				<mapping target="attendingLunch" operand="set" value="attendingLunch"></mapping>
+				<mapping target="attendingAfterEventDrinks" operand="set" value="attendingAfterEventDrinks"></mapping>
+				<mapping target="dietaryNotes" operand="set" value="dietaryNotes"></mapping>
+				<mapping target="subscribeToNewsletter" operand="set" value="subscribeToNewsletter"></mapping>
+				<mapping target="allowSharingWithRecruiters" operand="set" value="allowSharingWithRecruiters"></mapping>
+				<delete condition="#snapshot.isDeleted != ''"></delete>
+			</snapshot-handler>
+			<query graphql-namespace="Visitor" field-name="get" type="get" authorization="role" role="administrator"></query>
+			<query graphql-namespace="Visitor" field-name="filter" type="filter" authorization="role" role="administrator">
+				<filter-clause field-name="ticketId" operand="equals"></filter-clause>
+				<filter-clause field-name="year" operand="equals"></filter-clause>
+			</query>
+		</view>
+		<view name="WebPageElement" data-retention-days="-1" exclude-notification="false">
+			<field name="year" type="String"></field>
+			<field name="name" type="String" pk="true"></field>
+			<field name="edition" type="OneToOne" authorization="authenticated" foreign-key="year" ref="Edition"></field>
+			<field name="content" type="String"></field>
+			<snapshot-handler sub-domain="WebSite" aggregate="Element" key-mapping="name" processor="item" id="fMBDED">
+				<mapping target="name" operand="set" value="name"></mapping>
+				<mapping target="content" operand="set" value="content"></mapping>
+			</snapshot-handler>
+			<custom-handler sub-domain="Conference" aggregate="Edition" python-file="lib/ViewFunctions.py" method="determine_next_edition" id="VpQR4v"></custom-handler>
+			<query type="filter" authorization="anonymous" field-name="filter" graphql-namespace="WebSite.Element"></query>
+			<query type="get" authorization="anonymous" field-name="get" graphql-namespace="WebSite.Element"></query>
+		</view>
+		<view name="Ticket" data-retention-days="-1" exclude-notification="false">
+			<field name="year" type="String"></field>
+			<field name="verified" type="Boolean"></field>
+			<field name="ticketId" type="String" pk="true"></field>
+			<field name="breakouts" type="String"></field>
+			<field name="redeemed" type="Boolean"></field>
+			<field name="control" type="String"></field>
+			<field name="createdAt" type="Int"></field>
+			<field name="verifiedAt" type="Int"></field>
+			<field name="redeemedAt" type="Int"></field>
+			<snapshot-handler id="Yzgy2w" sub-domain="Conference" aggregate="Ticket" key-mapping="ticketId" processor="item">
+				<mapping target="year" operand="set" value="year"></mapping>
+				<mapping target="verified" operand="set" value="verified"></mapping>
+				<mapping target="ticketId" operand="set" value="ticketId"></mapping>
+				<mapping target="breakouts" operand="set" value="breakouts"></mapping>
+				<mapping target="redeemed" operand="set" value="redeemed"></mapping>
+				<mapping target="control" operand="set" value="control"></mapping>
+				<mapping target="createdAt" operand="set" value="createdAt"></mapping>
+				<mapping target="verifiedAt" operand="set" value="verifiedAt"></mapping>
+				<mapping target="redeemedAt" operand="set" value="redeemedAt"></mapping>
+				<delete condition="#snapshot.isDeleted != ''"></delete>
+			</snapshot-handler>
+			<query graphql-namespace="Ticket" field-name="get" type="get" authorization="role" role="administrator"></query>
+			<query graphql-namespace="Ticket" field-name="filter" type="filter" authorization="role" role="administrator">
+				<filter-clause field-name="year" operand="equals"></filter-clause>
+				<filter-clause field-name="verified" operand="equals"></filter-clause>
+				<filter-clause field-name="redeemed" operand="equals"></filter-clause>
+			</query>
+		</view>
 		<view name="Email" data-retention-days="-1" exclude-notification="false">
 			<field name="id" type="String" pk="true"></field>
 			<field name="subject" type="String"></field>
@@ -1497,69 +1626,6 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			</query>
 			<query type="get" authorization="anonymous" field-name="get" graphql-namespace="Program.Item" role=""></query>
 		</view>
-		<view name="Photo" data-retention-days="-1" exclude-notification="false">
-			<field name="path" type="String"></field>
-			<field name="uploadedBy" type="String"></field>
-		</view>
-		<view name="Album" data-retention-days="-1" exclude-notification="false">
-			<field name="year" type="String" pk="true"></field>
-			<field name="photos" type="ObjectList" ref="Photo" authorization="authenticated" foreign-key="year"></field>
-			<snapshot-handler id="vKBCfI" sub-domain="WebSite" aggregate="Album" key-mapping="year" processor="item">
-				<mapping target="year" operand="set" value="year"></mapping>
-				<mapping target="photos" operand="convert_items" value="images" template='{"path": value["path"],"uploadedBy": value["uploadedBy"]}'></mapping>
-				<delete condition="#snapshot.isDeleted != ''" id="3EteOt"></delete>
-			</snapshot-handler>
-			<query graphql-namespace="Album" field-name="get" type="get" authorization="anonymous"></query>
-			<query graphql-namespace="Album" field-name="filter" type="filter" authorization="anonymous"></query>
-		</view>
-		<view name="Ticket" data-retention-days="-1" exclude-notification="false">
-			<field name="year" type="String"></field>
-			<field name="verified" type="Boolean"></field>
-			<field name="ticketId" type="String" pk="true"></field>
-			<field name="breakouts" type="String"></field>
-			<field name="redeemed" type="Boolean"></field>
-			<field name="control" type="String"></field>
-			<field name="createdAt" type="Int"></field>
-			<field name="verifiedAt" type="Int"></field>
-			<field name="redeemedAt" type="Int"></field>
-			<snapshot-handler id="Yzgy2w" sub-domain="Conference" aggregate="Ticket" key-mapping="ticketId" processor="item">
-				<mapping target="year" operand="set" value="year"></mapping>
-				<mapping target="verified" operand="set" value="verified"></mapping>
-				<mapping target="ticketId" operand="set" value="ticketId"></mapping>
-				<mapping target="breakouts" operand="set" value="breakouts"></mapping>
-				<mapping target="redeemed" operand="set" value="redeemed"></mapping>
-				<mapping target="control" operand="set" value="control"></mapping>
-				<mapping target="createdAt" operand="set" value="createdAt"></mapping>
-				<mapping target="verifiedAt" operand="set" value="verifiedAt"></mapping>
-				<mapping target="redeemedAt" operand="set" value="redeemedAt"></mapping>
-				<delete condition="#snapshot.isDeleted != ''"></delete>
-			</snapshot-handler>
-			<query graphql-namespace="Ticket" field-name="get" type="get" authorization="role" role="administrator"></query>
-			<query graphql-namespace="Ticket" field-name="filter" type="filter" authorization="role" role="administrator">
-				<filter-clause field-name="year" operand="equals"></filter-clause>
-				<filter-clause field-name="verified" operand="equals"></filter-clause>
-				<filter-clause field-name="redeemed" operand="equals"></filter-clause>
-			</query>
-		</view>
-		<view name="TalkProposal" data-retention-days="-1" exclude-notification="false">
-			<field name="difficultyLevel" type="String"></field>
-			<field name="name" type="String"></field>
-			<field name="abstract" type="String"></field>
-			<field name="biography" type="String"></field>
-			<field name="id" type="String" pk="true"></field>
-			<field name="title" type="String"></field>
-			<field name="email" type="String"></field>
-			<snapshot-handler sub-domain="Conference" aggregate="TalkProposal" key-mapping="id" processor="item" id="kW1LRV">
-				<mapping target="difficultyLevel" operand="set" value="difficultyLevel"></mapping>
-				<mapping target="name" operand="set" value="name"></mapping>
-				<mapping target="abstract" operand="set" value="abstract"></mapping>
-				<mapping target="biography" operand="set" value="biography"></mapping>
-				<mapping target="id" operand="set" value="id"></mapping>
-				<mapping target="title" operand="set" value="title"></mapping>
-				<mapping target="email" operand="set" value="email"></mapping>
-			</snapshot-handler>
-			<query type="filter" authorization="role" role="administrator" field-name="filter" graphql-namespace="TalkProposal"></query>
-		</view>
 		<view name="RegistrationManager" data-retention-days="-1" exclude-notification="false">
 			<field name="closeDate" type="String"></field>
 			<field name="year" type="String" pk="true"></field>
@@ -1576,73 +1642,76 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			</snapshot-handler>
 			<query type="get" authorization="anonymous" field-name="get" graphql-namespace="Conference.RegistrationManager"></query>
 		</view>
-		<view name="Edition" data-retention-days="-1" exclude-notification="false">
-			<field name="date" type="String"></field>
-			<field name="year" type="String" pk="true"></field>
-			<field name="registrationManager" type="OneToOne" authorization="authenticated" foreign-key="year" ref="RegistrationManager"></field>
-			<field name="tagline" type="String"></field>
-			<field name="program" type="OneToOne" authorization="authenticated" foreign-key="year" ref="Program"></field>
-			<snapshot-handler sub-domain="Conference" aggregate="Edition" key-mapping="year" processor="item" id="ZUk0wn">
-				<mapping target="date" operand="set" value="date"></mapping>
-				<mapping target="year" operand="set" value="year"></mapping>
-				<mapping target="tagline" operand="set" value="tagline"></mapping>
-			</snapshot-handler>
-			<query type="filter" authorization="anonymous" field-name="filter" graphql-namespace="Edition"></query>
-			<query type="get" authorization="anonymous" field-name="get" graphql-namespace="Edition"></query>
-		</view>
-		<view name="Visitor" data-retention-days="90" exclude-notification="true">
-			<field name="firstName" type="String"></field>
-			<field name="lastName" type="String"></field>
-			<field name="year" type="String"></field>
-			<field name="ticketId" type="String"></field>
-			<field name="attendingLunch" type="Boolean"></field>
-			<field name="attendingAfterEventDrinks" type="Boolean"></field>
-			<field name="dietaryNotes" type="String"></field>
-			<field name="subscribeToNewsletter" type="Boolean"></field>
-			<field name="allowSharingWithRecruiters" type="Boolean"></field>
-			<field name="email" type="String" pk="true"></field>
-			<field name="ticket" type="OneToOne" ref="Ticket" authorization="authenticated" foreign-key="ticketId"></field>
-			<snapshot-handler id="XvTaSi" sub-domain="Conference" aggregate="Visitor" key-mapping="email" processor="item">
-				<mapping target="firstName" operand="set" value="firstName"></mapping>
-				<mapping target="lastName" operand="set" value="lastName"></mapping>
-				<mapping target="year" operand="set" value="year"></mapping>
-				<mapping target="ticketId" operand="set" value="ticketId"></mapping>
-				<mapping target="email" operand="set" value="email"></mapping>
-				<mapping target="attendingLunch" operand="set" value="attendingLunch"></mapping>
-				<mapping target="attendingAfterEventDrinks" operand="set" value="attendingAfterEventDrinks"></mapping>
-				<mapping target="dietaryNotes" operand="set" value="dietaryNotes"></mapping>
-				<mapping target="subscribeToNewsletter" operand="set" value="subscribeToNewsletter"></mapping>
-				<mapping target="allowSharingWithRecruiters" operand="set" value="allowSharingWithRecruiters"></mapping>
-				<delete condition="#snapshot.isDeleted != ''"></delete>
-			</snapshot-handler>
-			<query graphql-namespace="Visitor" field-name="get" type="get" authorization="role" role="administrator"></query>
-			<query graphql-namespace="Visitor" field-name="filter" type="filter" authorization="role" role="administrator">
-				<filter-clause field-name="ticketId" operand="equals"></filter-clause>
-				<filter-clause field-name="year" operand="equals"></filter-clause>
-			</query>
-		</view>
-		<view name="WebPageElement" data-retention-days="-1" exclude-notification="false">
-			<field name="year" type="String"></field>
-			<field name="name" type="String" pk="true"></field>
-			<field name="edition" type="OneToOne" authorization="authenticated" foreign-key="year" ref="Edition"></field>
-			<field name="content" type="String"></field>
-			<snapshot-handler sub-domain="WebSite" aggregate="Element" key-mapping="name" processor="item" id="fMBDED">
-				<mapping target="name" operand="set" value="name"></mapping>
-				<mapping target="content" operand="set" value="content"></mapping>
-			</snapshot-handler>
-			<custom-handler sub-domain="Conference" aggregate="Edition" python-file="lib/ViewFunctions.py" method="determine_next_edition" id="VpQR4v"></custom-handler>
-			<query type="filter" authorization="anonymous" field-name="filter" graphql-namespace="WebSite.Element"></query>
-			<query type="get" authorization="anonymous" field-name="get" graphql-namespace="WebSite.Element"></query>
-		</view>
 	</views>
 	<projections>
 	</projections>
 	<notifiers>
-		<notifier name="InitializeSystemUser">
+		<notifier name="SendTicketVerification">
+			<trigger source="ConferenceRegistrationManagerVisitorRegistered">
+				<mapping target="year" value="year"></mapping>
+				<mapping target="ticketId" value="ticketId"></mapping>
+				<mapping target="firstName" value="firstName"></mapping>
+				<mapping target="lastName" value="lastName"></mapping>
+				<mapping target="email" value="email"></mapping>
+				<mapping target="control" value="control"></mapping>
+			</trigger>
+			<trigger source="ResendVerificationTicketRequested">
+				<mapping target="year" value="year"></mapping>
+				<mapping target="ticketId" value="ticketId"></mapping>
+				<mapping target="firstName" value="firstName"></mapping>
+				<mapping target="lastName" value="lastName"></mapping>
+				<mapping target="email" value="email"></mapping>
+				<mapping target="control" value="control"></mapping>
+			</trigger>
+			<activity type="fetch-property" id="LanEWy" name="apiKey" key="mailgunKey"></activity>
+			<activity type="set-variable" id="9wrt54" name="host" expression="#'https://devconf.nl'"></activity>
+			<activity type="set-variable" id="8n3Dtb" name="subject" expression="#'Je inschrijving is bijna klaar!'"></activity>
+			<activity type="render-template" id="y41GHO" name="html" template-file="templates/TicketVerificationMail.html"></activity>
+			<activity type="render-template" id="KOeswM" name="text" template-file="templates/TicketVerificationMail.txt"></activity>
+			<activity type="code" id="RWPf3X" python-file="lib/MailGun.py" handler="send"></activity>
+		</notifier>
+		<notifier name="DistributeBulkMail">
+			<trigger source="@cron(0 * * * ? *)" idempotency-key="">
+				<mapping target="dummy" value="#''"></mapping>
+			</trigger>
+			<activity type="call-internal-api" name="emails" template-file="templates/FetchBulkMails.txt" id="iLxOix"></activity>
+			<activity type="code" python-file="lib/BulkMailUtils.py" handler="filter_mails" id="uebtJY"></activity>
+			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" template-file="templates/FetchBulkMailTargets.txt" id="hBkLCd"></activity>
+			<activity type="loop" array="#flow.emails" id="jeumTz">
+				<activity type="set-variable" name="emailId" expression='#item["id"]' id="ORFokB"></activity>
+				<activity type="set-variable" name="item" expression="#item" id="qfMbZb"></activity>
+				<activity type="code" python-file="lib/BulkMailUtils.py" handler="create_distribution_shards" id="rotACN"></activity>
+			</activity>
+			<activity type="loop" array="#flow.distributions" id="YEigkk">
+				<activity type="set-variable" name="emailId" expression='#item["emailId"]' id="iQjqkB"></activity>
+				<activity type="set-variable" name="targets" expression='#item["targets"]' id="dpzepG"></activity>
+				<activity type="call-internal-api" name="emailResult" template-file="templates/DistributeBulkMail.txt" id="rNMAkI"></activity>
+			</activity>
+		</notifier>
+		<notifier name="SetupEnvironment">
 			<trigger source="@afterDeployment">
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
 			<activity type="iam-create-systemuser" fail-silent="true" id="vMB9LZ"></activity>
+			<activity id="vkYuPh" type="create-iam-group" group-name="#'administrator'" fail-silent="true"></activity>
+			<activity id="wjJU3t" group-name="#'administrator'" type="add-user-to-iam-group" username="#'system-user'" fail-silent="true"></activity>
+			<activity id="wjJU3t2" group-name="#'administrator'" type="add-user-to-iam-group" username="#'bo.hanssen'" fail-silent="true"></activity>
+		</notifier>
+		<notifier name="SendProposalConfirmation" file_path="notifiers/SendProposalConfirmation.xml">
+			<trigger source="ConferenceTalkProposalCreated">
+				<mapping value="difficultyLevel" target="difficultyLevel"></mapping>
+				<mapping value="name" target="name"></mapping>
+				<mapping value="abstract" target="abstract"></mapping>
+				<mapping value="biography" target="biography"></mapping>
+				<mapping value="id" target="id"></mapping>
+				<mapping value="title" target="title"></mapping>
+				<mapping value="email" target="email"></mapping>
+			</trigger>
+			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="c4NcAD"></activity>
+			<activity type="set-variable" expression='#"Bedankt voor je proposal"' name="subject" id="p5oUyS"></activity>
+			<activity type="render-template" template-file="templates/ConfirmationMail.html" name="html" id="KLiO9o"></activity>
+			<activity type="render-template" id="DHXCaW" template-file="templates/ConfirmationMail.txt" name="text"></activity>
+			<activity type="code" handler="send_with_copy_to_mailbox" python-file="lib/MailGun.py" id="2LjgLd"></activity>
 		</notifier>
 		<notifier name="SendVerificationReminders">
 			<trigger source="@cron(0 4 ? * WED *)">
@@ -1681,22 +1750,6 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			<activity type="render-template" id="KOeswM" name="text" template-file="templates/TicketMail.txt"></activity>
 			<activity type="code" id="RWPf3X" python-file="lib/MailGun.py" handler="send"></activity>
 		</notifier>
-		<notifier name="SendProposalConfirmation" file_path="notifiers/SendProposalConfirmation.xml">
-			<trigger source="ConferenceTalkProposalCreated">
-				<mapping value="difficultyLevel" target="difficultyLevel"></mapping>
-				<mapping value="name" target="name"></mapping>
-				<mapping value="abstract" target="abstract"></mapping>
-				<mapping value="biography" target="biography"></mapping>
-				<mapping value="id" target="id"></mapping>
-				<mapping value="title" target="title"></mapping>
-				<mapping value="email" target="email"></mapping>
-			</trigger>
-			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="c4NcAD"></activity>
-			<activity type="set-variable" expression='#"Bedankt voor je proposal"' name="subject" id="p5oUyS"></activity>
-			<activity type="render-template" template-file="templates/ConfirmationMail.html" name="html" id="KLiO9o"></activity>
-			<activity type="render-template" id="DHXCaW" template-file="templates/ConfirmationMail.txt" name="text"></activity>
-			<activity type="code" handler="send_with_copy_to_mailbox" python-file="lib/MailGun.py" id="2LjgLd"></activity>
-		</notifier>
 		<notifier name="HandleResendRequest">
 			<trigger source="HandleLostTicketRequested">
 				<mapping target="email" value="email"></mapping>
@@ -1708,23 +1761,32 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			<activity type="call-internal-api" id="t5izl3" name="mutation" condition="flow.ticket.verified == False" query='mutation MyMutation {|LB|  Ticket {|LB|      resendVerification(input: {firstName: "{{flow.visitor.firstName}}", lastName: "{{flow.visitor.lastName}}", year: "{{flow.visitor.year}}", email: "{{flow.visitor.email}}", control: "{{flow.ticket.control }}", ticketId: "{{flow.ticket.ticketId}}"}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
 			<activity type="call-internal-api" id="gaFVDO" name="mutation" condition="flow.ticket.verified == True" query='mutation MyMutation {|LB|  Ticket {|LB|      resend(input: {ticketId: "{{flow.ticket.ticketId}}"}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
 		</notifier>
-		<notifier name="DistributeBulkMail">
-			<trigger source="@cron(0 * * * ? *)" idempotency-key="">
-				<mapping target="dummy" value="#''"></mapping>
+		<notifier name="ExecuteSendEmail">
+			<trigger source="SendEmailRequested" idempotency-key="">
+				<mapping target="id" value="id"></mapping>
+				<mapping target="email" value="email"></mapping>
+				<mapping target="firstName" value="firstName"></mapping>
+				<mapping target="lastName" value="lastName"></mapping>
+				<mapping target="enableUnsubscribe" value="enableUnsubscribe"></mapping>
 			</trigger>
-			<activity type="call-internal-api" name="emails" template-file="templates/FetchBulkMails.txt" id="UitLEU"></activity>
-			<activity type="code" python-file="lib/BulkMailUtils.py" handler="filter_mails" id="rYTtaU"></activity>
-			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" template-file="templates/FetchBulkMailTargets.txt" id="WoJrGz"></activity>
-			<activity type="loop" array="#flow.emails" id="MDNkBW">
-				<activity type="set-variable" name="emailId" expression='#item["id"]' id="USEsVK"></activity>
-				<activity type="set-variable" name="item" expression="#item" id="dQSAKd"></activity>
-				<activity type="code" python-file="lib/BulkMailUtils.py" handler="create_distribution_shards" id="tCyAcJ"></activity>
-			</activity>
-			<activity type="loop" array="#flow.distributions" id="zJZfAn">
-				<activity type="set-variable" name="emailId" expression='#item["emailId"]' id="bUgcRW"></activity>
-				<activity type="set-variable" name="targets" expression='#item["targets"]' id="QKQuah"></activity>
-				<activity type="call-internal-api" name="emailResult" template-file="templates/DistributeBulkMail.txt" id="kFFNiy"></activity>
-			</activity>
+			<activity type="call-internal-api" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|' id="MmMgxX"></activity>
+			<activity type="code" python-file="lib/MailGun.py" handler="prepare_email" id="tVFxRP"></activity>
+			<activity type="render-template" template-file="templates/GeneralMail.html" name="html" id="CVtdXn"></activity>
+			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="xJwYNe"></activity>
+			<activity type="code" python-file="lib/MailGun.py" handler="send" id="dIGNME"></activity>
+		</notifier>
+		<notifier name="SendDeregisterConfirmation">
+			<trigger source="VisitorDeregistered">
+				<mapping target="email" value="email"></mapping>
+				<mapping target="ticketId" value="ticketId"></mapping>
+				<mapping target="reason" value="reason"></mapping>
+				<mapping target="year" value="year"></mapping>
+			</trigger>
+			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="c4NcAA"></activity>
+			<activity type="set-variable" expression='#"Je registratie is geannuleerd"' name="subject" id="p5oUyA"></activity>
+			<activity type="render-template" template-file="templates/DeregisterConfirmationMail.html" name="html" id="KLiO9A"></activity>
+			<activity type="render-template" id="DHXCaA" template-file="templates/DeregisterConfirmationMail.txt" name="text"></activity>
+			<activity type="code" handler="send_with_copy_to_mailbox" python-file="lib/MailGun.py" id="2LjgLA"></activity>
 		</notifier>
 		<notifier name="SendTicketsWeekBefore">
 			<trigger source="@cron(0 10 ? * MON *)">
@@ -1739,65 +1801,11 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 				<activity type="call-internal-api" id="mASuDk" name="result" query='mutation MyMutation {|LB|  Ticket {|LB|      resend(input: {ticketId: "{{flow.ticket.ticketId}}", reminder: true}) {|LB|        correlationId|LB|      }|LB|  }|LB|}|LB|'></activity>
 			</activity>
 		</notifier>
-		<notifier name="SetupEnvironment">
+		<notifier name="InitializeSystemUser">
 			<trigger source="@afterDeployment">
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
 			<activity type="iam-create-systemuser" fail-silent="true" id="vMB9LZ"></activity>
-			<activity id="vkYuPh" type="create-iam-group" group-name="#'administrator'" fail-silent="true"></activity>
-			<activity id="wjJU3t" group-name="#'administrator'" type="add-user-to-iam-group" username="#'system-user'" fail-silent="true"></activity>
-			<activity id="wjJU3t2" group-name="#'administrator'" type="add-user-to-iam-group" username="#'bo.hanssen'" fail-silent="true"></activity>
-		</notifier>
-		<notifier name="SendTicketVerification">
-			<trigger source="ConferenceRegistrationManagerVisitorRegistered">
-				<mapping target="year" value="year"></mapping>
-				<mapping target="ticketId" value="ticketId"></mapping>
-				<mapping target="firstName" value="firstName"></mapping>
-				<mapping target="lastName" value="lastName"></mapping>
-				<mapping target="email" value="email"></mapping>
-				<mapping target="control" value="control"></mapping>
-			</trigger>
-			<trigger source="ResendVerificationTicketRequested">
-				<mapping target="year" value="year"></mapping>
-				<mapping target="ticketId" value="ticketId"></mapping>
-				<mapping target="firstName" value="firstName"></mapping>
-				<mapping target="lastName" value="lastName"></mapping>
-				<mapping target="email" value="email"></mapping>
-				<mapping target="control" value="control"></mapping>
-			</trigger>
-			<activity type="fetch-property" id="LanEWy" name="apiKey" key="mailgunKey"></activity>
-			<activity type="set-variable" id="9wrt54" name="host" expression="#'https://devconf.nl'"></activity>
-			<activity type="set-variable" id="8n3Dtb" name="subject" expression="#'Je inschrijving is bijna klaar!'"></activity>
-			<activity type="render-template" id="y41GHO" name="html" template-file="templates/TicketVerificationMail.html"></activity>
-			<activity type="render-template" id="KOeswM" name="text" template-file="templates/TicketVerificationMail.txt"></activity>
-			<activity type="code" id="RWPf3X" python-file="lib/MailGun.py" handler="send"></activity>
-		</notifier>
-		<notifier name="ExecuteSendEmail">
-			<trigger source="SendEmailRequested" idempotency-key="">
-				<mapping target="id" value="id"></mapping>
-				<mapping target="email" value="email"></mapping>
-				<mapping target="firstName" value="firstName"></mapping>
-				<mapping target="lastName" value="lastName"></mapping>
-				<mapping target="enableUnsubscribe" value="enableUnsubscribe"></mapping>
-			</trigger>
-			<activity type="call-internal-api" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|' id="BYxxif"></activity>
-			<activity type="code" python-file="lib/MailGun.py" handler="prepare_email" id="mkIKZs"></activity>
-			<activity type="render-template" template-file="templates/GeneralMail.html" name="html" id="TkSEwf"></activity>
-			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="qRtLJE"></activity>
-			<activity type="code" python-file="lib/MailGun.py" handler="send" id="BLPdVI"></activity>
-		</notifier>
-		<notifier name="SendDeregisterConfirmation">
-			<trigger source="VisitorDeregistered">
-				<mapping target="email" value="email"></mapping>
-				<mapping target="ticketId" value="ticketId"></mapping>
-				<mapping target="reason" value="reason"></mapping>
-				<mapping target="year" value="year"></mapping>
-			</trigger>
-			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="c4NcAA"></activity>
-			<activity type="set-variable" expression='#"Je registratie is geannuleerd"' name="subject" id="p5oUyA"></activity>
-			<activity type="render-template" template-file="templates/DeregisterConfirmationMail.html" name="html" id="KLiO9A"></activity>
-			<activity type="render-template" id="DHXCaA" template-file="templates/DeregisterConfirmationMail.txt" name="text"></activity>
-			<activity type="code" handler="send_with_copy_to_mailbox" python-file="lib/MailGun.py" id="2LjgLA"></activity>
 		</notifier>
 	</notifiers>
 	<functional-scenarios clean-db="true" clean-iam="false" minimum-event-coverage="80" minimum-view-coverage="80">
@@ -1837,22 +1845,6 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			<activity type="query" path="Email.get" view="Email" description="Verifieer dat de email correct ingepland is">
 				<input name="key" type="String" value="#id#"></input>
 				<expect-value name="sendAfter" type="String" value="#sendAfter#"></expect-value>
-			</activity>
-		</scenario>
-		<scenario name="PrepareWebPage" extends=";CreateProgram">
-			<activity type="set-variables">
-				<input name="year" type="String" value="2024"></input>
-			</activity>
-			<activity type="grant-role" description="Grant administrator role" role="administrator"></activity>
-			<activity type="mutation" description="Configureer call to action title" path="WebSite.Element.create">
-				<input name="name" type="String" value="call_to_action_title"></input>
-				<input name="content" type="String" value="Tot volgend jaar!"></input>
-				<expected-trace command="Element.Create" status="Success"></expected-trace>
-			</activity>
-			<activity type="mutation" description="Configureer call to action text" path="WebSite.Element.create">
-				<input name="name" type="String" value="call_to_action_text"></input>
-				<input name="content" type="String" value="base64:QmVkYW5rdCBkYXQgamUgYWFud2V6aWcgd2FzIG9wIGRlemUgbW9vaWUgZGFnLiBXaWwgamUgbm9nIGV2ZW4gdGVydWdibGlra2VuPyA8YSBocmVmPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVB4ZngxMTVQU0ZJIiB0YXJnZXQ9Il9ibGFuayI+QmVraWprIGRhbiBkZSBhZnRlcm1vdmllIHZhbiAyMDIzLjwvYT4KCldlIGhvcGVuIGRhdCBqZSBnZcOvbnNwaXJlZXJkIGJlbnQgZW4gdm9sZ2VuZCBqYWFyIHdlZXIgYWFud2V6aWcgYmVudC4gT20gaGV0IHZvbGdlbmRlIGV2ZW5lbWVudCBub2cgaW50ZXJlc3NhbnRlciB2b29yIGplIHRlIG1ha2VuLCB2cmFnZW4gd2UganVsbGllIHpvYWxzIGllZGVyIGphYXIgPGEgaHJlZj0ibWFpbHRvOmRldmNvbmZAYXBnLm5sIj5mZWVkYmFjazwvYT4uCgpXaWwgamUgZXIgdm9sZ2VuZCBqYWFyIHpla2VyIGJpaiB6aWpuLCByZXNlcnZlZXIgZGFuIGFsdmFzdCB3b2Vuc2RhZyAyNyBtYWFydCBpbiBqZSBhZ2VuZGEhIEFsdmFzdCBoYXJ0ZWxpamsgYmVkYW5rdCB2b29yIGplIHRpamQgZW4gdG90IHppZW5zLg=="></input>
-				<expected-trace command="Element.Create" status="Success"></expected-trace>
 			</activity>
 		</scenario>
 		<scenario name="CreateProgram" extends="">
@@ -2057,50 +2049,20 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 				<expected-trace command="Conference.ProgramItem.Delete" status="success"></expected-trace>
 			</activity>
 		</scenario>
-		<scenario name="WebPageElements" extends=";CreateProgram">
+		<scenario name="PrepareWebPage" extends=";CreateProgram">
 			<activity type="set-variables">
-				<input name="name" type="String" value="call-to-action"></input>
+				<input name="year" type="String" value="2024"></input>
 			</activity>
-			<activity type="grant-role" role="administrator"></activity>
-			<activity type="mutation" path="WebSite.Element.create">
-				<input name="name" type="String" value="#name#"></input>
-				<input name="content" type="String" value="Doe iets"></input>
+			<activity type="grant-role" description="Grant administrator role" role="administrator"></activity>
+			<activity type="mutation" description="Configureer call to action title" path="WebSite.Element.create">
+				<input name="name" type="String" value="call_to_action_title"></input>
+				<input name="content" type="String" value="Tot volgend jaar!"></input>
 				<expected-trace command="Element.Create" status="Success"></expected-trace>
 			</activity>
-			<activity type="query" path="WebSite.Element.get" view="WebPageElement">
-				<input name="key" type="ID" value="#name#"></input>
-				<expect-value name="name" type="String" value="#name#"></expect-value>
-				<expect-value name="content" type="String" value="Doe iets"></expect-value>
-				<data-remediation domain="WebSite" aggregate="Element" identifier="#name#"></data-remediation>
-			</activity>
-			<activity type="mutation" path="WebSite.Element.update">
-				<input name="name" type="String" value="#name#"></input>
-				<input name="content" type="String" value="Updated!"></input>
-				<expected-trace command="Element.Update" status="Success"></expected-trace>
-			</activity>
-			<activity type="query" path="WebSite.Element.get" view="WebPageElement">
-				<input name="key" type="ID" value="#name#"></input>
-				<expect-value name="content" type="String" value="Updated!"></expect-value>
-				<data-remediation domain="WebSite" aggregate="Element" identifier="#name#"></data-remediation>
-			</activity>
-		</scenario>
-		<scenario name="TalkProposal" extends=";CreateProgram">
-			<activity type="set-variables">
-				<input name="email" type="String" value="devconf@endtest-mail.io"></input>
-			</activity>
-			<activity type="mutation" path="Conference.TalkProposal.create">
-				<input name="difficultyLevel" type="String" value="novice"></input>
-				<input name="name" type="String" value="John Doe"></input>
-				<input name="abstract" type="String" value="base64:V2hhdCBhcmUgdGhlIGV4cGVjdGF0aW9ucy4gTGV2ZWwgdGhlIHBsYXlpbmcgZmllbGQgY29weSBhbmQgcGFzdGUgZnJvbSBzdGFjayBvdmVyZmxvdywgd2UncmUgYnVpbGRpbmcgdGhlIHBsYW5lIHdoaWxlIHdlJ3JlIGZseWluZyBpdCBhIHNldCBvZiBjZXJ0aXR1ZGVzIGJhc2VkIG9uIGRlZHVjdGlvbnMgZm91bmRlZCBvbiBmYWxzZSBwcmVtaXNlLCBzbyBwdWxsIGluIHRlbiBleHRyYSBib2RpZXMgdG8gaGVscCByb2xsIHRoZSB0b3J0b2lzZSB0aGF0IGplcmsgZnJvbSBmaW5hbmNlIHJlYWxseSB0aHJldyBtZSB1bmRlciB0aGUgYnVzLiBXZSB3YW50IHRvIHNlZSBtb3JlIGNoYXJ0cy4gV2hlcmUgZG8gd2Ugc3RhbmQgb24gdGhlIGxhdGVzdCBjbGllbnQgYXNrIHByb2NlZHVyYWxpemUgd2UgbmVlZCBhIHJlY2FwIGJ5IGVvZCwgY29iIG9yIHdoYXRldmVyIGNvbWVzIGZpcnN0IGdvb2Qgb3B0aWNzLCBub3IgcHJvZHVjdCBsYXVuY2guIFVwc2VsbC4gT3JnYW5pYyBncm93dGggcmVncm91cCwgb3IgYSBzZXQgb2YgY2VydGl0dWRlcyBiYXNlZCBvbiBkZWR1Y3Rpb25zIGZvdW5kZWQgb24gZmFsc2UgcHJlbWlzZS4gV2UgZG9uJ3Qgd2FudCB0byBib2lsIHRoZSBvY2VhbiBvbndhcmQgYW5kIHVwd2FyZCwgcHJvZHVjdGl6ZSB0aGUgZGVsaXZlcmFibGVzIGFuZCBmb2N1cyBvbiB0aGUgYm90dG9tIGxpbmUsIGJ1dCB0aGUgaG9yc2UgaXMgb3V0IG9mIHRoZSBiYXJuIHByb2R1Y3QgbWFya2V0IGZpdC4="></input>
-				<input name="biography" type="String" value="base64:SSdtIGJhYnkgZ2VudHJpZnkgdHJ1ZmZhdXQgRElZLCBmb3VyIGRvbGxhciB0b2FzdCB5ciBnbHV0ZW4tZnJlZSBkcmVhbWNhdGNoZXIgdmlueWwgZmxhbm5lbCBibGFja2JpcmQgc3B5cGxhbmUgbGVnZ2luZ3MuIEhhbW1vY2sgYmVzcG9rZSBzZW1pb3RpY3MsIGJhbmpvIHBvbGFyb2lkIG1peHRhcGUgZmxhbm5lbCBzZWl0YW4uIFVuaWNvcm4ga2FsZSBjaGlwcyBjaGlsbHdhdmUgaXJvbnkga29naSB0cnktaGFyZCB3YXlmYXJlcnMgYmFuaCBtaSBtYW4gYnJhaWQgZHJpbmtpbmcgdmluZWdhciBhY3R1YWxseSBCcm9va2x5biBvZmZhbCBwcmF4aXMgc2thdGVib2FyZC4gQ2VsaWFjIGZyZWVnYW4gdHJ5LWhhcmQsIG1pZ2FzIG5ldXRyYSByYXcgZGVuaW0gdW1hbWkgc3dhZyBjbGljaGUgYXV0aGVudGljIGVuYW1lbCBwaW4ga2V5dGFyIHNtYWxsIGJhdGNoIHNoYW1hbiBwb2tlLiBGb29kIHRydWNrIGNlbGlhYyBsdW1iZXJzZXh1YWwgcG91ci1vdmVyLiBUd2VlIHZlbm1vIGRyaW5raW5nIHZpbmVnYXIgbG9jYXZvcmUgYXN5bW1ldHJpY2FsIG11c3RhY2hlIHNhbWUgc3VzdGFpbmFibGUgZHJlYW1jYXRjaGVyLgoKRHVtbXkgdGV4dD8gTW9yZSBsaWtlIGR1bW15IHRoaWNjIHRleHQsIGFtaXJpdGU/"></input>
-				<input name="id" type="String" value="4fb469b4-b4ee-4622-bacc-6656d618cd7c"></input>
-				<input name="title" type="String" value="My Talk"></input>
-				<input name="email" type="String" value="#email#"></input>
-				<expected-trace command="TalkProposal.Create" status="Success"></expected-trace>
-			</activity>
-			<activity type="grant-role" role="administrator" description=""></activity>
-			<activity type="query" path="TalkProposal.filter" view="TalkProposal">
-				<expect-value name="resultset.0.email" type="String" value="#email#"></expect-value>
+			<activity type="mutation" description="Configureer call to action text" path="WebSite.Element.create">
+				<input name="name" type="String" value="call_to_action_text"></input>
+				<input name="content" type="String" value="base64:QmVkYW5rdCBkYXQgamUgYWFud2V6aWcgd2FzIG9wIGRlemUgbW9vaWUgZGFnLiBXaWwgamUgbm9nIGV2ZW4gdGVydWdibGlra2VuPyA8YSBocmVmPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVB4ZngxMTVQU0ZJIiB0YXJnZXQ9Il9ibGFuayI+QmVraWprIGRhbiBkZSBhZnRlcm1vdmllIHZhbiAyMDIzLjwvYT4KCldlIGhvcGVuIGRhdCBqZSBnZcOvbnNwaXJlZXJkIGJlbnQgZW4gdm9sZ2VuZCBqYWFyIHdlZXIgYWFud2V6aWcgYmVudC4gT20gaGV0IHZvbGdlbmRlIGV2ZW5lbWVudCBub2cgaW50ZXJlc3NhbnRlciB2b29yIGplIHRlIG1ha2VuLCB2cmFnZW4gd2UganVsbGllIHpvYWxzIGllZGVyIGphYXIgPGEgaHJlZj0ibWFpbHRvOmRldmNvbmZAYXBnLm5sIj5mZWVkYmFjazwvYT4uCgpXaWwgamUgZXIgdm9sZ2VuZCBqYWFyIHpla2VyIGJpaiB6aWpuLCByZXNlcnZlZXIgZGFuIGFsdmFzdCB3b2Vuc2RhZyAyNyBtYWFydCBpbiBqZSBhZ2VuZGEhIEFsdmFzdCBoYXJ0ZWxpamsgYmVkYW5rdCB2b29yIGplIHRpamQgZW4gdG90IHppZW5zLg=="></input>
+				<expected-trace command="Element.Create" status="Success"></expected-trace>
 			</activity>
 		</scenario>
 		<scenario name="RegistrationManagement" extends=";CreateProgram">
@@ -2307,6 +2269,52 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 				<expect-value name="registeredVisitors" type="Int" value="1"></expect-value>
 				<expect-value name="maxVisitors" type="Int" value="10"></expect-value>
 				<data-remediation domain="Conference" aggregate="RegistrationManager" identifier="#year#"></data-remediation>
+			</activity>
+		</scenario>
+		<scenario name="WebPageElements" extends=";CreateProgram">
+			<activity type="set-variables">
+				<input name="name" type="String" value="call-to-action"></input>
+			</activity>
+			<activity type="grant-role" role="administrator"></activity>
+			<activity type="mutation" path="WebSite.Element.create">
+				<input name="name" type="String" value="#name#"></input>
+				<input name="content" type="String" value="Doe iets"></input>
+				<expected-trace command="Element.Create" status="Success"></expected-trace>
+			</activity>
+			<activity type="query" path="WebSite.Element.get" view="WebPageElement">
+				<input name="key" type="ID" value="#name#"></input>
+				<expect-value name="name" type="String" value="#name#"></expect-value>
+				<expect-value name="content" type="String" value="Doe iets"></expect-value>
+				<data-remediation domain="WebSite" aggregate="Element" identifier="#name#"></data-remediation>
+			</activity>
+			<activity type="mutation" path="WebSite.Element.update">
+				<input name="name" type="String" value="#name#"></input>
+				<input name="content" type="String" value="Updated!"></input>
+				<expected-trace command="Element.Update" status="Success"></expected-trace>
+			</activity>
+			<activity type="query" path="WebSite.Element.get" view="WebPageElement">
+				<input name="key" type="ID" value="#name#"></input>
+				<expect-value name="content" type="String" value="Updated!"></expect-value>
+				<data-remediation domain="WebSite" aggregate="Element" identifier="#name#"></data-remediation>
+			</activity>
+		</scenario>
+		<scenario name="TalkProposal" extends=";CreateProgram">
+			<activity type="set-variables">
+				<input name="email" type="String" value="devconf@endtest-mail.io"></input>
+			</activity>
+			<activity type="mutation" path="Conference.TalkProposal.create">
+				<input name="difficultyLevel" type="String" value="novice"></input>
+				<input name="name" type="String" value="John Doe"></input>
+				<input name="abstract" type="String" value="base64:V2hhdCBhcmUgdGhlIGV4cGVjdGF0aW9ucy4gTGV2ZWwgdGhlIHBsYXlpbmcgZmllbGQgY29weSBhbmQgcGFzdGUgZnJvbSBzdGFjayBvdmVyZmxvdywgd2UncmUgYnVpbGRpbmcgdGhlIHBsYW5lIHdoaWxlIHdlJ3JlIGZseWluZyBpdCBhIHNldCBvZiBjZXJ0aXR1ZGVzIGJhc2VkIG9uIGRlZHVjdGlvbnMgZm91bmRlZCBvbiBmYWxzZSBwcmVtaXNlLCBzbyBwdWxsIGluIHRlbiBleHRyYSBib2RpZXMgdG8gaGVscCByb2xsIHRoZSB0b3J0b2lzZSB0aGF0IGplcmsgZnJvbSBmaW5hbmNlIHJlYWxseSB0aHJldyBtZSB1bmRlciB0aGUgYnVzLiBXZSB3YW50IHRvIHNlZSBtb3JlIGNoYXJ0cy4gV2hlcmUgZG8gd2Ugc3RhbmQgb24gdGhlIGxhdGVzdCBjbGllbnQgYXNrIHByb2NlZHVyYWxpemUgd2UgbmVlZCBhIHJlY2FwIGJ5IGVvZCwgY29iIG9yIHdoYXRldmVyIGNvbWVzIGZpcnN0IGdvb2Qgb3B0aWNzLCBub3IgcHJvZHVjdCBsYXVuY2guIFVwc2VsbC4gT3JnYW5pYyBncm93dGggcmVncm91cCwgb3IgYSBzZXQgb2YgY2VydGl0dWRlcyBiYXNlZCBvbiBkZWR1Y3Rpb25zIGZvdW5kZWQgb24gZmFsc2UgcHJlbWlzZS4gV2UgZG9uJ3Qgd2FudCB0byBib2lsIHRoZSBvY2VhbiBvbndhcmQgYW5kIHVwd2FyZCwgcHJvZHVjdGl6ZSB0aGUgZGVsaXZlcmFibGVzIGFuZCBmb2N1cyBvbiB0aGUgYm90dG9tIGxpbmUsIGJ1dCB0aGUgaG9yc2UgaXMgb3V0IG9mIHRoZSBiYXJuIHByb2R1Y3QgbWFya2V0IGZpdC4="></input>
+				<input name="biography" type="String" value="base64:SSdtIGJhYnkgZ2VudHJpZnkgdHJ1ZmZhdXQgRElZLCBmb3VyIGRvbGxhciB0b2FzdCB5ciBnbHV0ZW4tZnJlZSBkcmVhbWNhdGNoZXIgdmlueWwgZmxhbm5lbCBibGFja2JpcmQgc3B5cGxhbmUgbGVnZ2luZ3MuIEhhbW1vY2sgYmVzcG9rZSBzZW1pb3RpY3MsIGJhbmpvIHBvbGFyb2lkIG1peHRhcGUgZmxhbm5lbCBzZWl0YW4uIFVuaWNvcm4ga2FsZSBjaGlwcyBjaGlsbHdhdmUgaXJvbnkga29naSB0cnktaGFyZCB3YXlmYXJlcnMgYmFuaCBtaSBtYW4gYnJhaWQgZHJpbmtpbmcgdmluZWdhciBhY3R1YWxseSBCcm9va2x5biBvZmZhbCBwcmF4aXMgc2thdGVib2FyZC4gQ2VsaWFjIGZyZWVnYW4gdHJ5LWhhcmQsIG1pZ2FzIG5ldXRyYSByYXcgZGVuaW0gdW1hbWkgc3dhZyBjbGljaGUgYXV0aGVudGljIGVuYW1lbCBwaW4ga2V5dGFyIHNtYWxsIGJhdGNoIHNoYW1hbiBwb2tlLiBGb29kIHRydWNrIGNlbGlhYyBsdW1iZXJzZXh1YWwgcG91ci1vdmVyLiBUd2VlIHZlbm1vIGRyaW5raW5nIHZpbmVnYXIgbG9jYXZvcmUgYXN5bW1ldHJpY2FsIG11c3RhY2hlIHNhbWUgc3VzdGFpbmFibGUgZHJlYW1jYXRjaGVyLgoKRHVtbXkgdGV4dD8gTW9yZSBsaWtlIGR1bW15IHRoaWNjIHRleHQsIGFtaXJpdGU/"></input>
+				<input name="id" type="String" value="4fb469b4-b4ee-4622-bacc-6656d618cd7c"></input>
+				<input name="title" type="String" value="My Talk"></input>
+				<input name="email" type="String" value="#email#"></input>
+				<expected-trace command="TalkProposal.Create" status="Success"></expected-trace>
+			</activity>
+			<activity type="grant-role" role="administrator" description=""></activity>
+			<activity type="query" path="TalkProposal.filter" view="TalkProposal">
+				<expect-value name="resultset.0.email" type="String" value="#email#"></expect-value>
 			</activity>
 		</scenario>
 	</functional-scenarios>
