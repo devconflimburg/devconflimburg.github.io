@@ -7,51 +7,15 @@
                     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                         
                         <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'UnsubscribeEmail'"
-                                x-show="'unsubscribeemail'.includes(search.toLowerCase())">
-                            UnsubscribeEmail
+                                @click="Draftsman.empty_track_and_trace_log();component = 'UpdateWebSiteElement'"
+                                x-show="'updatewebsiteelement'.includes(search.toLowerCase())">
+                            UpdateWebSiteElement
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'DeleteEmail'"
-                                x-show="'deleteemail'.includes(search.toLowerCase())">
-                            DeleteEmail
-                        </button>
-                        
-                        <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'MarkAsSendEmail'"
-                                x-show="'markassendemail'.includes(search.toLowerCase())">
-                            MarkAsSendEmail
-                        </button>
-                        
-                        <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'CreateEmail'"
-                                x-show="'createemail'.includes(search.toLowerCase())">
-                            CreateEmail
-                        </button>
-                        
-                        <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'UpdateEmail'"
-                                x-show="'updateemail'.includes(search.toLowerCase())">
-                            UpdateEmail
-                        </button>
-                        
-                        <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'ScheduleEmail'"
-                                x-show="'scheduleemail'.includes(search.toLowerCase())">
-                            ScheduleEmail
-                        </button>
-                        
-                        <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'ImportSubscriptionEmail'"
-                                x-show="'importsubscriptionemail'.includes(search.toLowerCase())">
-                            ImportSubscriptionEmail
-                        </button>
-                        
-                        <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'SendEmail'"
-                                x-show="'sendemail'.includes(search.toLowerCase())">
-                            SendEmail
+                                @click="Draftsman.empty_track_and_trace_log();component = 'CreateWebSiteElement'"
+                                x-show="'createwebsiteelement'.includes(search.toLowerCase())">
+                            CreateWebSiteElement
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
@@ -61,21 +25,15 @@
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'ResendTicket'"
-                                x-show="'resendticket'.includes(search.toLowerCase())">
-                            ResendTicket
-                        </button>
-                        
-                        <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'RedeemTicket'"
-                                x-show="'redeemticket'.includes(search.toLowerCase())">
-                            RedeemTicket
-                        </button>
-                        
-                        <button type="button" class="btn btn-outline-primary"
                                 @click="Draftsman.empty_track_and_trace_log();component = 'VerifyTicket'"
                                 x-show="'verifyticket'.includes(search.toLowerCase())">
                             VerifyTicket
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'ResendTicket'"
+                                x-show="'resendticket'.includes(search.toLowerCase())">
+                            ResendTicket
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
@@ -85,9 +43,57 @@
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'RemoveProgramItemConference'"
-                                x-show="'removeprogramitemconference'.includes(search.toLowerCase())">
-                            RemoveProgramItemConference
+                                @click="Draftsman.empty_track_and_trace_log();component = 'RedeemTicket'"
+                                x-show="'redeemticket'.includes(search.toLowerCase())">
+                            RedeemTicket
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'MarkAsSendEmail'"
+                                x-show="'markassendemail'.includes(search.toLowerCase())">
+                            MarkAsSendEmail
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'UnsubscribeEmail'"
+                                x-show="'unsubscribeemail'.includes(search.toLowerCase())">
+                            UnsubscribeEmail
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'ScheduleEmail'"
+                                x-show="'scheduleemail'.includes(search.toLowerCase())">
+                            ScheduleEmail
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'DeleteEmail'"
+                                x-show="'deleteemail'.includes(search.toLowerCase())">
+                            DeleteEmail
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'CreateEmail'"
+                                x-show="'createemail'.includes(search.toLowerCase())">
+                            CreateEmail
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'SendEmail'"
+                                x-show="'sendemail'.includes(search.toLowerCase())">
+                            SendEmail
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'ImportSubscriptionEmail'"
+                                x-show="'importsubscriptionemail'.includes(search.toLowerCase())">
+                            ImportSubscriptionEmail
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'UpdateEmail'"
+                                x-show="'updateemail'.includes(search.toLowerCase())">
+                            UpdateEmail
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
@@ -97,15 +103,21 @@
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'RemoveProgramItemConference'"
+                                x-show="'removeprogramitemconference'.includes(search.toLowerCase())">
+                            RemoveProgramItemConference
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
                                 @click="Draftsman.empty_track_and_trace_log();component = 'InitializeEditionConference'"
                                 x-show="'initializeeditionconference'.includes(search.toLowerCase())">
                             InitializeEditionConference
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'DeregisterVisitorConferenceRegistrationManager'"
-                                x-show="'deregistervisitorconferenceregistrationmanager'.includes(search.toLowerCase())">
-                            DeregisterVisitorConferenceRegistrationManager
+                                @click="Draftsman.empty_track_and_trace_log();component = 'CreateConferenceTalkProposal'"
+                                x-show="'createconferencetalkproposal'.includes(search.toLowerCase())">
+                            CreateConferenceTalkProposal
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
@@ -121,21 +133,9 @@
                         </button>
                         
                         <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'CreateConferenceTalkProposal'"
-                                x-show="'createconferencetalkproposal'.includes(search.toLowerCase())">
-                            CreateConferenceTalkProposal
-                        </button>
-                        
-                        <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'CreateWebSiteElement'"
-                                x-show="'createwebsiteelement'.includes(search.toLowerCase())">
-                            CreateWebSiteElement
-                        </button>
-                        
-                        <button type="button" class="btn btn-outline-primary"
-                                @click="Draftsman.empty_track_and_trace_log();component = 'UpdateWebSiteElement'"
-                                x-show="'updatewebsiteelement'.includes(search.toLowerCase())">
-                            UpdateWebSiteElement
+                                @click="Draftsman.empty_track_and_trace_log();component = 'DeregisterVisitorConferenceRegistrationManager'"
+                                x-show="'deregistervisitorconferenceregistrationmanager'.includes(search.toLowerCase())">
+                            DeregisterVisitorConferenceRegistrationManager
                         </button>
                         
                     </div>
@@ -143,66 +143,18 @@
             </div>
             <div class="col-6">
                 
-                <div x-show="component == 'UnsubscribeEmail'" x-cloak x-transition>
-                    <div x-import="commands/UnsubscribeEmail">
-                        <h6>UnsubscribeEmail</h6>
-                        <ui-UnsubscribeEmail></ui-UnsubscribeEmail>
+                <div x-show="component == 'UpdateWebSiteElement'" x-cloak x-transition>
+                    <div x-import="commands/UpdateWebSiteElement">
+                        <h6>UpdateWebSiteElement</h6>
+                        <ui-UpdateWebSiteElement></ui-UpdateWebSiteElement>
                     </div>
                 </div>
 
                 
-                <div x-show="component == 'DeleteEmail'" x-cloak x-transition>
-                    <div x-import="commands/DeleteEmail">
-                        <h6>DeleteEmail</h6>
-                        <ui-DeleteEmail></ui-DeleteEmail>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'MarkAsSendEmail'" x-cloak x-transition>
-                    <div x-import="commands/MarkAsSendEmail">
-                        <h6>MarkAsSendEmail</h6>
-                        <ui-MarkAsSendEmail></ui-MarkAsSendEmail>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'CreateEmail'" x-cloak x-transition>
-                    <div x-import="commands/CreateEmail">
-                        <h6>CreateEmail</h6>
-                        <ui-CreateEmail></ui-CreateEmail>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'UpdateEmail'" x-cloak x-transition>
-                    <div x-import="commands/UpdateEmail">
-                        <h6>UpdateEmail</h6>
-                        <ui-UpdateEmail></ui-UpdateEmail>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'ScheduleEmail'" x-cloak x-transition>
-                    <div x-import="commands/ScheduleEmail">
-                        <h6>ScheduleEmail</h6>
-                        <ui-ScheduleEmail></ui-ScheduleEmail>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'ImportSubscriptionEmail'" x-cloak x-transition>
-                    <div x-import="commands/ImportSubscriptionEmail">
-                        <h6>ImportSubscriptionEmail</h6>
-                        <ui-ImportSubscriptionEmail></ui-ImportSubscriptionEmail>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'SendEmail'" x-cloak x-transition>
-                    <div x-import="commands/SendEmail">
-                        <h6>SendEmail</h6>
-                        <ui-SendEmail></ui-SendEmail>
+                <div x-show="component == 'CreateWebSiteElement'" x-cloak x-transition>
+                    <div x-import="commands/CreateWebSiteElement">
+                        <h6>CreateWebSiteElement</h6>
+                        <ui-CreateWebSiteElement></ui-CreateWebSiteElement>
                     </div>
                 </div>
 
@@ -215,26 +167,18 @@
                 </div>
 
                 
-                <div x-show="component == 'ResendTicket'" x-cloak x-transition>
-                    <div x-import="commands/ResendTicket">
-                        <h6>ResendTicket</h6>
-                        <ui-ResendTicket></ui-ResendTicket>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'RedeemTicket'" x-cloak x-transition>
-                    <div x-import="commands/RedeemTicket">
-                        <h6>RedeemTicket</h6>
-                        <ui-RedeemTicket></ui-RedeemTicket>
-                    </div>
-                </div>
-
-                
                 <div x-show="component == 'VerifyTicket'" x-cloak x-transition>
                     <div x-import="commands/VerifyTicket">
                         <h6>VerifyTicket</h6>
                         <ui-VerifyTicket></ui-VerifyTicket>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'ResendTicket'" x-cloak x-transition>
+                    <div x-import="commands/ResendTicket">
+                        <h6>ResendTicket</h6>
+                        <ui-ResendTicket></ui-ResendTicket>
                     </div>
                 </div>
 
@@ -247,10 +191,74 @@
                 </div>
 
                 
-                <div x-show="component == 'RemoveProgramItemConference'" x-cloak x-transition>
-                    <div x-import="commands/RemoveProgramItemConference">
-                        <h6>RemoveProgramItemConference</h6>
-                        <ui-RemoveProgramItemConference></ui-RemoveProgramItemConference>
+                <div x-show="component == 'RedeemTicket'" x-cloak x-transition>
+                    <div x-import="commands/RedeemTicket">
+                        <h6>RedeemTicket</h6>
+                        <ui-RedeemTicket></ui-RedeemTicket>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'MarkAsSendEmail'" x-cloak x-transition>
+                    <div x-import="commands/MarkAsSendEmail">
+                        <h6>MarkAsSendEmail</h6>
+                        <ui-MarkAsSendEmail></ui-MarkAsSendEmail>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'UnsubscribeEmail'" x-cloak x-transition>
+                    <div x-import="commands/UnsubscribeEmail">
+                        <h6>UnsubscribeEmail</h6>
+                        <ui-UnsubscribeEmail></ui-UnsubscribeEmail>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'ScheduleEmail'" x-cloak x-transition>
+                    <div x-import="commands/ScheduleEmail">
+                        <h6>ScheduleEmail</h6>
+                        <ui-ScheduleEmail></ui-ScheduleEmail>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'DeleteEmail'" x-cloak x-transition>
+                    <div x-import="commands/DeleteEmail">
+                        <h6>DeleteEmail</h6>
+                        <ui-DeleteEmail></ui-DeleteEmail>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'CreateEmail'" x-cloak x-transition>
+                    <div x-import="commands/CreateEmail">
+                        <h6>CreateEmail</h6>
+                        <ui-CreateEmail></ui-CreateEmail>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'SendEmail'" x-cloak x-transition>
+                    <div x-import="commands/SendEmail">
+                        <h6>SendEmail</h6>
+                        <ui-SendEmail></ui-SendEmail>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'ImportSubscriptionEmail'" x-cloak x-transition>
+                    <div x-import="commands/ImportSubscriptionEmail">
+                        <h6>ImportSubscriptionEmail</h6>
+                        <ui-ImportSubscriptionEmail></ui-ImportSubscriptionEmail>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'UpdateEmail'" x-cloak x-transition>
+                    <div x-import="commands/UpdateEmail">
+                        <h6>UpdateEmail</h6>
+                        <ui-UpdateEmail></ui-UpdateEmail>
                     </div>
                 </div>
 
@@ -263,6 +271,14 @@
                 </div>
 
                 
+                <div x-show="component == 'RemoveProgramItemConference'" x-cloak x-transition>
+                    <div x-import="commands/RemoveProgramItemConference">
+                        <h6>RemoveProgramItemConference</h6>
+                        <ui-RemoveProgramItemConference></ui-RemoveProgramItemConference>
+                    </div>
+                </div>
+
+                
                 <div x-show="component == 'InitializeEditionConference'" x-cloak x-transition>
                     <div x-import="commands/InitializeEditionConference">
                         <h6>InitializeEditionConference</h6>
@@ -271,10 +287,10 @@
                 </div>
 
                 
-                <div x-show="component == 'DeregisterVisitorConferenceRegistrationManager'" x-cloak x-transition>
-                    <div x-import="commands/DeregisterVisitorConferenceRegistrationManager">
-                        <h6>DeregisterVisitorConferenceRegistrationManager</h6>
-                        <ui-DeregisterVisitorConferenceRegistrationManager></ui-DeregisterVisitorConferenceRegistrationManager>
+                <div x-show="component == 'CreateConferenceTalkProposal'" x-cloak x-transition>
+                    <div x-import="commands/CreateConferenceTalkProposal">
+                        <h6>CreateConferenceTalkProposal</h6>
+                        <ui-CreateConferenceTalkProposal></ui-CreateConferenceTalkProposal>
                     </div>
                 </div>
 
@@ -295,30 +311,102 @@
                 </div>
 
                 
-                <div x-show="component == 'CreateConferenceTalkProposal'" x-cloak x-transition>
-                    <div x-import="commands/CreateConferenceTalkProposal">
-                        <h6>CreateConferenceTalkProposal</h6>
-                        <ui-CreateConferenceTalkProposal></ui-CreateConferenceTalkProposal>
+                <div x-show="component == 'DeregisterVisitorConferenceRegistrationManager'" x-cloak x-transition>
+                    <div x-import="commands/DeregisterVisitorConferenceRegistrationManager">
+                        <h6>DeregisterVisitorConferenceRegistrationManager</h6>
+                        <ui-DeregisterVisitorConferenceRegistrationManager></ui-DeregisterVisitorConferenceRegistrationManager>
                     </div>
                 </div>
 
                 
-                <div x-show="component == 'CreateWebSiteElement'" x-cloak x-transition>
-                    <div x-import="commands/CreateWebSiteElement">
-                        <h6>CreateWebSiteElement</h6>
-                        <ui-CreateWebSiteElement></ui-CreateWebSiteElement>
+
+                
+                <div x-show="component == 'TalkProposal/filter'" x-cloak x-transition>
+                    <div x-import="views/TalkProposal/filter">
+                        <h6>TalkProposal.filter</h6>
+                        <ui-TalkProposal-filter></ui-TalkProposal-filter>
                     </div>
                 </div>
 
                 
-                <div x-show="component == 'UpdateWebSiteElement'" x-cloak x-transition>
-                    <div x-import="commands/UpdateWebSiteElement">
-                        <h6>UpdateWebSiteElement</h6>
-                        <ui-UpdateWebSiteElement></ui-UpdateWebSiteElement>
+                <div x-show="component == 'Edition/filter'" x-cloak x-transition>
+                    <div x-import="views/Edition/filter">
+                        <h6>Edition.filter</h6>
+                        <ui-Edition-filter></ui-Edition-filter>
                     </div>
                 </div>
 
                 
+                <div x-show="component == 'Edition/get'" x-cloak x-transition>
+                    <div x-import="views/Edition/get">
+                        <h6>Edition.get</h6>
+                        <ui-Edition-get></ui-Edition-get>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'Album/get'" x-cloak x-transition>
+                    <div x-import="views/Album/get">
+                        <h6>Album.get</h6>
+                        <ui-Album-get></ui-Album-get>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'Album/filter'" x-cloak x-transition>
+                    <div x-import="views/Album/filter">
+                        <h6>Album.filter</h6>
+                        <ui-Album-filter></ui-Album-filter>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'Visitor/get'" x-cloak x-transition>
+                    <div x-import="views/Visitor/get">
+                        <h6>Visitor.get</h6>
+                        <ui-Visitor-get></ui-Visitor-get>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'Visitor/filter'" x-cloak x-transition>
+                    <div x-import="views/Visitor/filter">
+                        <h6>Visitor.filter</h6>
+                        <ui-Visitor-filter></ui-Visitor-filter>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'WebPageElement/filter'" x-cloak x-transition>
+                    <div x-import="views/WebPageElement/filter">
+                        <h6>WebPageElement.filter</h6>
+                        <ui-WebPageElement-filter></ui-WebPageElement-filter>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'WebPageElement/get'" x-cloak x-transition>
+                    <div x-import="views/WebPageElement/get">
+                        <h6>WebPageElement.get</h6>
+                        <ui-WebPageElement-get></ui-WebPageElement-get>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'Ticket/get'" x-cloak x-transition>
+                    <div x-import="views/Ticket/get">
+                        <h6>Ticket.get</h6>
+                        <ui-Ticket-get></ui-Ticket-get>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'Ticket/filter'" x-cloak x-transition>
+                    <div x-import="views/Ticket/filter">
+                        <h6>Ticket.filter</h6>
+                        <ui-Ticket-filter></ui-Ticket-filter>
+                    </div>
+                </div>
 
                 
                 <div x-show="component == 'Email/get'" x-cloak x-transition>
@@ -377,98 +465,10 @@
                 </div>
 
                 
-                <div x-show="component == 'Album/get'" x-cloak x-transition>
-                    <div x-import="views/Album/get">
-                        <h6>Album.get</h6>
-                        <ui-Album-get></ui-Album-get>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'Album/filter'" x-cloak x-transition>
-                    <div x-import="views/Album/filter">
-                        <h6>Album.filter</h6>
-                        <ui-Album-filter></ui-Album-filter>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'Ticket/get'" x-cloak x-transition>
-                    <div x-import="views/Ticket/get">
-                        <h6>Ticket.get</h6>
-                        <ui-Ticket-get></ui-Ticket-get>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'Ticket/filter'" x-cloak x-transition>
-                    <div x-import="views/Ticket/filter">
-                        <h6>Ticket.filter</h6>
-                        <ui-Ticket-filter></ui-Ticket-filter>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'TalkProposal/filter'" x-cloak x-transition>
-                    <div x-import="views/TalkProposal/filter">
-                        <h6>TalkProposal.filter</h6>
-                        <ui-TalkProposal-filter></ui-TalkProposal-filter>
-                    </div>
-                </div>
-
-                
                 <div x-show="component == 'RegistrationManager/get'" x-cloak x-transition>
                     <div x-import="views/RegistrationManager/get">
                         <h6>RegistrationManager.get</h6>
                         <ui-RegistrationManager-get></ui-RegistrationManager-get>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'Edition/filter'" x-cloak x-transition>
-                    <div x-import="views/Edition/filter">
-                        <h6>Edition.filter</h6>
-                        <ui-Edition-filter></ui-Edition-filter>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'Edition/get'" x-cloak x-transition>
-                    <div x-import="views/Edition/get">
-                        <h6>Edition.get</h6>
-                        <ui-Edition-get></ui-Edition-get>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'Visitor/get'" x-cloak x-transition>
-                    <div x-import="views/Visitor/get">
-                        <h6>Visitor.get</h6>
-                        <ui-Visitor-get></ui-Visitor-get>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'Visitor/filter'" x-cloak x-transition>
-                    <div x-import="views/Visitor/filter">
-                        <h6>Visitor.filter</h6>
-                        <ui-Visitor-filter></ui-Visitor-filter>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'WebPageElement/filter'" x-cloak x-transition>
-                    <div x-import="views/WebPageElement/filter">
-                        <h6>WebPageElement.filter</h6>
-                        <ui-WebPageElement-filter></ui-WebPageElement-filter>
-                    </div>
-                </div>
-
-                
-                <div x-show="component == 'WebPageElement/get'" x-cloak x-transition>
-                    <div x-import="views/WebPageElement/get">
-                        <h6>WebPageElement.get</h6>
-                        <ui-WebPageElement-get></ui-WebPageElement-get>
                     </div>
                 </div>
 
@@ -478,6 +478,61 @@
             <div class="col-3">
                 <h4>Queries</h4>
                 <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'talkproposal.filter'.includes(search.toLowerCase())"
+                            @click="component = 'TalkProposal/filter'">TalkProposal.filter
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'edition.filter'.includes(search.toLowerCase())"
+                            @click="component = 'Edition/filter'">Edition.filter
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'edition.get'.includes(search.toLowerCase())"
+                            @click="component = 'Edition/get'">Edition.get
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'album.get'.includes(search.toLowerCase())"
+                            @click="component = 'Album/get'">Album.get
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'album.filter'.includes(search.toLowerCase())"
+                            @click="component = 'Album/filter'">Album.filter
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'visitor.get'.includes(search.toLowerCase())"
+                            @click="component = 'Visitor/get'">Visitor.get
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'visitor.filter'.includes(search.toLowerCase())"
+                            @click="component = 'Visitor/filter'">Visitor.filter
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'webpageelement.filter'.includes(search.toLowerCase())"
+                            @click="component = 'WebPageElement/filter'">WebPageElement.filter
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'webpageelement.get'.includes(search.toLowerCase())"
+                            @click="component = 'WebPageElement/get'">WebPageElement.get
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'ticket.get'.includes(search.toLowerCase())"
+                            @click="component = 'Ticket/get'">Ticket.get
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'ticket.filter'.includes(search.toLowerCase())"
+                            @click="component = 'Ticket/filter'">Ticket.filter
+                    </button>
                     
                     <button type="button" class="btn btn-outline-primary"
                             x-show="'email.get'.includes(search.toLowerCase())"
@@ -515,63 +570,8 @@
                     </button>
                     
                     <button type="button" class="btn btn-outline-primary"
-                            x-show="'album.get'.includes(search.toLowerCase())"
-                            @click="component = 'Album/get'">Album.get
-                    </button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'album.filter'.includes(search.toLowerCase())"
-                            @click="component = 'Album/filter'">Album.filter
-                    </button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'ticket.get'.includes(search.toLowerCase())"
-                            @click="component = 'Ticket/get'">Ticket.get
-                    </button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'ticket.filter'.includes(search.toLowerCase())"
-                            @click="component = 'Ticket/filter'">Ticket.filter
-                    </button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'talkproposal.filter'.includes(search.toLowerCase())"
-                            @click="component = 'TalkProposal/filter'">TalkProposal.filter
-                    </button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
                             x-show="'registrationmanager.get'.includes(search.toLowerCase())"
                             @click="component = 'RegistrationManager/get'">RegistrationManager.get
-                    </button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'edition.filter'.includes(search.toLowerCase())"
-                            @click="component = 'Edition/filter'">Edition.filter
-                    </button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'edition.get'.includes(search.toLowerCase())"
-                            @click="component = 'Edition/get'">Edition.get
-                    </button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'visitor.get'.includes(search.toLowerCase())"
-                            @click="component = 'Visitor/get'">Visitor.get
-                    </button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'visitor.filter'.includes(search.toLowerCase())"
-                            @click="component = 'Visitor/filter'">Visitor.filter
-                    </button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'webpageelement.filter'.includes(search.toLowerCase())"
-                            @click="component = 'WebPageElement/filter'">WebPageElement.filter
-                    </button>
-                    
-                    <button type="button" class="btn btn-outline-primary"
-                            x-show="'webpageelement.get'.includes(search.toLowerCase())"
-                            @click="component = 'WebPageElement/get'">WebPageElement.get
                     </button>
                     
                 </div>
