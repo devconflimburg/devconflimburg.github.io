@@ -4,7 +4,10 @@ const room_colors = {
      "Forum":"#a4cbf2",
      "No-code-zone":"#a4a4f2",
      "Scriptingroom":"#f2a4a4",
-     "Hackingdorm":"#f2f2a4"
+     "Hackingdorm":"#f2f2a4",
+     "Theater":"#a4cbf2",
+      "Graanschuur":"#a4a4f2",
+      "Kersentuin":"#f2a4a4"
 };
 
 var registrationData = null;
