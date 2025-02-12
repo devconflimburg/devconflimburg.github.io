@@ -1674,18 +1674,18 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			<trigger source="@cron(0 * * * ? *)" idempotency-key="">
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
-			<activity type="call-internal-api" name="emails" template-file="templates/FetchBulkMails.txt" id="UvXrSn"></activity>
-			<activity type="code" python-file="lib/BulkMailUtils.py" handler="filter_mails" id="WUCOyC"></activity>
-			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" template-file="templates/FetchBulkMailTargets.txt" id="MpSXnp"></activity>
-			<activity type="loop" array="#flow.emails" id="gGXrDz">
-				<activity type="set-variable" name="emailId" expression='#item["id"]' id="LRoPOT"></activity>
-				<activity type="set-variable" name="item" expression="#item" id="RTnrBR"></activity>
-				<activity type="code" python-file="lib/BulkMailUtils.py" handler="create_distribution_shards" id="uSpYbf"></activity>
+			<activity type="call-internal-api" name="emails" template-file="templates/FetchBulkMails.txt" id="iLxOix"></activity>
+			<activity type="code" python-file="lib/BulkMailUtils.py" handler="filter_mails" id="uebtJY"></activity>
+			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" template-file="templates/FetchBulkMailTargets.txt" id="hBkLCd"></activity>
+			<activity type="loop" array="#flow.emails" id="jeumTz">
+				<activity type="set-variable" name="emailId" expression='#item["id"]' id="ORFokB"></activity>
+				<activity type="set-variable" name="item" expression="#item" id="qfMbZb"></activity>
+				<activity type="code" python-file="lib/BulkMailUtils.py" handler="create_distribution_shards" id="rotACN"></activity>
 			</activity>
-			<activity type="loop" array="#flow.distributions" id="qcBSHr">
-				<activity type="set-variable" name="emailId" expression='#item["emailId"]' id="uxBJYz"></activity>
-				<activity type="set-variable" name="targets" expression='#item["targets"]' id="WrsYyz"></activity>
-				<activity type="call-internal-api" name="emailResult" template-file="templates/DistributeBulkMail.txt" id="gNNSVx"></activity>
+			<activity type="loop" array="#flow.distributions" id="YEigkk">
+				<activity type="set-variable" name="emailId" expression='#item["emailId"]' id="iQjqkB"></activity>
+				<activity type="set-variable" name="targets" expression='#item["targets"]' id="dpzepG"></activity>
+				<activity type="call-internal-api" name="emailResult" template-file="templates/DistributeBulkMail.txt" id="rNMAkI"></activity>
 			</activity>
 		</notifier>
 		<notifier name="SetupEnvironment">
@@ -1769,11 +1769,11 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 				<mapping target="lastName" value="lastName"></mapping>
 				<mapping target="enableUnsubscribe" value="enableUnsubscribe"></mapping>
 			</trigger>
-			<activity type="call-internal-api" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|' id="gHqStL"></activity>
-			<activity type="code" python-file="lib/MailGun.py" handler="prepare_email" id="APaMLL"></activity>
-			<activity type="render-template" template-file="templates/GeneralMail.html" name="html" id="SEMEuo"></activity>
-			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="MrvBBz"></activity>
-			<activity type="code" python-file="lib/MailGun.py" handler="send" id="uBWBvG"></activity>
+			<activity type="call-internal-api" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|' id="MmMgxX"></activity>
+			<activity type="code" python-file="lib/MailGun.py" handler="prepare_email" id="tVFxRP"></activity>
+			<activity type="render-template" template-file="templates/GeneralMail.html" name="html" id="CVtdXn"></activity>
+			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="xJwYNe"></activity>
+			<activity type="code" python-file="lib/MailGun.py" handler="send" id="dIGNME"></activity>
 		</notifier>
 		<notifier name="SendDeregisterConfirmation">
 			<trigger source="VisitorDeregistered">
