@@ -19,8 +19,8 @@
         <script async defer data-domain="devconf.nl"
                 src="https://analytics.bohanssen.com/js/plausible.js"></script>
     </head>
-    <body x-data>
-        one moment...
+    <body x-data="{ verifying: false }">
+    <span x-show="verifying">one moment...</span>
         <div class="table-responsive">
         <table class="table" x-show="$store.trace.length != 0" x-cloak>
             <thead>
@@ -42,15 +42,21 @@
             </template>
             </tbody>
         </table>
+            <button x-show="!verifying"
+                    x-on:click="$store.mutation.send('verify-ticket',{
+             ticketId: Draftsman.fetch_query_parameter('id'),
+             control: Draftsman.fetch_query_parameter('control')});verifying=true">
+                Bevestig registratie
+            </button>
     </div>
 
         <draftsman-mutation command="verify-ticket" x-include="/prepared-statements/commands/VerifyTicket.txt">
         </draftsman-mutation>
 
-        <div x-init="setTimeout(function(){
-            $store.mutation.send('verify-ticket',{
-                ticketId: Draftsman.fetch_query_parameter('id'),
-                control: Draftsman.fetch_query_parameter('control')})},1000);"></div>
+<!--        <div x-init="setTimeout(function(){-->
+<!--            $store.mutation.send('verify-ticket',{-->
+<!--                ticketId: Draftsman.fetch_query_parameter('id'),-->
+<!--                control: Draftsman.fetch_query_parameter('control')})},1000);"></div>-->
         <draftsman-trace command="verify-ticket"
                          component="Ticket.Verify"
                          status="success"
