@@ -1695,11 +1695,11 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 				<mapping target="lastName" value="lastName"></mapping>
 				<mapping target="enableUnsubscribe" value="enableUnsubscribe"></mapping>
 			</trigger>
-			<activity type="call-internal-api" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|' id="hSlkKo"></activity>
-			<activity type="code" python-file="lib/MailGun.py" handler="prepare_email" id="FHdZVn"></activity>
-			<activity type="render-template" template-file="templates/GeneralMail.html" name="html" id="QjGyMo"></activity>
-			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="bivIRW"></activity>
-			<activity type="code" python-file="lib/MailGun.py" handler="send" id="ndniVn"></activity>
+			<activity type="call-internal-api" name="emailContent" query='query MyQuery {|LB|  Email {|LB|    get(key: "{{flow.id}}") {|LB|      content|LB|      subject|LB|    }|LB|  }|LB|}|LB|' id="MqcdyP"></activity>
+			<activity type="code" python-file="lib/MailGun.py" handler="prepare_email" id="VisjjD"></activity>
+			<activity type="render-template" template-file="templates/GeneralMail.html" name="html" id="DusLzN"></activity>
+			<activity type="fetch-property" key="mailgunKey" name="apiKey" id="aCOokU"></activity>
+			<activity type="code" python-file="lib/MailGun.py" handler="send" id="ByFezZ"></activity>
 		</notifier>
 		<notifier name="SendDeregisterConfirmation">
 			<trigger source="VisitorDeregistered">
@@ -1744,18 +1744,18 @@ entity.end = entity.end if entity.end != "" and int(entity.end.replace(":","")) 
 			<trigger source="@cron(0 * * * ? *)" idempotency-key="">
 				<mapping target="dummy" value="#''"></mapping>
 			</trigger>
-			<activity type="call-internal-api" name="emails" template-file="templates/FetchBulkMails.txt" id="VMVVov"></activity>
-			<activity type="code" python-file="lib/BulkMailUtils.py" handler="filter_mails" id="JFYQMg"></activity>
-			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" template-file="templates/FetchBulkMailTargets.txt" id="FVNBGK"></activity>
-			<activity type="loop" array="#flow.emails" id="qImODy">
-				<activity type="set-variable" name="emailId" expression='#item["id"]' id="sdsIor"></activity>
-				<activity type="set-variable" name="item" expression="#item" id="jSzsNR"></activity>
-				<activity type="code" python-file="lib/BulkMailUtils.py" handler="create_distribution_shards" id="WwiCMo"></activity>
+			<activity type="call-internal-api" name="emails" template-file="templates/FetchBulkMails.txt" id="PEZDqu"></activity>
+			<activity type="code" python-file="lib/BulkMailUtils.py" handler="filter_mails" id="PTHQWT"></activity>
+			<activity type="call-internal-api" condition="len(flow.emails) != 0" name="visitors" template-file="templates/FetchBulkMailTargets.txt" id="SzgrdB"></activity>
+			<activity type="loop" array="#flow.emails" id="UliWYj">
+				<activity type="set-variable" name="emailId" expression='#item["id"]' id="NcaSYp"></activity>
+				<activity type="set-variable" name="item" expression="#item" id="TxYvwf"></activity>
+				<activity type="code" python-file="lib/BulkMailUtils.py" handler="create_distribution_shards" id="HqRgeF"></activity>
 			</activity>
-			<activity type="loop" array="#flow.distributions" id="aGwfmL">
-				<activity type="set-variable" name="emailId" expression='#item["emailId"]' id="DgagGb"></activity>
-				<activity type="set-variable" name="targets" expression='#item["targets"]' id="XrEtNC"></activity>
-				<activity type="call-internal-api" name="emailResult" template-file="templates/DistributeBulkMail.txt" id="ihFyLw"></activity>
+			<activity type="loop" array="#flow.distributions" id="KFKuin">
+				<activity type="set-variable" name="emailId" expression='#item["emailId"]' id="DAoUjs"></activity>
+				<activity type="set-variable" name="targets" expression='#item["targets"]' id="ECxkUG"></activity>
+				<activity type="call-internal-api" name="emailResult" template-file="templates/DistributeBulkMail.txt" id="CDqfZV"></activity>
 			</activity>
 		</notifier>
 		<notifier name="SetupEnvironment">
