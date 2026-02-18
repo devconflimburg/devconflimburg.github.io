@@ -16,42 +16,39 @@
           <div class="my-5 text-center text-xl-start">
             <img src="/assets/devconf_logo_white_poly.png" width="100%"/>
 
-            <h4 x-text="moment('27-03-2026', 'DD-MM-YYYY').format('LL')"
+<!--            <div class="d-grid gap-2 col-6 mx-auto">-->
+<!--              <a href="https://sessionize.com/devconf2026/"-->
+<!--                   target="_blank"-->
+<!--                   class="btn btn-outline-light">Meld je aan als spreker!</a>-->
+<!--            </div>-->
+
+
+            <h4 x-text="date != '' ? moment(date, 'DD-MM-YYYY').format('LL') : ''"
                 class="display-5 fw-bolder text-white mb-2 text-center">
             </h4>
-            <div class="d-grid gap-2 col-6 mx-auto">
-              <a href="https://sessionize.com/devconf2026/"
-                   target="_blank"
-                   class="btn btn-outline-light">Meld je aan als spreker!</a>
-            </div>
-
-
-<!--            <h4 x-text="date != '' ? moment(date, 'DD-MM-YYYY').format('LL') : ''"-->
-<!--                class="display-5 fw-bolder text-white mb-2 text-center">-->
-<!--            </h4>-->
-<!--            <template x-if="Draftsman.fetch_query_parameter('geslaagd')">-->
-<!--              <div class="d-grid gap-2 col-6 mx-auto">-->
-<!--                <h6 class="text-white">Inschrijving afgerond, je ontvangt zo je ticket via e-mail</h6>-->
-<!--              </div>-->
-<!--            </template>-->
-<!--            <template x-if="opened && !Draftsman.fetch_query_parameter('geslaagd')">-->
-<!--              <div class="d-grid gap-2 col-6 mx-auto" -->
-<!--                x-effect="-->
-<!--                  let seats = registrationManager.maxVisitors - registrationManager.registeredVisitors;-->
-<!--                  if (seats > 10){detail=seats}else{detail='Nog maar enkele'}-->
-<!--                "-->
-<!--                x-data="{detail: ''}">-->
-<!--                <h6 class="text-white"><span x-text="detail"></span> seats beschikbaar, inschrijving sluit <span x-text="closeText"></span></h6>-->
-<!--                <a href="#"-->
-<!--                   @click="open_registration_window()"-->
-<!--                   class="btn btn-outline-light">Schrijf je nu in!</a>-->
-<!--              </div>-->
-<!--            </template>-->
-<!--            <template x-if="!opened && !Draftsman.fetch_query_parameter('geslaagd')">-->
-<!--              <div class="d-grid gap-2 col-6 mx-auto">-->
-<!--                <h6 class="text-white" x-text="reason"></h6>-->
-<!--              </div>-->
-<!--            </template>-->
+            <template x-if="Draftsman.fetch_query_parameter('geslaagd')">
+              <div class="d-grid gap-2 col-6 mx-auto">
+                <h6 class="text-white">Inschrijving afgerond, je ontvangt zo je ticket via e-mail</h6>
+              </div>
+            </template>
+            <template x-if="opened && !Draftsman.fetch_query_parameter('geslaagd')">
+              <div class="d-grid gap-2 col-6 mx-auto"
+                x-effect="
+                  let seats = registrationManager.maxVisitors - registrationManager.registeredVisitors;
+                  if (seats > 10){detail=seats}else{detail='Nog maar enkele'}
+                "
+                x-data="{detail: ''}">
+                <h6 class="text-white"><span x-text="detail"></span> seats beschikbaar, inschrijving sluit <span x-text="closeText"></span></h6>
+                <a href="#"
+                   @click="open_registration_window()"
+                   class="btn btn-outline-light">Schrijf je nu in!</a>
+              </div>
+            </template>
+            <template x-if="!opened && !Draftsman.fetch_query_parameter('geslaagd')">
+              <div class="d-grid gap-2 col-6 mx-auto">
+                <h6 class="text-white" x-text="reason"></h6>
+              </div>
+            </template>
           </div>
         </div>
         <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">

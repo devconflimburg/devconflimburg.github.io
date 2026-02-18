@@ -40,7 +40,12 @@ var rooms = ["Forum",
              "Theater",
              "Manege",
              "Graanschuur",
-             "Kersentuin"];
+             "Kersentuin",
+             "Dinger",
+             "Heuvelland",
+             "Mergelland",
+             "Wormdal",
+             "Maasdal"];
 var talks = rooms.map(x => []);
 var classes = ["one","two","three","four","five","one","two","three","four"]
 function get_talks(programma){
