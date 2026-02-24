@@ -243,6 +243,9 @@ function write_log(message){
     let element = document.getElementById("console");
     element.scrollTo(0, element.scrollHeight);
     element.scrollTop = element.scrollHeight;
+    setTimeout(function(){
+    element.scrollTop = element.scrollHeight;
+    },100);
 }
 
 var logs = [];
