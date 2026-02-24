@@ -7,7 +7,11 @@ const room_colors = {
      "Hackingdorm":"#f2f2a4",
      "Theater":"#a4cbf2",
       "Graanschuur":"#a4a4f2",
-      "Kersentuin":"#f2a4a4"
+      "Kersentuin":"#f2a4a4",
+      "Heuvelland":"#a4cbf2",
+     "Mergelland":"#a4a4f2",
+     "Maasdal":"#f2a4a4",
+     "Wormdal":"#f2f2a4",
 };
 
 var registrationData = null;
@@ -96,11 +100,12 @@ function prepare_breakouts(){
     for (let i = 0; i < Object.keys(data_set).length; i++){
         rooms.forEach(room => {
             let talk = data_set[i+1][room];
+            if (talk){
             prepared_data.push([
                 `${talk.title} - ${talk.speaker} - ${talk.room}`,
                 visitors[talk.id] ? visitors[talk.id] : 0,
                 room_colors[talk.room],
-            ]);
+            ]);}
         });
     }
     breakoutData = google.visualization.arrayToDataTable(prepared_data);
