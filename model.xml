@@ -1229,7 +1229,7 @@
 					<test-case name="HappyFlow" trigger-event="ConferenceVisitorCreated" expected-processing-status="success">
 						<input name="firstName" type="String" value="John"></input>
 						<input name="lastName" type="String" value="Doe"></input>
-						<input name="year" type="String" value="2025"></input>
+						<input name="year" type="String" value="2026"></input>
 						<input name="ticketId" type="String" value="dummy"></input>
 						<input name="email" type="String" value="john.doe@example.com"></input>
 						<input name="attendingLunch" type="Boolean" value="True"></input>

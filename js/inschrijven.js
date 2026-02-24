@@ -125,7 +125,12 @@ function next_command(){
        let session = parseInt(current_state.replace("breakout-",""));
        write_log("<br>Breakout sessie " + session);
        breakouts[session].forEach((breakout,index) => {
-        write_log(index + ") " + breakout.title);
+        if (breakout.id == "2026-13"){
+            //TODO:HACK mini sessies hardcoded
+            write_log(index + ") Kennis; macht, risico of cultuur / Developer productivity / Database backups zijn geen archivering");
+        } else {
+            write_log(index + ") " + breakout.title);
+        }
        });
        command.instruction = "Selecteer een van de breakout sessies [0-" + (breakouts[session].length-1) + "]";
     } else if (current_state == "submit"){
@@ -185,6 +190,19 @@ function enter_command(element){
         form.breakouts.push({
             id: breakouts[session][index].id
         });
+
+        if (["2026-7","2026-14"].includes(breakouts[session][index].id)){
+            //TODO:HACK dubbel slot, skip next
+            flow.shift();
+        } else if (breakouts[session][index].id == "2026-13"){
+            //TODO:HACK mini sessies hardcoded
+            form.breakouts.push({
+                id: "2026-15"
+            });
+            form.breakouts.push({
+                id: "2026-16"
+            });
+        }
     }
 
     if (current_state == "attendingLunch"){
@@ -224,6 +242,7 @@ function write_log(message){
     logs.push(message);
     let element = document.getElementById("console");
     element.scrollTo(0, element.scrollHeight);
+    element.scrollTop = element.scrollHeight;
 }
 
 var logs = [];

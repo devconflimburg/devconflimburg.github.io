@@ -1,4 +1,4 @@
-query MyQuery($year: String = "2025") {
+query MyQuery($year: String = "2026") {
   Visitor {
     filter(limit: 1000, year_equals: $year) {
       resultset {
