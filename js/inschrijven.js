@@ -45,6 +45,7 @@ function get_breakouts(program){
 function open_registration_window(){
     let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=${screen.width * 0.5},height=${screen.height * 0.5},left=10,top=10`;
     open('/inschrijf-terminal', 'inschrijf-terminal', params);
+    location.href = "/programma";
 }
 
 /// Terminal flow
@@ -56,12 +57,13 @@ var submitted = false;
 
 function start_registration(edition){
     write_log("Welkom bij de aanmelding voor devConf " + edition.year);
-    write_log("Het event vindt plaats op woensdag " + moment(edition.date,'DD-MM-YYYY').format("YYYY-MM-DD"));
+    write_log("Het event vindt plaats op vrijdag " + moment(edition.date,'DD-MM-YYYY').format("YYYY-MM-DD"));
     write_log("&nbsp;");
     write_log("Gedurende deze registratie vragen we ook om een voorkeur op te geven voor de breakoutsessies, dit is niet bindend. We gebruiken deze data enkel als input voor de zaalindeling.")
+    write_log("Tip: houd het <a href='/programma' target='_blank'>tijdschema</a> bij de hand bij het samenstellen van je programma.")
     write_log("&nbsp;");
     write_log("Door het commando ‘reset’ uit te voeren kun je alle ingevoerde data verwijderen zonder te registreren.")
-    write_log("Ben je al aangemeld, maar ben je de email kwijt? Voer dan het commando ‘resend email’ uit.");
+    write_log("Ben je al aangemeld, maar ben je de e-mail kwijt? Voer dan het commando ‘resend e-mail’ uit.");
     write_log("&nbsp;");
     breakouts = get_breakouts(edition.program.programItem);
     form.year = edition.year;
@@ -109,7 +111,7 @@ function next_command(){
             form["dietaryNotes"] = "";
             next_command();
         } else {
-            command.instruction = "Kunt u aangeven of er dieetbeperkingen zijn waarmee we rekening kunnen houden?";
+            command.instruction = "Kun je aangeven of er dieetbeperkingen zijn waarmee we rekening kunnen houden?";
         }
     } else if (current_state == "attendingAfterEventDrinks") {
         command.instruction = "Ben je aanwezig tijdens de netwerk borrel? [y/N]";
@@ -128,6 +130,8 @@ function next_command(){
         if (breakout.id == "2026-13"){
             //TODO:HACK mini sessies hardcoded
             write_log(index + ") Kennis; macht, risico of cultuur / Developer productivity / Database backups zijn geen archivering");
+        } else if (breakout.id == "2026-14" && form.breakouts.some(b => b.id === "2026-7")){
+            //TODO:HACK skip workshop als deelnemer voor het eerste slot heeft ingeschreven
         } else {
             write_log(index + ") " + breakout.title);
         }
@@ -147,7 +151,7 @@ function enter_command(element){
     if (element.innerText.trim().toLowerCase() == "reset"){
         location.reload();
     }
-    if (element.innerText.trim().toLowerCase() == "resend email"){
+    if (element.innerText.trim().toLowerCase() == "resend e-mail"){
        flow = ["email","resend"];
        current_state = "";
     }
@@ -155,7 +159,7 @@ function enter_command(element){
         element.innerText = element.innerText.trim().toLowerCase();
         if (!/^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$/.test(element.innerText)){
             element.innerText = "";
-            write_log("<i style='color:red;'>The provided email address does not match the required pattern: <a style='color:#00d2ff;' href='https://regexr.com/3e48o' target='_blank'>^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$</a></i>")
+            write_log("<i style='color:red;'>The provided e-mail address does not match the required pattern: <a style='color:#00d2ff;' href='https://regexr.com/3e48o' target='_blank'>^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$</a></i>")
             throw "invalid input";
         }
     }
@@ -227,11 +231,12 @@ function append_tracelog(log_message){
     let line = `${message.command ? message.command : message.event} ${message.status} ${message.message}`;
     if (message.status == "error"){
         line = `<i style="color:red">${line}</i>`
+        // Alleen errors tonen, als we alles willen moet de write buiten de if.
+        write_log(line);
     }
-    write_log(line);
     if(message.command == "SendTicketVerification-Notifier" && message.status == "success"){
         setTimeout(function(){
-            write_log(`Er is een verificatie-e-mail gestuurd naar <i>${form.email}</i>. Klik op de link in de e-mail om je inschrijving te voltooien.`);
+            write_log(`Er is een verificatie e-mail gestuurd naar <i>${form.email}</i>. Klik op de link in de e-mail om je inschrijving te voltooien.`);
             write_log(`Geen e-mail ontvangen? Controleer je spamfolder. Nog steeds niets? <a href="mailto:info@devconf.nl">Neem contact op</a>.`);
             write_log(`<h2 style="color: red;">Let op: je inschrijving is pas voltooid na e-mailverificatie. Zonder bevestiging wordt je registratie over 2 weken automatisch geannuleerd.</h2>`);
         }, 1000);

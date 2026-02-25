@@ -12,55 +12,39 @@
         <script src="/js/framework.js"></script>
         <script src="/js/cache.js"></script>
         <script src="/js/tp/vimeshui.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
         <script src="/js/utils.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
         <script src="/js/tp/alpine.js" defer></script>
         <script async defer data-domain="devconf.nl"
                 src="https://analytics.bohanssen.com/js/plausible.js"></script>
+        <script src="/js/verify.js"></script>
+        <style>
+            html, body {
+  margin: 0;
+  height: 100%;
+}
+
+.screen {
+  background: #cf6061;
+  color: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100vh;
+
+  font-family: system-ui, sans-serif;
+  font-size: 1.5rem;
+}
+        </style>
     </head>
-    <body x-data="{ verifying: false }">
-    <span x-show="verifying">one moment...</span>
-        <div class="table-responsive">
-        <table class="table" x-show="$store.trace.length != 0" x-cloak>
-            <thead>
-            <tr>
-                <th scope="col">Timestamp</th>
-                <th scope="col">Command/Event</th>
-                <th scope="col">Status</th>
-                <th scope="col">Message</th>
-            </tr>
-            </thead>
-            <tbody>
-            <template x-for="message in $store.trace">
-                <tr x-transition>
-                    <th scope="row" x-html="message.timestamp.replace('Z','').replace('T',' ')"></th>
-                    <td x-html="message.command != '' ? message.command : message.event"></td>
-                    <td x-html="message.status"></td>
-                    <td x-html="message.message"></td>
-                </tr>
-            </template>
-            </tbody>
-        </table>
-            <button x-show="!verifying"
-                    x-on:click="$store.mutation.send('verify-ticket',{
-             ticketId: Draftsman.fetch_query_parameter('id'),
-             control: Draftsman.fetch_query_parameter('control')});verifying=true">
-                Bevestig registratie
-            </button>
+    <body x-data>
+
+    <div class="screen">
+      <p id="message">
+          one moment…
+      </p>
     </div>
 
-        <draftsman-mutation command="verify-ticket" x-include="/prepared-statements/commands/VerifyTicket.txt">
-        </draftsman-mutation>
-
-<!--        <div x-init="setTimeout(function(){-->
-<!--            $store.mutation.send('verify-ticket',{-->
-<!--                ticketId: Draftsman.fetch_query_parameter('id'),-->
-<!--                control: Draftsman.fetch_query_parameter('control')})},1000);"></div>-->
-        <draftsman-trace command="verify-ticket"
-                         component="Ticket.Verify"
-                         status="success"
-                         @trace="location.href = '/?geslaagd=true'">
-        </draftsman-trace>
     </body>
 </html>
