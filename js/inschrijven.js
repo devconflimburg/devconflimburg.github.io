@@ -118,7 +118,7 @@ function next_command(){
     } else if (current_state == "subscribeToNewsletter") {
         command.instruction = "<br>Wil je toegevoegd worden aan onze distributielijst?";
         command.instruction += "<br>We gebruiken deze lijst voor het uitzenden van de <i>Call for Speakers</i> en de aankondiging van een nieuwe editie.";
-        command.instruction += "<br>We bewaren je gegevens 2,5 jaar, daarna worden ze automatisch verwijderd, tenzij je je opnieuw aanmeldt.";
+        command.instruction += "<br>We bewaren je gegevens 2.5 jaar, daarna worden ze automatisch verwijderd, tenzij je je opnieuw aanmeldt.";
         command.instruction += "<br>Aanmelden voor de distributielijst? [y/N]";
     } else if (current_state == "allowSharingWithRecruiters"){
         command.instruction = "<br>devConf is gesponsord door APG, maar een initiatief van APG IT-medewerkers. Work@APG houdt je op de hoogte van carrièremogelijkheden bij APG.";
