@@ -57,7 +57,7 @@ var submitted = false;
 
 function start_registration(edition){
     write_log("Welkom bij de aanmelding voor devConf " + edition.year);
-    write_log("Het event vindt plaats op vrijdag " + moment(edition.date,'DD-MM-YYYY').format("YYYY-MM-DD"));
+    write_log("Het event vindt plaats op vrijdag " + moment(edition.date,'DD-MM-YYYY').format("DD-MM-YYYY"));
     write_log("&nbsp;");
     write_log("Gedurende deze registratie vragen we ook om een voorkeur op te geven voor de breakoutsessies, dit is niet bindend. We gebruiken deze data enkel als input voor de zaalindeling.")
     write_log("Tip: houd het <a href='/programma' target='_blank'>tijdschema</a> bij de hand bij het samenstellen van je programma.")
