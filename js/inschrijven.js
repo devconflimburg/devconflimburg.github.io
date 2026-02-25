@@ -139,7 +139,6 @@ function next_command(){
        command.instruction = "Selecteer een van de breakout sessies [0-" + (breakouts[session].length-1) + "]";
     } else if (current_state == "submit"){
         command.instruction = "<br>Door je in te schrijven ga je akkoord met onze <a href='/algemene-voorwaarden' target='_blank'>algemene voorwaarden</a>."
-        command.instruction += "<br>⚠️ Op DevConf delen we goodies uit, maar let op: <strong>op = op!</strong> We hebben een beperkte voorraad om verspilling te voorkomen en onze milieu-impact zo laag mogelijk te houden."
         command.instruction += "<br>Is bovenstaande informatie correct? [ja/reset]"
     } else if (current_state == "resend"){
         send_mutation("lost-email-command",form);
