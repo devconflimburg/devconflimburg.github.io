@@ -126,17 +126,27 @@ function next_command(){
     } else if (current_state.startsWith("breakout")){
        let session = parseInt(current_state.replace("breakout-",""));
        write_log("<br>Breakout sessie " + session);
+       let count = 0;
        breakouts[session].forEach((breakout,index) => {
-        if (breakout.id == "2026-13"){
+        if (breakout.id == "2026-7"){
+            //TODO:HACK omdat deze sessie vol is.
+            write_log(
+              "<span style='color:red;'>" +
+              "<i style='text-decoration:line-through;'>" + breakout.title + "</i>" +
+              " (full)</span>"
+            );
+        } else if (breakout.id == "2026-13"){
             //TODO:HACK mini sessies hardcoded
+            count += 1;
             write_log(index + ") Kennis; macht, risico of cultuur / Developer productivity / Database backups zijn geen archivering");
         } else if (breakout.id == "2026-14" && form.breakouts.some(b => b.id === "2026-7")){
             //TODO:HACK skip workshop als deelnemer voor het eerste slot heeft ingeschreven
         } else {
+            count += 1;
             write_log(index + ") " + breakout.title);
         }
        });
-       command.instruction = "Selecteer een van de breakout sessies [0-" + (breakouts[session].length-1) + "]";
+       command.instruction = "Selecteer een van de breakout sessies [0-" + (count-1) + "]";
     } else if (current_state == "submit"){
         command.instruction = "<br>Door je in te schrijven ga je akkoord met onze <a href='/algemene-voorwaarden' target='_blank'>algemene voorwaarden</a>."
         command.instruction += "<br>Is bovenstaande informatie correct? [ja/reset]"
@@ -184,11 +194,15 @@ function enter_command(element){
     } else {
         let session = parseInt(current_state.replace("breakout-",""));
         let index = parseInt(element.innerText);
-        if (!breakouts[session][index]){
+        if (!breakouts[session][index] || breakouts[session][index].id == "2026-7" ){ //TODO:HACK omdat sessie vol is
             let options = breakouts[session].length - 1;
+            if (breakouts[session][index] && breakouts[session][index].id == "2026-7"){
+                options += -1;
+            }
             write_log(command.instruction + "> <span style='color: white;'>" + element.innerText + "</span>");
             write_log("<i style='color:red;'>Please select a value between 0-" + options +"</i>")
             element.innerText = "";
+            return;
         }
         form.breakouts.push({
             id: breakouts[session][index].id
