@@ -27,7 +27,7 @@ function closedReason(registrationManager){
     }
 }
 function getCloseText(registrationManager){
-    return moment(registrationManager.closeDate, 'DD-MM-YYYY').add(1,'days').fromNow()
+    return moment(registrationManager.closeDate, 'DD-MM-YYYY').fromNow()
 }
 
 function get_breakouts(program){
