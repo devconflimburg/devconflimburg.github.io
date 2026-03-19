@@ -39,6 +39,9 @@
       let payload = parseJwt(token);
       localStorage["username"] = payload["cognito:username"];
       localStorage["email"] = payload["email"];
+      if (referer.startsWith("/admin-console/")){
+          referer = "/admin-console/";
+      }
       location = referer;
   },1);
 </script>
