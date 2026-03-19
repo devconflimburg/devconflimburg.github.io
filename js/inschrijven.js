@@ -6,7 +6,7 @@ function inschrijvingGeopend(registrationManager){
         var check = new Date();
         return check >= openDate && check <= closeDate && registrationManager.registeredVisitors < registrationManager.maxVisitors;
     } catch(err) {
-        return false;
+        return false; 
     }
 }
 
