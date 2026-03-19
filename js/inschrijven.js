@@ -2,7 +2,7 @@
 function inschrijvingGeopend(registrationManager){
     try{
         var openDate = moment(registrationManager.openDate, 'DD-MM-YYYY');
-        var closeDate = moment(registrationManager.closeDate, 'DD-MM-YYYY');
+        var closeDate = moment(registrationManager.closeDate, 'DD-MM-YYYY').add(1,'days');
         var check = new Date();
         return check >= openDate && check <= closeDate && registrationManager.registeredVisitors < registrationManager.maxVisitors;
     } catch(err) {
@@ -13,7 +13,7 @@ function inschrijvingGeopend(registrationManager){
 function closedReason(registrationManager){
     try{
         var openDate = moment(registrationManager.openDate, 'DD-MM-YYYY');
-        var closeDate = moment(registrationManager.closeDate, 'DD-MM-YYYY');
+        var closeDate = moment(registrationManager.closeDate, 'DD-MM-YYYY').add(1,'days');
         var check = new Date();
         if (check < openDate){
             return "Inschrijving opent " + openDate.from(check);
@@ -27,7 +27,7 @@ function closedReason(registrationManager){
     }
 }
 function getCloseText(registrationManager){
-    return moment(registrationManager.closeDate, 'DD-MM-YYYY').fromNow()
+    return moment(registrationManager.closeDate, 'DD-MM-YYYY').add(1,'days').fromNow()
 }
 
 function get_breakouts(program){
