@@ -58,6 +58,41 @@
         let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=${screen.width * 0.5},height=${screen.height * 0.5},left=10,top=10`;
         open(`/uitschrijven?email=${visitor.email}&year=${visitor.year}&ticketId=${visitor.ticket.ticketId}`, 'uitschrijven', params);
       }
+
+      function create_csv(visitors, filename = "devConf-data.csv"){
+        const csv = [
+          ["email",
+          "firstName",
+          "lastName",
+          "subscribeToNewsletter",
+          "attendingLunch",
+          "attendingAfterEventDrinks",
+          "allowSharingWithRecruiters",
+          "dietaryNotes"]
+        ];
+        visitors.forEach(v => {
+          let row = [
+            v.email,
+            v.firstName,
+            v.lastName,
+            v.subscribeToNewsletter,
+            v.attendingLunch,
+            v.attendingAfterEventDrinks,
+            v.allowSharingWithRecruiters,
+            v.dietaryNotes
+          ];
+          csv.push(row.join(","));
+        });
+        const blob = new Blob([csv.join("\n")], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.click();
+
+        URL.revokeObjectURL(url);
+      }
   </script>
   <div class="container">
     <h1>Visitors</h1>
@@ -65,7 +100,11 @@
     <div class="form-check form-switch">
       <input class="form-check-input" type="checkbox" role="switch" id="verifiedToggle" x-model="show_only_unverified">
       <label class="form-check-label" for="verifiedToggle">Show only unverified registrations</label>
+      <button @click="create_csv($store.visitors.filter.resultset)" class="btn btn-sm btn-info">
+        Export to csv
+      </button>
     </div>
+    <br>
     <form class="d-flex" role="search">
       <input class="form-control me-2" type="search"
              x-model="search"
